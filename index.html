@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <div id="main-container" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 40px;">
+
+    <div id="left-content" style="flex-grow: 1; max-width: 15%;">
+        <script>
+            const currentVersion = "v0.0.6b";
+            const savedVersion = localStorage.getItem("gameVersion");
+            if (savedVersion !== currentVersion) {
+                localStorage.setItem("gameVersion", currentVersion);
+                location.reload(true);
+            }
+        </script>
+
+        <title id = "title">EPIC RPG FIGHT GAME</title>
+        <h1 id = "gameTitle">EPIC RPG FIGHT GAME</h1>
+
+        <script>
+            document.getElementById("title").innerHTML += " " + currentVersion;
+            document.getElementById("gameTitle").innerHTML += " " + currentVersion;
+        </script>
+        <p>By William Babuschak</p>
+        <h2>Volume</h2>
+        <input type="range" id="volumeSlider" min="0" max="100" value="50"></input>
+        <p></p>
+        <div id="xpContainer" style="width: 300px; height: 25px; background: #ffffff; overflow: hidden; box-shadow: inset 0 0 2px #000;">
+        <div id="xpBar" style="height: 100%; width: 0%; background: linear-gradient(90deg, #1649b8ff, #a6b4d3ff); transition: width 0.3s ease;"></div>
+        </div>
+
+        <p id="xpText">Level: 0 XP: 0 / 0</p>
+
+
+        <button id="saveButton">Save Game Data</button>
+        <p></p>    
+        <select id="worldSelect"></select>
+        <button id="resetButton">Reset Save Data</button>
+        <p id="worldTimer"></p>
+        
+        
+    </div>
+    <div id="middle-content" style="flex-grow: 1; max-width: 35%;">
+        <p id = "entityDisplay"></p>
+        <p id = "lootDisplay">&nbsp;</p>
+        <button id="attackButton">Attack!</button>
+        <button id="autoButton">Auto</button>
+        <p id = "dpsDisplay"></p>
+        <button id="equipButton">Equip</button>
+        <select id="equipSelect"></select>
+        <p></p>
+        <button id="unequipButton">Unquip</button>
+        <select id="unequipSelect"></select>
+        <p id = "equippedItems"></p>
+    </div>
+    <div id="right-content" style="flex-grow: 1; max-width: 50%;">
+        <p id = "inventory"></p>
+    </div>
+    
+    
+    <script src="entity.js?v=1.3"></script>
+    <script src="item.js?v=1.9"></script>
+    <script src="loot_table.js?v=1.4"></script>
+    <script src="inventory.js?v=1.3"></script>
+    <script src="loot_tables.js?v=1.5"></script>
+    <script src="enemies.js?v=1.3"></script>
+
+    <style>
+        #entityDisplay {
+            font-size: 24px;
+        }
+        #attackButton {
+            font-size: 36px;
+            padding: 12px 24px;
+            font-weight: bold;
+        }
+        #autoButton {
+            font-size: 36px;
+            padding: 12px 2px;
+            font-weight: bold;
+        }
+        #resetButton {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+        #equipButton {
+            width: 84px;
+            height: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            vertical-align: middle;
+        }
+        #unequipButton {
+            width: 84px;
+            height: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            vertical-align: middle;
+        }
+        #equipSelect {
+            height: 30px;
+            vertical-align: middle;
+        }
+        #unequipSelect {
+            height: 30px;
+            vertical-align: middle;
+        }
+        #saveButton {
+            font-weight: bold;
+        }
+        #lootDisplay{
+            min-height: 1em;
+            line-height: 1em;
+        }
+    </style>
+
+    <script>
+        const worldMusic = {
+            0: "music/Live-Today.wav",
+            1: "music/Wasted-Time.wav",
+            2: "music/Thinking-Of-You.wav",
+            7: "music/Overdose.wav",
+        }
+
+        let activeEntity;
+        let inventory = new Inventory;
+        let equipped = [];
+        let autoMode = false;
+        let autoInterval;
+        let attackCount = 0;
+        let enemyAttacks = 0;
+        let lastHits = [];
+        let kills = 0;
+        let dropCount = 1;
+        let music = false;
+        let volume;
+
+        let precomputedDamage = {
+            baseDmg: 1,
+            dmgMult: 1.0,
+            moreMult: 1.0,
+            missChance: 0.0,
+            missMult: 0.0,
+            arcaneCount: 0,
+            arcaneSetBonus: 0,
+            setBase: -1
+        };
+
+        let experience = 0;
+        let level = 0;
+
+        function gainExperience(exp){
+            if (exp > level) experience += exp;
+            let xp_to_level = 2 * (1 + level) * (1 + level) * (20 + level);
+            
+            while (experience >= xp_to_level){
+                experience -= xp_to_level;
+                level++;
+                
+                xp_to_level = 2 * (1 + level) * (1 + level) * (20 + level);
+            }
+            document.getElementById("xpBar").style.width = (100 * experience / xp_to_level) + '%';
+            document.getElementById("xpText").innerHTML =`Level: ${level}<br>XP: ${experience } / ${xp_to_level}`;
+        }
+
+        gainExperience(0);
+
+        function updateInventory(){
+            const inventoryElement = document.getElementById("inventory");
+            if (inventory.items.length == 0) {
+                inventoryElement.textContent = "Inventory is empty.";
+            } else {
+                inventoryElement.innerHTML = inventory.list();
+            }
+            updateEquipSelect();
+            updateUnequipSelect();
+            updateWorldSelect();
+            saveGame();
+        }
+        function updateEquipped(){
+            const equippedElement = document.getElementById("equippedItems");
+            if (!equipped.length) {
+                equippedElement.textContent = "No items equipped.";
+            } else {
+                equipped.sort((a,b) => a.equippable.localeCompare(b.equippable));
+                equippedElement.innerHTML = equipped.map(item => `<span style = "color: ${item.color}">${item.name}</span>` + " " + `<em>(${item.desc})</em>`).join("<br>");
+            }
+            lastHits = [];
+            updateDPSDisplay();
+        }
+
+        function updateEquipSelect() {
+            const select = document.getElementById("equipSelect");
+            const previousValue = select.value;
+
+            select.innerHTML = "";
+
+            const equippables = inventory.items.filter(item => item.equippable).sort((a, b) => a.equippable.localeCompare(b.equippable));
+            for (const item of equippables) {
+                let option = document.createElement("option");
+                option.value = item.name;
+                option.text = `${item.equippable} - ${item.name} (${item.quantity})`;
+                select.add(option);
+            }
+
+            if (previousValue && Array.from(select.options).some(opt => opt.value === previousValue)) {
+                select.value = previousValue;
+            } else if (select.options.length > 0 && !select.value) {
+                select.selectedIndex = 0;
+            }
+        }
+
+        function updateWorldSelect(){
+            const select = document.getElementById("worldSelect");
+            const previousValue = select.value;
+
+            select.innerHTML = "";
+
+            let worlds = [];
+            // default world
+            worlds.push(0);
+
+            // default world part 2
+            let dirtyShoes = inventory.items.find(i => i.name == "Dirty Shoes");
+            if (dirtyShoes && (dirtyShoes.quantity >= 10 || (dirtyShoes.quantity >= 9 && itemEquipped("Dirty Shoes")))){
+                worlds.push(7);
+            }
+
+            // spirit world
+            if (itemEquipped("Spectral Cowl") || itemEquipped("Skullstompers") || itemEquipped("Frozen Gemstone Amulet")){
+                worlds.push(1);
+            }
+            // desert world
+            let goldCoins = inventory.items.find(i => i.name == "Gold Coin");
+            if (goldCoins && goldCoins.quantity >= 500){
+                worlds.push(2);
+            }
+
+            let hellItem1 = inventory.items.find(i => i.name == "Token of Faith");
+            let hellItem2 = inventory.items.find(i => i.name == "Water Jar");
+            let hellItem3 = inventory.items.find(i => i.name == "Venomous Gland");
+            let hellItem4 = inventory.items.find(i => i.name == "Drained Essence");
+
+            if (hellItem1 && hellItem2 && hellItem3 && hellItem4){
+                worlds.push(3);
+            }
+
+            let mountainItem1 = inventory.items.find(i => i.name == "Memento of the Vulture");
+            let mountainItem2 = inventory.items.find(i => i.name == "Memento of the Dino");
+            let mountainItem3 = inventory.items.find(i => i.name == "Memento of the Fangtooth");
+            let mountainItem4 = inventory.items.find(i => i.name == "Memento of the Succubus");
+            let mountainItem5 = inventory.items.find(i => i.name == "Memento of the Insect");
+            let mountainItem6 = inventory.items.find(i => i.name == "Memento of the Bovine");
+
+            let hasPromiseRing = itemEquipped("Promise Ring") || inventory.items.find(i => i.name == "Promise Ring");
+
+            if (mountainItem1 && mountainItem2 && mountainItem3 && mountainItem4 && mountainItem5 && mountainItem6 && hasPromiseRing){
+                worlds.push(4);
+            }
+
+            if (goldCoins && goldCoins.quantity >= 10000){
+                worlds.push(5);
+            }
+
+            let platinumCoins = inventory.items.find(i => i.name == "Platinum Coin");
+            if (platinumCoins){
+                worlds.push(6);
+            }
+
+            // magic world
+            let firstSeal = inventory.items.find(i => i.name == "First Seal");
+            let secondSeal = inventory.items.find(i => i.name == "Second Seal");
+            if (firstSeal && secondSeal){
+                worlds.push(8);
+            }
+
+            // magic world part 2
+            let thirdSeal = inventory.items.find(i => i.name == "Third Seal");
+            let fourthSeal = inventory.items.find(i => i.name == "Fourth Seal");
+            let fifthSeal = inventory.items.find(i => i.name == "Fifth Seal");
+            let sixthSeal = inventory.items.find(i => i.name == "Sixth Seal");
+            let seventhSeal = inventory.items.find(i => i.name == "Seventh Seal");
+            if (thirdSeal && fourthSeal && fifthSeal && sixthSeal && seventhSeal){
+                worlds.push(9);
+            }
+
+            // space world
+            let starJars = inventory.items.find(i => i.name == "Arcane Star Jar");
+            if (starJars && starJars.quantity >= 10){
+                worlds.push(10);
+            }
+
+            let universalCredit = inventory.items.find(i => i.name == "Universal Credit");
+
+            if (universalCredit){
+                if (universalCredit.quantity >= 1) worlds.push(11);
+                if (universalCredit.quantity >= 10) worlds.push(12);
+                if (universalCredit.quantity >= 100) worlds.push(13);
+                if (universalCredit.quantity >= 1000) worlds.push(14);
+            }
+
+            let mythItem1 = inventory.items.find(i => i.name == "Perpetual Dynamo");
+            let mythItem2 = inventory.items.find(i => i.name == "Element Collector");
+            if (mythItem1 && mythItem1.quantity >= 15 && mythItem2 && mythItem2.quantity >= 3){
+                if (dropCount < 2) dropCount = 2;
+                worlds.push(15);
+            }
+
+            for (const world of worlds) {
+                let option = document.createElement("option");
+                option.value = world;
+                option.text = worldName(world);
+                select.add(option);
+            }
+
+            if (previousValue && Array.from(select.options).some(opt => opt.value === previousValue)) {
+                select.value = previousValue;
+            } else if (select.options.length > 0 && !select.value) {
+                select.selectedIndex = 0;
+            }
+        
+        }
+
+        function updateUnequipSelect() {
+            const select = document.getElementById("unequipSelect");
+            const previousValue = select.value;
+
+            select.innerHTML = "";
+
+            for (const item of equipped) {
+                let option = document.createElement("option");
+                option.value = item.name;
+                option.text = item.equippable + " - " + item.name;
+                select.add(option);
+            }
+
+            if (previousValue && Array.from(select.options).some(opt => opt.value === previousValue)) {
+                select.value = previousValue;
+            } else if (select.options.length > 0 && !select.value) {
+                select.selectedIndex = 0;
+            }
+        }
+
+        function addToLastHits(damage){
+            lastHits.push(damage);
+            if (lastHits.length > 100){
+                lastHits.shift();
+            }
+        }
+
+        function updateEntityDisplay(lastHit){
+            document.getElementById("entityDisplay").innerHTML = 
+            lastHit == -1
+                ? `<strong>${activeEntity.name}</strong><br><strong>${activeEntity.HP}</strong>`
+                : activeEntity.armor > 0
+                    ? `<strong>${activeEntity.name}</strong><br><strong>${activeEntity.HP}</strong> (-${lastHit - activeEntity.armor}) <em>(${lastHit} dmg, ${activeEntity.armor} armor)</em>`
+                    : `<strong>${activeEntity.name}</strong><br><strong>${activeEntity.HP}</strong> (-${lastHit})`;
+            if (lastHit > -1) addToLastHits(lastHit);
+            updateDPSDisplay();
+        }
+
+        function updateDPSDisplay(){
+            if (lastHits.length == 0){
+                document.getElementById("dpsDisplay").innerHTML = "0 average dmg"
+                return;
+            }
+            
+            let cumDamage = 0;
+            
+            for (let i = 0; i < lastHits.length; i++){
+                cumDamage += lastHits[i];
+            }
+            
+            document.getElementById("dpsDisplay").innerHTML = Math.floor(cumDamage / lastHits.length) + " average dmg";
+        }
+
+        function equip(itemName){
+            // console.log("trying to equip " + itemName);
+            if (!inventory.items){
+                return;
+            }
+            let item = inventory.items.find(i => i.name == itemName);
+            if (!item){
+                return;
+            }
+            if (!item.equippable){
+                return;
+            }
+
+            for (let i of equipped){
+                if (i.equippable == item.equippable){
+                    inventory.addItem(Item.createItem(i.name, 1));
+                    equipped = equipped.filter(e => e !== i);
+                }
+            }
+
+            item.quantity -= 1;
+            if(item.quantity == 0) inventory.items = inventory.items.filter(i => i.name !== itemName);
+
+            equipped.push(Item.createItem(item.name, 1));
+            // console.log("equipped " + itemName);
+            updateInventory();
+            updateEquipped();
+            updateWorldSelect();
+            computeLoadoutStats();
+        }
+
+        function itemEquipped(name){
+            for (let i of equipped){
+                if (i.name == name){
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function unequip(itemName){
+            let item = equipped.find(i => i.name == itemName);
+            if (!item){
+                return;
+            }
+            equipped = equipped.filter(i => i != item);
+            inventory.addItem(Item.createItem(item.name, 1));
+            updateInventory();
+            updateEquipped();
+            updateWorldSelect();
+            computeLoadoutStats();
+        }
+
+        function computeLoadoutStats(){
+            let dmg = 1;
+            let dmg_mult = 1.0;
+            let more_mult = 1.0;
+            let miss_chance = 0.0;
+            let miss_mult = 0;
+            let arcane_count = 0;
+            let arcane_setbonus = 0;
+            let star_count = 0;
+            let set_base = -1;
+
+            // static item effects
+            for (let i of equipped){
+                if (i.name == "Common Dagger") dmg += 3;
+                if (i.name == "Ring of Slaying") dmg += 1;
+                if (i.name == "Epic Sword") dmg += 7;
+                if (i.name == "Fearsome Kris") dmg += 8;
+                if (i.name == "Mummy Wraps") dmg_mult += 0.10;
+                if (i.name == "Havoc Blade"){
+                    dmg_mult += 0.30;
+                    dmg += 3;
+                }
+                if (i.name == "Haunting Guise" && !itemInSlot("weapon")){
+                    dmg_mult += 0.50;
+                }
+                if (i.name == "Ring of Venom") dmg_mult += 0.10;
+                if (i.name == "Gauntlets of Sheer Force") set_base = 10;
+                if (i.name == "Emesis Amulet"){
+                    miss_chance += 0.09;
+                    dmg_mult += 0.09;
+                    dmg += 9;
+                }
+                if (i.name == "Crown of the Corpseeater") dmg_mult += 0.11;
+                if (i.name == "Wraps of Temptation"){
+                    dmg_mult += 0.23;
+                    miss_chance += .10;
+                }
+                if (i.name == "Blade of One Thousand Hooks") dmg_mult += 0.66;
+                if (i.name == "Stone of James") more_mult += 0.10;
+                if (i.name == "Treads of Crushing Depths") dmg_mult += 0.09;
+                if (i.name == "Fossil Blade") dmg += 20;
+                if (i.name == "Tooth Necklace") dmg += 6;
+                if (i.name == "Killer Gloves") dmg_mult += 0.03;
+                if (i.name == "Blasting Wand") dmg += 10;
+                if (i.name == "Ice Bear Fur Shawl") dmg += 10;
+                if (i.name == "Terror Mask") miss_chance -= 0.20;
+                if (i.name == "Dread Loop"){
+                    set_base = 16;
+                    miss_chance += 0.16;
+                }
+                if (i.name == "Mote of Arcane Power"){
+                    miss_chance -= 0.40;
+                    dmg_mult -= 0.20;
+                }
+                if (i.name == "Nature's Wrath"){
+                    dmg += 18;
+                    miss_chance -= 0.09;
+                    dmg_mult += 0.06;
+                }
+                if (i.name == "Ice Bear Paw Mitts") dmg += 6;
+                if (i.name == "Frozen Gemstone Amulet") dmg += 6;
+                if (i.name == "Baby Dragon Fang") dmg_mult += 0.13;
+                if (i.name == "Juvenile Dragon Talon") dmg += 33;
+                if (i.name == "Green Dragonscale Cape") dmg_mult += 0.07;
+                if (i.name == "Black Dragonscale Cape"){
+                    more_mult += 0.10;
+                    miss_chance += 0.07;
+                }
+                if (i.name == "Blue Dragonscale Cape") dmg += 7;
+                if (i.name == "Dragonheart Piercer"){
+                    dmg_mult += 0.07;
+                    dmg += 26;
+                }
+                if (i.name == "Devastating Crossbow"){
+                    miss_chance -= 10000.0;
+                    dmg += 21;
+                }
+                if (i.name == "Snake-eye Chain") dmg += 2;
+                if (i.name == "Skullstompers") dmg += 1;
+                if (i.name == "Devious Dagger"){
+                    dmg += 6;
+                    dmg_mult += 0.16;
+                };
+                if (i.name == "Ratkickers") dmg_mult += .06;
+                if (i.name == "Gold Cloak"){
+                    dmg += 1;
+                    dmg_mult += 0.01;
+                    more_mult += 0.01;
+                    miss_chance -= 0.01;
+                };
+                if (i.name == "Ring of Greed"){
+                    dmg_mult += 0.40;
+                }
+                // Arcane items
+                if (i.name.includes("Arcane")){
+                    arcane_count++;
+                    if (i.name.includes("Helmet") || i.name.includes("Vest") || i.name.includes("Gauntlets") || i.name.includes("Treads") || i.name.includes("Staff")){
+                        dmg += 7;
+                        arcane_setbonus++;
+                    }
+                    if (i.name == "Arcane Phylactery") {
+                        dmg_mult += 0.18;
+                        miss_chance += 0.10;
+                    }
+                    if (i.name == "Arcane Shield") {
+                        dmg_mult += 0.05;
+                        miss_chance -= 0.10;
+                    }
+                    if (i.name == "Arcane Iris") {
+                        dmg_mult += 0.05;
+                        miss_mult = 0.4;
+                    }
+                    if (i.name == "Arcane Focusing Gem") {
+                        more_mult += 0.13;
+                    }
+                }
+                if (i.name == "Astral Hammer"){
+                    dmg += 100;
+                    miss_chance += 0.50;
+                }
+                if (i.name == "Moon Blasting Super Smashers") set_base = 40;
+                if (i.name == "Laser Gigawatt Charger"){
+                    if (itemEquipped("Astral Hammer") || itemEquipped("Laser-powered Goblin Smasher") || itemEquipped("Green Laser Blaster") || itemEquipped("Grey Laser Blaster")){
+                        dmg_mult += 0.40;
+                    }
+                }
+                if (i.name == "Laser-powered Goblin Smasher") dmg += 22;
+                if (i.name == "Green Laser Blaster") dmg += 55;
+                if (i.name == "Grey Laser Blaster"){
+                    dmg += 50;
+                    dmg_mult += 0.10;
+                }
+
+                // volcano planet world items
+
+                if (i.name == "Volcano Badge"){
+                    dmg_mult += 0.10;
+                    miss_chance -= 0.10;
+                }
+                if (i.name == "Kor'As, Obliteration Blade"){
+                    dmg += 113;
+                    dmg_mult += 0.48;
+                }
+                if (i.name == "Heart of Molten Giant"){
+                    dmg_mult += 0.48;
+                    miss_chance += 0.11;
+                }
+                if (i.name == "Eye of Molten Giant"){
+                    dmg_mult += 0.24;
+                    miss_chance += 0.07;
+                }
+                if (i.name == "Destroyer Greaves"){
+                    more_mult += 0.20;
+                }
+                if (i.name == "Signet of Trembling"){
+                    dmg_mult += 0.18;
+                    miss_chance -= 0.18;
+                }
+                if (i.name == "Deep Black Mask"){
+                    if (itemEquipped("The Obsidian Band")){
+                        dmg_mult += 0.60;
+                    }
+                }
+                if (i.name == "Sulfur Respirator") dmg += 10;
+                    
+                if (i.name == "Horn of Doom") more_mult += 0.06;
+                if (i.name == "Lava Scorpion Exoskeleton"){
+                    if (!itemInSlot("head") && !itemInSlot("feet") && !itemInSlot("hands")){
+                        dmg_mult += 1.00;
+                    }
+                }
+                if (i.name == "Steps of Worldshaking") dmg += 20;
+
+                // pleasure world items
+                if (i.name == "Chaos Blade"){
+                    dmg += 90;
+                    dmg_mult += 0.90;
+                }
+                if (i.name == "Overtuned Grippers") dmg_mult += 0.60;
+                if (i.name == "Flesh Den Entry Token"){
+                    dmg += 6;
+                    miss_chance -= 0.09;
+                }
+                if (i.name == "Dual-purpose Cane"){
+                    dmg += 10;
+                    miss_chance -= 0.10;
+                }
+                if (i.name == "Off-world Beast Fur Shawl") dmg += 40;
+                if (i.name == "Hyper Cutter"){
+                    dmg += 21;
+                    miss_chance += 0.10;
+                }
+                if (i.name == "Badass Cloak") dmg_mult += 0.30;
+                if (i.name == "Ambush Sensor") more_mult += 0.10;
+                if (i.name == "Gar'Ahan, Fleshstripper"){
+                    dmg += 300;
+                    miss_chance += 1.50;
+                }
+                if (i.name == "Tabis of Inexorable Torment"){
+                    dmg += 18;
+                    miss_chance -= 0.18;
+                }
+                if (i.name == "Cage of Inexorable Torment") dmg_mult += 0.40;
+                if (i.name == "Perfect Diamond Amulet") miss_chance -= 0.30;
+                if (i.name == "Inexplicable Ribs"){
+                    dmg_mult += 0.60;
+                    miss_chance += 0.16;
+                }
+                if (i.name == "Slicing Gloves") baseDmg = 100;
+                if (i.name == "Strangler Mitts"){
+                    if (!itemInSlot("weapon")){
+                        miss_chance -= 10000.0;
+                    }
+                }
+                if (i.name == "Collapse Clasp") dmg_mult += 0.30;
+                // Degenerate Star items
+                if (i.name.includes("Degenerate Star")){
+                    star_count++;
+                }
+                if (i.name == "Magnetar Pendant") dmg += 23;
+                if (i.name == "Impossibly Dense Chain"){
+                    dmg_mult += 0.56;
+                    miss_chance += 0.14;
+                }
+                if (i.name == "Shard of Light"){
+                    dmg += 50;
+                    if (itemEquipped("Shard of Darkness")){
+                        dmg_mult += 0.30;
+                        miss_chance -= 0.18;
+                    }
+                }
+                if (i.name == "Shard of Darkness"){
+                    dmg_mult += 0.30;
+                    miss_chance -= 0.18;
+                }
+                if (i.name == "Singularity of Purpose"){
+                    dmg += 1000;
+                    dmg -= 100 * equipped.length;
+                }
+                
+            }
+
+            dmg += (star_count * star_count * 30);
+            dmg_mult += (arcane_count * arcane_setbonus * 0.03);
+            if (set_base !== -1) dmg = set_base;
+
+            precomputedDamage = {
+                baseDmg: dmg,
+                dmgMult: dmg_mult,
+                moreMult: more_mult,
+                missChance: miss_chance,
+                missMult: miss_mult,
+                arcaneCount: arcane_count,
+                arcaneSetBonus: arcane_setbonus,
+                setBase: set_base
+            };
+            // console.log(precomputedDamage);
+        }
+
+        function worldName(i){
+            worlds = [
+            "Default World", 
+            "Spirit World", 
+            "Desert World", 
+            "Hell World", 
+            "Ice World", 
+            "Dragon Swamp World", 
+            "Gold World", 
+            "Default World (Part 2)", 
+            "Magic World",
+            "Magic World (Part 2)",
+            "Space World",
+            "Volcano Planet World",
+            "Pleasure World",
+            "A.M. World",
+            "Stellar Remnant World",
+            "Myth World",
+            "Default World (Part 3)",
+            "Default World (Part 4)",
+            "Desert World (Part 2)",
+            ];
+            return worlds[i];
+        }
+
+        function itemInSlot(slot){
+            for (let item of equipped){
+                if (item.equippable == slot){
+                    return item;
+                }
+            }
+            return null;
+        }
+
+        function saveGame() {
+            const saveData = {
+                items: inventory.serialize(),
+                equipped: equipped,
+                level: level,
+                xp: experience,
+                volume: volume,
+            };
+            localStorage.setItem("clickerGameSave", JSON.stringify(saveData));
+        }
+
+        function loadGame() {
+            const savedDataString = localStorage.getItem("clickerGameSave") || localStorage.getItem("gameSave");
+            if (savedDataString) {
+                const savedData = JSON.parse(savedDataString);
+                localStorage.setItem("clickerGameSave", savedDataString);
+                equipped = savedData.equipped || [];
+                autoMode = false;
+
+                inventory = new Inventory();
+                inventory.load(savedData.items || []);
+
+                level = savedData.level || 0;
+                experience = 0;
+                gainExperience(savedData.xp || 0);
+
+                volume = savedData.volume || 50;
+                document.getElementById("volumeSlider").value = volume;
+            } else {
+                inventory = new Inventory();
+            }
+            updateInventory();
+            updateEquipped();
+            updateWorldSelect();
+            computeLoadoutStats();
+        }
+        
+
+        let worldTimer = 0;
+        setInterval(() => {
+            worldTimer++;
+            let alert_message = `You have been in ${worldName(worldSelect.value)} for ${worldTimer} seconds (${Math.floor((kills/worldTimer)*60*60)} kills/h)`;
+            document.getElementById("worldTimer").textContent = alert_message;
+        }, 1000);
+        document.getElementById("worldTimer").textContent = "You have been in Default World for 1 seconds";
+
+        const musicPlayer = new Audio();
+        musicPlayer.loop = true;
+        function playMusic(){
+            musicPlayer.pause();
+            if (worldMusic[worldSelect.value]) {
+                musicPlayer.src = worldMusic[worldSelect.value];
+                musicPlayer.currentTime = 0;
+                musicPlayer.play();
+            }
+            
+        }
+
+        worldSelect.addEventListener("change", () => {
+            worldTimer = 0;
+            kills = 0;
+            activeEntity = randomEnemy(Number(worldSelect.value));
+            playMusic();
+        });
+
+        musicPlayer.onerror = (e) => {
+            console.error("Audio playback error", e);
+        };
+
+        document.getElementById("volumeSlider").addEventListener("change", () => {
+            volume = document.getElementById("volumeSlider").value;
+            musicPlayer.volume = volume / 100.0;
+        })
+
+        window.onload = loadGame;
+        window.onbeforeunload = saveGame;
+
+        loadGame();
+        updateInventory();
+        updateEquipped();
+        updateWorldSelect();
+        playMusic();
+        musicPlayer.volume = volume / 100.0;
+    </script>
+
+    <script>
+        let textTimer;
+        function hit(){
+            let hit = attackDamage();
+            let loot;
+            activeEntity.damage(hit);
+            attackCount++;
+            enemyAttacks++;
+            if (activeEntity.destroyed){
+                if (loot = activeEntity.getLoot(dropCount)){
+                    document.getElementById("lootDisplay").innerHTML = "Got: ";
+                    for (let item of loot){
+                        inventory.addItem(item);
+                        document.getElementById("lootDisplay").innerHTML +=  item.quantity + "x" + `<span style="color: ${item.color}"> ${item.name} </span>`;
+                    }
+                    if (textTimer) clearTimeout(textTimer);
+                    textTimer = setTimeout(() => {
+                        document.getElementById("lootDisplay").innerHTML = "";
+                        textTimer = null;
+                    }, 6000);
+                }
+                gainExperience(activeEntity.xp);
+                activeEntity = randomEnemy(Number(worldSelect.value));
+                enemyAttacks = 0;
+                kills++;
+                updateInventory();
+            } 
+
+            updateEntityDisplay(hit);
+        }
+        // attack button logic
+        document.getElementById("attackButton").addEventListener("click", () => {
+            hit();
+            if (!music){
+                music = true;
+                playMusic();
+            }
+        });
+    </script>
+
+    <script>
+        document.getElementById("equipButton").addEventListener("click", () => {
+            this.equip(document.getElementById("equipSelect").value);
+        });
+        document.getElementById("unequipButton").addEventListener("click", () => {
+            this.unequip(document.getElementById("unequipSelect").value);
+        });
+        document.getElementById("saveButton").addEventListener("click", () => {
+            saveGame();
+        });
+        document.getElementById("resetButton").addEventListener("click", () => {
+            if (confirm("Are you sure you want to reset your sava data? This cannot be undone.")) {
+                inventory = new Inventory();
+                equipped = [];
+                autoMode = false;
+                experience = 0;
+                level = 0;
+                updateWorldSelect();
+                activeEntity = randomEnemy(Number(worldSelect.value));
+                updateEntityDisplay(-1);
+                saveGame();
+                loadGame();
+            }
+        });
+        // document.getElementById("saveButton").addEventListener("click", () => {
+        //     saveGame();
+        // });
+    </script>
+
+    <script>
+        function attackDamage(){
+            let { baseDmg, dmgMult, moreMult, missChance, missMult } = precomputedDamage;
+            let dmg = baseDmg;
+            let armorBreak = 0;
+            let armorBreakMod = 1.00;
+            // item procs
+            for (let i of equipped){
+                if (i.name == "Stormstrike"){
+                    dmgMult += Math.random() > 0.5 ? 1.00 : -1.00;
+                }
+                if (i.name == "Red Dragonscale Cape" && attackCount % 7 == 0){
+                    dmgMult += 1.00;
+                }
+                if (i.name == "Dragon Mucus Tincture" && attackCount % 7 == 0){
+                    dmgMult += 0.10;
+                }
+                if (i.name == "Goblin Ledger"){
+                    dmgMult += 0.01 * (attackCount % 12);
+                }
+                if (i.name == "Nebula Gemstone" && attackCount % 2 == 0){
+                    dmgMult += 0.50;
+                }
+                if (i.name == "Laser-powered Goblin Smasher" && attackCount % 3 == 0){
+                    moreMult += 1.00;
+                }
+                if (i.name == "Arcane Circuitboard" && attackCount % 3 == 0){
+                    dmgMult += 0.08;
+                }
+                if (i.name == "Ring of Greed" && attackCount % 4 == 0){
+                    missChance += 1000.0;
+                }
+                if (i.name == "Headcracker Mitts"){
+                    dmg += 1 + Math.floor(Math.random() * 12);
+                }
+                if (i.name == "Mysterious Pleasure Juice"){
+                    dmgMult += Math.random() * 0.30;
+                }
+                if (i.name == "Ak'Olp, Incineration Wand"){
+                    dmg += 20 * (attackCount % 10);
+                    dmgMult += 0.20 * (attackCount % 10);
+                }
+                if (i.name == "Chaos Vambrace"){
+                    dmg += Math.floor(Math.random() * 31);
+                }
+                if (i.name == "Cape of Cunning"){
+                    if (enemyAttacks == 0){
+                        moreMult += 0.20;
+                    }
+                }
+                if (i.name == "Overtuned Grippers"){
+                    dmgMult -= 0.10 * (attackCount % 6);
+                }
+                if (i.name == "Ambush Sensor"){
+                    if (enemyAttacks == 0){
+                        missChance -= 10000.0;
+                    }
+                }
+                if (i.name == "Reworked Goblin Tech"){
+                    if (enemyAttacks == 0){
+                        dmg += Math.floor(Math.random() * 51);
+                    }
+                }
+                if (i.name == "Electric Eye"){
+                    dmg += 1 * (attackCount % 33);
+                }
+                if (i.name == "Cage of Inexorable Torment"){
+                    if (enemyAttacks == 0){
+                        missChance += 1000.0;
+                    }
+                }
+                if (i.name == "Ring of the Unbroken Stare"){
+                    if (enemyAttacks > 7){
+                        dmgMult += 0.40;
+                    }
+                }
+                if (i.name == "Symbol of Everlasting Humanity"){
+                    if (enemyAttacks > 9){
+                        moreMult += 0.10;
+                        if (enemyAttacks > 19){
+                            moreMult += 0.10;
+                        }
+                    }
+                }
+                if (i.name == "Butcher's Apron"){
+                    if (attackCount % 2 == 0){
+                        dmgMult += 0.40;
+                        if (attackCount % 4 == 0){
+                            dmg += 10;
+                        }
+                    }
+                }
+                if (i.name == "Damaged Exosuit"){
+                    if (enemyAttacks > 9){
+                        missChance -= 0.50;
+                        if (enemyAttacks > 19){
+                            missChance -= 0.50;
+                        }
+                    }
+                }
+                if (i.name == "Repurposed Digital Gauge"){
+                    let trophies = inventory.items.find(i => i.name == "Dreadbeast Trophy");
+                    if (trophies){
+                        dmg_mult += .001 * trophies.quantity;
+                    }
+                }
+                if (i.name == "Degenerate Star Tome"){
+                    if (attackCount % 5 == 0){
+                        moreMult += 1.00;
+                    }
+                }
+                if (i.name == "Degenerate Star Boots"){
+                    if (attackCount % 5 == 1){
+                        moreMult += 1.00;
+                    }
+                }
+                if (i.name == "Degenerate Star Belt"){
+                    if (attackCount % 5 == 2){
+                        moreMult += 1.00;
+                    }
+                }
+                if (i.name == "Degenerate Star Hood"){
+                    if (attackCount % 5 == 3){
+                        moreMult += 1.00;
+                    }
+                }
+                if (i.name == "Degenerate Star Coat"){
+                    if (attackCount % 5 == 4){
+                        moreMult += 1.00;
+                    }
+                }
+                if (i.name == "Cape of the Neutron Star"){
+                    if (attackCount % 45 == 0){
+                        dmgMult += 16.00;
+                    }
+                }
+                if (i.name == "Cape of the White Dwarf"){
+                    if (attackCount % 9 == 0){
+                        dmgMult += 3.00;
+                    }
+                }
+                if (i.name == "Anti-matter Aegis"){
+                    dmg += 10 * (attackCount % 4)
+                }
+                if (i.name == "Ion Chimes"){
+                    if (attackCount % 2 == 0){
+                        missChance -= 0.50;
+                        if (attackCount % 4 == 0){
+                            dmgMult += 0.50;
+                        }
+                    }
+                }
+                if (i.name == "Stolen Hope"){
+                    dmgMult += 0.01 * (attackCount % 50)
+                }
+                if (i.name == "Sulfur Respirator"){
+                    dmgMult += 0.06 * (attackCount % 6);
+                }
+                if (i.name == "Amulet of Vitriolic Withering"){
+                    missChance -= 0.10 * (attackCount % 10);
+                }
+                if (i.name == "Aura Scanner"){
+                    armorBreak += 20;
+                }
+                if (i.name == "Blazer of the Screaming Eagle"){
+                    armorBreak += 20;
+                    armorBreakMod += 1.00;
+                }
+                if (i.name == "Gauntlets of Transcendent Faith"){
+                    if (Math.random() > 0.75){
+                        armorBreak += 0.5 * activeEntity.armor;
+                    }
+                }
+                if (i.name == "Symbol of Trinity"){
+                    dmgMult += 0.33 * (attackCount % 3);
+                }
+            }
+
+            let miss = Math.random() < missChance;
+            if (miss) dmg *= missMult;
+
+            return Math.floor(Math.max(0, dmg) * Math.max(0.0, dmgMult) * Math.max(0.0, moreMult) + Math.min(Math.max(0.0, armorBreak) * Math.max(0.0, armorBreakMod), activeEntity.armor));
+        }
+
+        
+    </script>
+
+    <script>
+        function randomEnemy(world){
+            let enemies = [];
+            let worldColor;
+            switch(world){
+                case 0:
+                    enemies.push(spawnEnemy("Common Thief"));
+                    enemies.push(spawnEnemy("Dirty Goblin"));
+                    enemies.push(spawnEnemy("Mysterious Villain"));
+                    worldColor = "#cdffccff"
+                    break;
+                case 1:
+                    enemies.push(spawnEnemy("Spectral Fiend"));
+                    enemies.push(spawnEnemy("Spirit Eater"));
+                    enemies.push(spawnEnemy("Ghastly Horror"));
+                    worldColor = "#ebcaffff"
+                    break;
+                case 2:
+                    enemies.push(spawnEnemy("Desert Wraith"));
+                    enemies.push(spawnEnemy("Bile Spitter"));
+                    enemies.push(spawnEnemy("Desert Zealot"));
+                    enemies.push(spawnEnemy("Sandstone Golem"));
+                    worldColor = "#ffe4aaff"
+                    break;
+                case 3:
+                    enemies.push(spawnEnemy("Blazing Bovine"));
+                    enemies.push(spawnEnemy("Infernal Insect"));
+                    enemies.push(spawnEnemy("Sinful Succubus"));
+                    enemies.push(spawnEnemy("Fiery Fangtooth"));
+                    enemies.push(spawnEnemy("Dreadful Dino"));
+                    enemies.push(spawnEnemy("Vile Vulture"));
+                    worldColor = "#ffceceff"
+                    break;
+                case 4:
+                    enemies.push(spawnEnemy("Iceologer"));
+                    enemies.push(spawnEnemy("Spooky Revenant"));
+                    enemies.push(spawnEnemy("Ice Bear"));
+                    enemies.push(spawnEnemy("Animated Weapon"));
+                    enemies.push(spawnEnemy("Foul Necromancer"));
+                    worldColor = "#bbf1ffff"
+                    break;
+                case 5:
+                    enemies.push(spawnEnemy("Juvenile Green Drake"));
+                    enemies.push(spawnEnemy("Juvenile Red Drake"));
+                    enemies.push(spawnEnemy("Juvenile Blue Drake"));
+                    enemies.push(spawnEnemy("Juvenile Black Drake"));
+                    enemies.push(spawnEnemy("Adolescent Green Drake"));
+                    enemies.push(spawnEnemy("Adolescent Red Drake"));
+                    enemies.push(spawnEnemy("Adolescent Blue Drake"));
+                    enemies.push(spawnEnemy("Adolescent Black Drake"));
+                    enemies.push(spawnEnemy("Green Drake"));
+                    enemies.push(spawnEnemy("Red Drake"));
+                    enemies.push(spawnEnemy("Blue Drake"));
+                    enemies.push(spawnEnemy("Black Drake"));
+                    enemies.push(spawnEnemy("Giant Anaconda"));
+                    enemies.push(spawnEnemy("Vainglorious Dragon Hunter"));
+                    worldColor = "#93ffd2ff"
+                    break;
+                case 6:
+                    enemies.push(spawnEnemy("Boss Goblin"));
+                    enemies.push(spawnEnemy("Goblin Loanmaster"));
+                    enemies.push(spawnEnemy("Goblin Headcracker"));
+                    enemies.push(spawnEnemy("Gold Goblin Golem"));
+                    worldColor = "#eff8a0ff"
+                    break;
+                case 7:
+                    enemies.push(spawnEnemy("Uncommon Bandit"));
+                    enemies.push(spawnEnemy("Filthy Goblin"));
+                    enemies.push(spawnEnemy("Overgrown Vole"));
+                    enemies.push(spawnEnemy("Mysterious Villain"));
+                    worldColor = "#bfffbeff"
+                    break;
+                case 8:
+                    enemies.push(spawnEnemy("Keeper of Seals"));
+                    worldColor = "#dbceffff"
+                    break;
+                case 9:
+                    enemies.push(spawnEnemy("Arcane Soul Stitcher"));
+                    enemies.push(spawnEnemy("Arcane Knight"));
+                    enemies.push(spawnEnemy("Arcane Devotee"));
+                    enemies.push(spawnEnemy("Arcane Battlemage"));
+                    enemies.push(spawnEnemy("Arcane Golem"));
+                    worldColor = "#cdbaffff"
+                    break; 
+                case 10:
+                    enemies.push(spawnEnemy("Green Laser Alien"));
+                    enemies.push(spawnEnemy("Grey Laser Alien"));
+                    enemies.push(spawnEnemy("Ugly Bug Alien"));
+                    enemies.push(spawnEnemy("Superstellar Space Raider"));
+                    enemies.push(spawnEnemy("Living Comet"));
+                    enemies.push(spawnEnemy("Moon Rock Golem"));
+                    worldColor = "#9791a7ff"
+                    break;
+                case 11:
+                    enemies.push(spawnEnemy("Obsidian Sphere"));
+                    enemies.push(spawnEnemy("Lava Scorpion"));
+                    enemies.push(spawnEnemy("Magma Drinker"));
+                    enemies.push(spawnEnemy("Basalt Golem"));
+                    enemies.push(spawnEnemy("Fiery Dreadbeast"));
+                    enemies.push(spawnEnemy("Molten Giant"));
+                    worldColor = "#bb7a6aff"
+                    break;
+                case 12:
+                    enemies.push(spawnEnemy("Underworld Gangster"));
+                    enemies.push(spawnEnemy("Subterranean"));
+                    enemies.push(spawnEnemy("Chaos Infiltrator"));
+                    enemies.push(spawnEnemy("Alien Pimp"));
+                    enemies.push(spawnEnemy("Veiled Dreadbeast"));
+                    enemies.push(spawnEnemy("Uncompromising Hedonist"));
+                    worldColor = "#ee94c8ff"
+                    break;
+                case 13:
+                    enemies.push(spawnEnemy("Razor Spitter"));
+                    enemies.push(spawnEnemy("Warped Man"));
+                    enemies.push(spawnEnemy("Clanging Mechanotentacle"));
+                    enemies.push(spawnEnemy("Resurrected Meat-sludge"));
+                    enemies.push(spawnEnemy("Hairy Dreadbeast"));
+                    enemies.push(spawnEnemy("A.M. Plaything"));
+                    worldColor = "#b8d5e9ff"
+                    break;
+                case 14:
+                    enemies.push(spawnEnemy("Ion Breather"));
+                    enemies.push(spawnEnemy("Impact Survivor"));
+                    enemies.push(spawnEnemy("Plasma Junker"));
+                    enemies.push(spawnEnemy("Post-stellar Screamer"));
+                    enemies.push(spawnEnemy("Super Dreadbeast"));
+                    enemies.push(spawnEnemy("Student of Syzygy"));
+                    worldColor = "#bca3ccff"
+                    break;
+                case 15:
+                    enemies.push(spawnEnemy("Echo of Roc"));
+                    enemies.push(spawnEnemy("Echo of Medusa"));
+                    enemies.push(spawnEnemy("Echo of Minotaur"));
+                    enemies.push(spawnEnemy("Echo of Cerberus"));
+                    enemies.push(spawnEnemy("Echo of Basilisk"));
+                    enemies.push(spawnEnemy("Echo of Chimera"));
+                    enemies.push(spawnEnemy("Echo of Hydra"));
+                    enemies.push(spawnEnemy("Echo of Kraken"));
+                    enemies.push(spawnEnemy("Echo of Fenrir"));
+                    enemies.push(spawnEnemy("Echo of Jörmungandr"));
+                    worldColor = "#ccbea3ff"
+                    break;
+                case 16:
+                    enemies.push(spawnEnemy("Rare Vandal"));
+                    enemies.push(spawnEnemy("Nasty Goblin"));
+                    enemies.push(spawnEnemy("Werewolf"));
+                    worldColor = "rgba(163, 196, 148, 1)"
+                    break;
+                case 17:
+                    enemies.push(spawnEnemy("Epic Footpad"));
+                    enemies.push(spawnEnemy("Putrid Goblin"));
+                    enemies.push(spawnEnemy("Werebear"));
+                    worldColor = "rgba(151, 202, 127, 1)"
+                    break;
+                case 18:
+                    enemies.push(spawnEnemy("Spooky Desert Geist"));
+                    enemies.push(spawnEnemy("Acid Spitter"));
+                    enemies.push(spawnEnemy("Obssessed Desert Fanatic"));
+                    enemies.push(spawnEnemy("Overclocked Sandstone Golem"));
+                    worldColor = "#ffde96ff"
+                    break;
+                default:
+                    enemies.push(spawnEnemy("Dirty Goblin"));
+                    worldColor = "rgba(204, 200, 163, 1)";
+            }
+            if (itemEquipped("Greedy Goldgrubber Grips")){
+                let fixedSize = enemies.length;
+                for (let i = 0; i < fixedSize; i++){
+                    enemies.push(spawnEnemy("Treasure Goblin"));
+                }
+            }
+            document.body.style.backgroundColor = worldColor;
+            return enemies[Math.floor(Math.random() * enemies.length)];
+        }
+    </script>
+
+    <script>
+        activeEntity = randomEnemy(Number(worldSelect.value));
+        updateEntityDisplay(-1);
+    </script>
+
+    <script>
+        document.getElementById("autoButton").addEventListener("click", () => {
+            autoMode = !autoMode;
+            if (autoMode){
+                document.getElementById("attackButton").disabled = true;
+                autoInterval = setInterval(() => {
+                    hit();
+                }, 250);
+            } else {
+                document.getElementById("attackButton").disabled = false;
+                clearInterval(autoInterval);
+            }
+        });
+    </script>
+
+    
+    
+</body>
+</html>
