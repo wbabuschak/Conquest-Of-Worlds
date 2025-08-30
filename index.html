@@ -284,6 +284,8 @@
             
             document.getElementById("crafting-content").style.display = craftDisplay.innerHTML === "" ? "none" : "block";
             if (document.getElementById("recipe-content").style.display != "none") document.getElementById("recipe-content").style.display = recipeDisplay.innerHTML === "" ? "none" : "block";
+            if (document.getElementById("crafting-content").style.display === "none" && document.getElementById("recipe-content").innerHTML != "") document.getElementById("recipe-content").style.display = "block";
+            document.getElementById("recipeToggle").innerHTML = craftDisplay.style.display === "none" ? "Show Recipes" : "Hide Recipes";  
         }
 
         function updateEquipSelect() {
@@ -822,7 +824,9 @@
                 autoMode = false;
                 document.getElementById("attackButton").innerHTML = "Attack!";
                 clearInterval(autoInterval);
-
+                knownItems.clear();
+                knownWorlds.clear();
+                
                 experience = 0;
                 level = 0;
                 updateWorldSelect();
