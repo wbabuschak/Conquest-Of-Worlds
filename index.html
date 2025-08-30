@@ -284,7 +284,7 @@
             
             document.getElementById("crafting-content").style.display = craftDisplay.innerHTML === "" ? "none" : "block";
             if (document.getElementById("recipe-content").style.display != "none") document.getElementById("recipe-content").style.display = recipeDisplay.innerHTML === "" ? "none" : "block";
-            if (document.getElementById("crafting-content").style.display === "none" && document.getElementById("recipe-content").innerHTML != "") document.getElementById("recipe-content").style.display = "block";
+            if (document.getElementById("crafting-content").style.display === "none" && recipeDisplay.innerHTML != "") document.getElementById("recipe-content").style.display = "block";
             document.getElementById("recipeToggle").innerHTML = craftDisplay.style.display === "none" ? "Show Recipes" : "Hide Recipes";  
         }
 
@@ -832,6 +832,7 @@
                 updateWorldSelect();
                 activeEntity = randomEnemy(worldSelect.value);
                 updateEntityDisplay(-1);
+                updateRecipesDisplays();
                 saveGame();
                 loadGame();
             }
