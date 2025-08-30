@@ -178,6 +178,7 @@ const ItemStaticEffects = {
     "Dread Loop": s => { s.setBase = 16; s.missChance += 0.16; },
     "Mote of Arcane Power": s => { s.missChance -= 0.40; s.dmgMult -= 0.20; s.arcaneCount++;},
     "Nature's Wrath": s => { s.dmg += 18; s.missChance -= 0.09; s.dmgMult += 0.06; },
+    "Nature's Fury": s => { s.dmg += 19; s.missChance -= 0.09; s.dmgMult += 0.11; },
     "Ice Bear Paw Mitts": s => { s.dmg += 6; },
     "Activated Gemstone Amulet": s => { s.dmg += 10; },
     "Baby Dragon Fang": s => { s.dmgMult += 0.13; },
