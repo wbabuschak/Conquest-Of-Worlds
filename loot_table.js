@@ -21,4 +21,13 @@ class LootTable{
         }
     }
 
+    getChance(item){
+        let sum = 0;
+        for (let i = 0; i < this.weights.length; i++){
+            sum += this.weights[i];
+        }
+        let index = this.items.indexOf(item);
+        return this.weights[index] / sum;
+    }
+
 }

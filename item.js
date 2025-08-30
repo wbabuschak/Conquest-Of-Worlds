@@ -10,6 +10,9 @@ const LIGHT_PURPLE = "#c392dfff";
 const LIGHT_YELLOW = "#e7c818ff";
 const LIGHT_GREEN = "#4e9b36ff";
 const HOT_PINK = "#c432bcff";
+const CRAFTING_BROWN = "#694e1dff";
+
+const orderedSlots = ["head","back","chest","hands","waist","feet","weapon","off-hand","amulet","finger","trinket","augment"];
 
 class Item{
 
@@ -35,21 +38,125 @@ class Item{
         };
     }
 
-    static createItem(name, quantity){
+    static createItem(name, quantity = 1){
         if (!name || !quantity){
             return null;
         }
         switch (name){
+            // 0.1.0 "The Big Update" crafting materials
+            case "Spectral Essence":
+                return new Item(name,quantity,null,null,CRAFTING_BROWN);
+            case "Greater Spectral Essence":
+                return new Item(name,quantity,null,null,CRAFTING_BROWN);
+            case "Cracked Gemstone Amulet":
+                return new Item(name,quantity,null,null,CRAFTING_BROWN);
+            case "Zealot Essence":
+                return new Item(name,quantity,null,null,CRAFTING_BROWN);
+            case "Magical Essence":
+                return new Item(name,quantity,null,null,CRAFTING_BROWN);
+            case "Dragon Scale":
+                return new Item(name,quantity,null,null,CRAFTING_BROWN);
+            case "Frozen Essence":
+                return new Item(name,quantity,null,null,CRAFTING_BROWN);
+            case "Volcano Planet Essence":
+                return new Item(name,quantity,null,null,CRAFTING_BROWN);
+            case "Pleasure Essence":
+                return new Item(name,quantity,null,null,CRAFTING_BROWN);
+            case "A.M. Essence":
+                return new Item(name,quantity,null,null,CRAFTING_BROWN);
+            case "Stellar Remnant Essence":
+                return new Item(name,quantity,null,null,CRAFTING_BROWN);
+            case "Solar Debris":
+                return new Item(name,quantity,null,null,CRAFTING_BROWN);
+            case "Titan Essence":
+                return new Item(name,quantity,null,null,CRAFTING_BROWN);
+            // 0.1.0 "The Big Update" crafted items
+            case "Gilded Dagger":
+                return new Item(name,quantity,"weapon","+6 dmg",DARK_BLUE);
+            case "Spectral Cowl":
+                return new Item(name,quantity,"head","access to spirit world",PURPLE);
+            case "Skullstompers":
+                return new Item(name,quantity,"feet","+2 dmg, access to spirit world",PURPLE);
+            case "Activated Gemstone Amulet":
+                return new Item(name,quantity,"amulet","+10 dmg, access to spirit world",PURPLE);
+            case "Havoc Blade":
+                return new Item(name,quantity,"weapon","+13 dmg, 30% dmg",DARK_BLUE);
+            case "Nature's Fury":
+                return new Item(name,quantity,"weapon","+19 dmg, 11% dmg, +9% chance to hit", RED);
+            case "Green Dragonscale Cape":
+                return new Item(name,quantity,"back","10% dmg",RED);
+            case "Black Dragonscale Cape":
+                return new Item(name,quantity,"back","1.1x dmg, +7% chance to hit",RED);
+            case "Blue Dragonscale Cape":
+                return new Item(name,quantity,"back","+7 dmg",RED);
+            case "Red Dragonscale Cape":
+                return new Item(name,quantity,"back","100% dmg every 7 attacks",RED);
+            case "Degenerate Star Tome":
+                return new Item(name,quantity,"weapon","+25 dmg for each degenerate star item, deal 2.00x dmg on the first of every 5 attacks",RED);
+            case "Degenerate Star Boots":
+                return new Item(name,quantity,"feet","+25 dmg for each degenerate star item, deal 2.00x dmg on the second of every 5 attacks",RED);
+            case "Degenerate Star Belt":
+                return new Item(name,quantity,"waist","+25 dmg for each degenerate star item, deal 2.00x dmg on the third of every 5 attacks",RED);
+            case "Degenerate Star Hood":
+                return new Item(name,quantity,"head","+25 dmg for each degenerate star item, deal 2.00x dmg on the fourth of every 5 attacks", RED);
+            case "Degenerate Star Coat":
+                return new Item(name,quantity,"chest","+25 dmg for each degenerate star item, deal 2.00x dmg on the fifth of every 5 attacks",RED);
+            case "Symbol of the Desert":
+                return new Item(name,quantity,null,null,LIGHT_BLUE);
+            // 0.1.0 "The Big Update" new and updated drops
+            case "Gravegrips":
+                return new Item(name,quantity,"hands","4% dmg",GREEN);
+            case "Killer Gloves":
+                return new Item(name,quantity,"hands","+2 dmg",GREEN);
+            case "Broken Havoc Blade":
+                return new Item(name,quantity,"weapon","+10 dmg",GREEN);
+            case "Shattered Havoc Hilt":
+                return new Item(name,quantity,"weapon","+3 dmg, 30% dmg",GREEN);
+            case "Nature's Wrath":
+                return new Item(name,quantity,"weapon","+18 dmg, +8% chance to hit", DARK_BLUE);
+            case "Drained Spirit":
+                return new Item(name,quantity,null,null,LIGHT_BLUE);
+            case "Green Cape":
+                return new Item(name,quantity,"back","7% dmg",DARK_BLUE);
+            case "Black Cape":
+                return new Item(name,quantity,"back","7% chance to hit",DARK_BLUE);
+            case "Blue Cape":
+                return new Item(name,quantity,"back","+7 dmg, 7% chance to miss",DARK_BLUE);
+            case "Red Cape":
+                return new Item(name,quantity,"back","70% dmg every 10 attacks",DARK_BLUE);
+            case "Arcane Helmet":
+                return new Item(name,quantity,"head","+7 dmg, 3% dmg",DARK_BLUE);
+            case "Arcane Vest":
+                return new Item(name,quantity,"chest","+7 dmg, 3% dmg",DARK_BLUE);
+            case "Arcane Gauntlets":
+                return new Item(name,quantity,"hands","+7 dmg, 3% dmg",DARK_BLUE);
+            case "Arcane Treads":
+                return new Item(name,quantity,"feet","+7 dmg, 3% dmg",DARK_BLUE);
+            case "Arcane Staff":
+                return new Item(name,quantity,"weapon","+7 dmg, 3% dmg",DARK_BLUE);
+            case "Essence-Starved Tome":
+                return new Item(name,quantity,"weapon","deal 2.00x dmg on the first of every 5 attacks",RED);
+            case "Essence-Starved Boots":
+                return new Item(name,quantity,"feet","deal 2.00x dmg on the second of every 5 attacks",RED);
+            case "Essence-Starved Belt":
+                return new Item(name,quantity,"waist","deal 2.00x dmg on the third of every 5 attacks",RED);
+            case "Essence-Starved Hood":
+                return new Item(name,quantity,"head","deal 2.00x dmg on the fourth of every 5 attacks", RED);
+            case "Essence-Starved Coat":
+                return new Item(name,quantity,"chest","deal 2.00x dmg on the fifth of every 5 attacks",RED);
+            case "Flesh Den Entry Token":
+                return new Item(name,quantity,"trinket","+16 dmg, +9% chance to hit",DARK_BLUE);
+            case "Titanic Bulwark":
+                return new Item(name,quantity,"off-hand","+200 armor break",DARK_BLUE);
+            case "Titanic Smasher":
+                return new Item(name,quantity,"weapon","400% dmg",RED);
+            // alpha items 
             case "Gold Coin":
                 return new Item(name,quantity,null,null,GOLD);
             case "Platinum Coin":
-                return new Item(name,quantity,null,null,GOLD);
+                return new Item(name,quantity,null,null,GRAY);
             case "Universal Credit":
-                return new Item(name,quantity,null,null,GOLD);
-            case "Perpetual Dynamo":
-                return new Item(name,quantity,null,null,LIGHT_YELLOW);
-            case "Element Collector":
-                return new Item(name,quantity,null,null,LIGHT_YELLOW);
+                return new Item(name,quantity,null,null,GRAY);
             case "Greater Myth Essence":
                 return new Item(name,quantity,null,null,LIGHT_GREEN);
             case "Token of Faith":
@@ -58,30 +165,20 @@ class Item{
                 return new Item(name,quantity,null,null,LIGHT_BLUE);
             case "Venomous Gland":
                 return new Item(name,quantity,null,null,LIGHT_BLUE);
-            case "Drained Essence":
-                return new Item(name,quantity,null,null,LIGHT_BLUE);
             case "Ring of Slaying":
                 return new Item(name,quantity,"finger","+1 dmg",GREEN);
             case "Epic Sword":
                 return new Item(name,quantity,"weapon","+7 dmg",RED);
             case "Common Dagger":
                 return new Item(name,quantity,"weapon","+3 dmg",GREEN);
-            case "Spectral Cowl":
-                return new Item(name,quantity,"head","access to spirit world",PURPLE);
             case "Dirty Shoes":
                 return new Item(name,quantity,"feet","does nothing",GRAY);
-            case "Fearsome Kris":
-                return new Item(name,quantity,"weapon","+8 dmg",RED);
             case "Mummy Wraps":
                 return new Item(name,quantity,"chest","10% dmg",GREEN);
-            case "Havoc Blade":
-                return new Item(name,quantity,"weapon","+3 dmg, 30% dmg",GREEN);
             case "Haunting Guise":
                 return new Item(name,quantity,"head","50% dmg if no weapon",DARK_BLUE);
             case "Ring of Venom":
                 return new Item(name,quantity,"finger","10% dmg",RED);
-            case "Stormstrike":
-                return new Item(name,quantity,"hands","100% dmg or -100% dmg",DARK_BLUE);
             case "Gauntlets of Sheer Force":
                 return new Item(name,quantity,"hands","base damage is always 10",DARK_BLUE);
             case "Tooth Necklace":
@@ -102,10 +199,6 @@ class Item{
                 return new Item(name,quantity,"weapon","66% dmg",RED);
             case "Stone of James":
                 return new Item(name,quantity,"finger","1.1x dmg",RED);
-            case "Killer Gloves":
-                return new Item(name,quantity,"hands","3% dmg",GREEN);
-            case "Blasting Wand":
-                return new Item(name,quantity,"weapon","+10 dmg",GREEN);
             case "Memento of the Vulture":
                 return new Item(name,quantity,null,null,DARK_RED);
             case "Memento of the Dino":
@@ -126,26 +219,12 @@ class Item{
                 return new Item(name,quantity,"finger","base damage is always 16, 16% chance to miss",RED);
             case "Mote of Arcane Power":
                 return new Item(name,quantity,"finger","+40% chance to hit, -20% dmg",RED);
-            case "Nature's Wrath":
-                return new Item(name,quantity,"weapon","+18 dmg, 6% dmg, +9% chance to hit", RED);
             case "Ice Bear Paw Mitts":
                 return new Item(name,quantity,"hands","+5 dmg",GREEN);
-            case "Frozen Gemstone Amulet":
-                return new Item(name,quantity,"amulet","+8 dmg, access to spirit world",PURPLE);
-            case "Skullstompers":
-                return new Item(name,quantity,"feet","+1 dmg, access to spirit world",PURPLE);
             case "Baby Dragon Fang":
                 return new Item(name,quantity,"amulet","13% dmg",GREEN);
             case "Juvenile Dragon Talon":
                 return new Item(name,quantity,"weapon","+33 dmg",GREEN);
-            case "Green Dragonscale Cape":
-                return new Item(name,quantity,"back","7% dmg",RED);
-            case "Black Dragonscale Cape":
-                return new Item(name,quantity,"back","1.1x dmg, 7% chance to miss",RED);
-            case "Blue Dragonscale Cape":
-                return new Item(name,quantity,"back","+7 dmg",RED);
-            case "Red Dragonscale Cape":
-                return new Item(name,quantity,"back","100% dmg every 7 attacks",RED);
             case "Dragon Mucus Tincture":
                 return new Item(name,quantity,"off-hand","10% dmg every 7 attacks",GREEN);
             case "Dragonheart Piercer":
@@ -160,8 +239,6 @@ class Item{
                 return new Item(name,quantity,"finger","40% dmg, miss every 4 attacks",GREEN);
             case "Goblin Ledger":
                 return new Item(name,quantity,"off-hand","1% damage every attack, resets on 12",RED);
-            case "Devious Dagger":
-                return new Item(name,quantity,"weapon","+6 dmg, 16% dmg",GREEN);
             case "Ratkickers":
                 return new Item(name,quantity,"feet","6% dmg",GREEN);
             case "Greedy Goldgrubber Grips":
@@ -241,9 +318,6 @@ class Item{
                 return new Item(name,quantity,"off-hand","1.06x dmg",DARK_BLUE);
             case "Lava Scorpion Exoskeleton":
                 return new Item(name,quantity,"chest","100% dmg if no head, hands, or feet item equipped",RED);
-            // case correction for bugged item
-            case "Amulet of Vitrioltic Withering":
-                return new Item("Amulet of Vitriolic Withering",quantity,"amulet","+10% chance to hit every attack, resets on 10",DARK_BLUE);
             case "Amulet of Vitriolic Withering":
                 return new Item(name,quantity,"amulet","+10% chance to hit every attack, resets on 10",DARK_BLUE);
             case "Steps of Worldshaking":
@@ -251,9 +325,6 @@ class Item{
             // pleasure world items
             case "Mysterious Pleasure Juice":
                 return new Item(name,quantity,"trinket","0-30% dmg",GREEN);
-            // case correction for bugged item
-            case "Ak'lop, Incineration Wand":
-                return new Item("Ak'Olp, Incineration Wand",quantity,"weapon","+20 dmg & 20% dmg every attack, resets on 10",RED);
             case "Ak'Olp, Incineration Wand":
                 return new Item(name,quantity,"weapon","+20 dmg & 20% dmg every attack, resets on 10",RED);
             case "Chaos Vambrace":
@@ -264,8 +335,6 @@ class Item{
                 return new Item(name,quantity,"back","1.2x dmg on first attack",DARK_BLUE);
             case "Overtuned Grippers":
                 return new Item(name,quantity,"hands","60% dmg, -10% every attack, resets on 6",RED);
-            case "Flesh Den Entry Token":
-                return new Item(name,quantity,"trinket","+6 dmg, +9% chance to hit",DARK_BLUE);
             case "Dual-purpose Cane":
                 return new Item(name,quantity,"off-hand","+10 dmg, +10% chance to hit",RED);
             case "Off-world Beast Fur Shawl":
@@ -308,35 +377,26 @@ class Item{
             // stellar remnant world items
             case "Collapse Clasp":
                 return new Item(name,quantity,"waist","30% dmg",GREEN);
-            case "Degenerate Star Tome":
-                return new Item(name,quantity,"weapon","+30 dmg for each degenerate star item, deal 2.00x dmg on the first of every 5 attacks",RED);
+            
             case "Cape of the Neutron Star":
                 return new Item(name,quantity,"back","1600% dmg every 45 attacks",DARK_BLUE);
             case "Cape of the White Dwarf":
                 return new Item(name,quantity,"back","300% dmg every 9 attacks",GREEN);
             case "Magnetar Pendant":
                 return new Item(name,quantity,"amulet","+23 dmg",DARK_BLUE);
-            case "Degenerate Star Boots":
-                return new Item(name,quantity,"feet","+30 dmg for each degenerate star item, deal 2.00x dmg on the second of every 5 attacks",RED);
             case "Impossibly Dense Chain":
                 return new Item(name,quantity,"amulet","56% dmg, 14% chance to miss",DARK_BLUE);
-            case "Degenerate Star Belt":
-                return new Item(name,quantity,"waist","+30 dmg for each degenerate star item, deal 2.00x dmg on the third of every 5 attacks",RED);
             case "Anti-matter Aegis":
                 return new Item(name,quantity,"off-hand","+10 dmg every attack, resets on 4",DARK_BLUE);
-            case "Degenerate Star Hood":
-                return new Item(name,quantity,"head","+30 dmg for each degenerate star item, deal 2.00x dmg on the fourth of every 5 attacks", RED);
             case "Ion Chimes":
                 return new Item(name,quantity,"off-hand","+50% chance to hit every 2 attacks, 50% dmg every 4 attacks",DARK_BLUE);
-            case "Degenerate Star Coat":
-                return new Item(name,quantity,"chest","+30 dmg for each degenerate star item, deal 2.00x dmg on the fifth of every 5 attacks",RED);
             case "Stolen Hope":
                 return new Item(name,quantity,"trinket","1% dmg every attack, resets on 50 attacks",RED);
             // myth world items
             case "Aura Scanner":
                 return new Item(name,quantity,"off-hand","+20 armor break",GREEN);
             case "Gauntlets of Transcendent Faith":
-                return new Item(name,quantity,"hands","your attacks have a 50% chance to break 50% of armor",DARK_BLUE);
+                return new Item(name,quantity,"hands","25% chance for +100 armor break",DARK_BLUE);
             case "Shard of Light":
                 return new Item(name,quantity,"finger","+50 dmg, doubles effect of Shard of Darkness",DARK_BLUE);
             case "Shard of Darkness":

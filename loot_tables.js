@@ -1,964 +1,929 @@
+function genLootTable(table){
+        const items = table.map(item => Item.createItem(item.name, item.quantity));
+        const weights = table.map(item => item.weight);
+        return new LootTable(items, weights);
+    }
+
 // DEFAULT WORLD
 
-const commonThiefLootTable = new LootTable([
-    Item.createItem("Epic Sword", 1),
-    Item.createItem("Deadly Poison", 1),
-    Item.createItem("Gold Coin", 3),
-    Item.createItem("Gold Coin", 2),
-    Item.createItem("Gold Coin", 1),
-    Item.createItem("Lame Rocks", 4),
-    Item.createItem("Lame Rocks", 2),
-    Item.createItem("Lame Rocks", 1),
-    Item.createItem("Common Dagger", 1),
-    Item.createItem("Dirty Shoes", 1)
-    ],[1,2,4,6,8,10,14,16,20,4]
-);
+const commonThiefLootTable = genLootTable([
+    { name: "Deadly Poison", quantity: 1, weight: 2 },
+    { name: "Gold Coin", quantity: 3, weight: 4 },
+    { name: "Gold Coin", quantity: 2, weight: 6 },
+    { name: "Gold Coin", quantity: 1, weight: 8 },
+    { name: "Cloth Scrap", quantity: 1, weight: 10 },
+    { name: "Lame Rocks", quantity: 2, weight: 14 },
+    { name: "Lame Rocks", quantity: 1, weight: 16 },
+    { name: "Common Dagger", quantity: 1, weight: 20 },
+    { name: "Dirty Shoes", quantity: 1, weight: 4 }
+]);
 
-const dirtyGoblinLootTable = new LootTable([
-    Item.createItem("Rotten Food", 1),
-    Item.createItem("Gold Coin", 4),
-    Item.createItem("Gold Coin", 2),
-    Item.createItem("Lame Rocks", 4),
-    Item.createItem("Lame Rocks", 2),
-    Item.createItem("Lame Rocks", 1),
-    Item.createItem("Common Dagger", 1),
-    Item.createItem("Dirty Shoes", 1)
-    ],[2,6,8,10,14,16,4,5]
-);
+const dirtyGoblinLootTable = genLootTable([
+    { name: "Rotten Food", quantity: 1, weight: 2 },
+    { name: "Gold Coin", quantity: 4, weight: 6 },
+    { name: "Gold Coin", quantity: 2, weight: 8 },
+    { name: "Cloth Scrap", quantity: 1, weight: 10 },
+    { name: "Lame Rocks", quantity: 2, weight: 14 },
+    { name: "Lame Rocks", quantity: 1, weight: 16 },
+    { name: "Common Dagger", quantity: 1, weight: 4 },
+    { name: "Dirty Shoes", quantity: 1, weight: 5 }
+]);
 
-const mysteriousVillainLootTable = new LootTable([
-    Item.createItem("Gold Coin", 8),
-    Item.createItem("Gold Coin", 6),
-    Item.createItem("Gold Coin", 4),
-    Item.createItem("Gold Coin", 3),
-    Item.createItem("Dirty Shoes", 1),
-    Item.createItem("Ring of Slaying", 1),
-    Item.createItem("Spectral Cowl", 1)
-    ],[5,5,5,5,4,2,1]
-);
+const mysteriousVillainLootTable = genLootTable([
+    { name: "Gold Coin", quantity: 8, weight: 5 },
+    { name: "Gold Coin", quantity: 6, weight: 5 },
+    { name: "Gold Coin", quantity: 4, weight: 5 },
+    { name: "Gold Coin", quantity: 3, weight: 5 },
+    { name: "Dirty Shoes", quantity: 1, weight: 4 },
+    { name: "Ring of Slaying", quantity: 1, weight: 2 },
+    { name: "Spectral Essence", quantity: 1, weight: 1 }
+]);
 
 // SPIRIT WORLD
 
-const spectralFiendLootTable = new LootTable([
-    Item.createItem("Ectoplasm", 6),
-    Item.createItem("Ectoplasm", 12),
-    Item.createItem("Ectoplasm", 18),
-    Item.createItem("Ring of Slaying", 1),
-    Item.createItem("Spectral Cowl", 1),
-    Item.createItem("Mummy Wraps", 1),
-    Item.createItem("Skullstompers", 1)
-    ],[66,64,62,2,2,2,1]
-);
+const spectralFiendLootTable = genLootTable([
+    { name: "Ectoplasm", quantity: 6, weight: 66 },
+    { name: "Ectoplasm", quantity: 12, weight: 64 },
+    { name: "Ectoplasm", quantity: 18, weight: 62 },
+    { name: "Ring of Slaying", quantity: 1, weight: 2 },
+    { name: "Spectral Essence", quantity: 1, weight: 2 },
+    { name: "Mummy Wraps", quantity: 1, weight: 2 },
+    { name: "Gravegrips", quantity: 1, weight: 1 }
+]);
 
-const spiritEaterLootTable = new LootTable([
-    Item.createItem("Ectoplasm", 6),
-    Item.createItem("Gold Coin", 1),
-    Item.createItem("Bone Chip", 1),
-    Item.createItem("Fearsome Kris", 1),
-    Item.createItem("Ring of Slaying", 1),
-    Item.createItem("Skullstompers", 1)
-    ],[36,14,4,2,2,1]
-);
+const spiritEaterLootTable = genLootTable([
+    { name: "Ectoplasm", quantity: 6, weight: 36 },
+    { name: "Gold Coin", quantity: 1, weight: 14 },
+    { name: "Bone Chip", quantity: 1, weight: 4 },
+    { name: "Greater Spectral Essence", quantity: 1, weight: 2 },
+    { name: "Ring of Slaying", quantity: 1, weight: 2 },
+    { name: "Gravegrips", quantity: 1, weight: 1 }
+]);
 
-const ghastlyHorrorLootTable = new LootTable([
-    Item.createItem("Ectoplasm", 6),
-    Item.createItem("Brain Slime", 2),
-    Item.createItem("Brain Slime", 1),
-    Item.createItem("Bone Chip", 1),
-    Item.createItem("Mummy Wraps", 1),
-    Item.createItem("Ring of Slaying", 1),
-    Item.createItem("Skullstompers", 1)
-    ],[62,8,6,4,2,2,1]
-);
+const ghastlyHorrorLootTable = genLootTable([
+    { name: "Ectoplasm", quantity: 6, weight: 62 },
+    { name: "Brain Slime", quantity: 2, weight: 8 },
+    { name: "Brain Slime", quantity: 1, weight: 6 },
+    { name: "Bone Chip", quantity: 1, weight: 4 },
+    { name: "Mummy Wraps", quantity: 1, weight: 2 },
+    { name: "Ring of Slaying", quantity: 1, weight: 2 },
+    { name: "Gravegrips", quantity: 1, weight: 1 }
+]);
 
 // DESERT WORLD
 
-const desertWraithLootTable = new LootTable([
-    Item.createItem("Gold Coin", 39),
-    Item.createItem("Gold Coin", 29),
-    Item.createItem("Gold Coin", 17),
-    Item.createItem("Gold Coin", 13),
-    Item.createItem("Cloth Scrap", 13),
-    Item.createItem("Cloth Scrap", 11),
-    Item.createItem("Cloth Scrap", 7),
-    Item.createItem("Cloth Scrap", 5),
-    Item.createItem("Drained Essence", 1),
-    Item.createItem("Havoc Blade", 1),
-    Item.createItem("Haunting Guise", 1),
-    ],[3,5,7,9,6,10,14,18,2,1,1]
-);
+const desertWraithLootTable = genLootTable([
+    { name: "Gold Coin", quantity: 39, weight: 3 },
+    { name: "Gold Coin", quantity: 29, weight: 5 },
+    { name: "Gold Coin", quantity: 17, weight: 7 },
+    { name: "Gold Coin", quantity: 13, weight: 9 },
+    { name: "Cloth Scrap", quantity: 13, weight: 6 },
+    { name: "Cloth Scrap", quantity: 11, weight: 10 },
+    { name: "Cloth Scrap", quantity: 7, weight: 14 },
+    { name: "Cloth Scrap", quantity: 5, weight: 18 },
+    { name: "Drained Spirit", quantity: 1, weight: 2 },
+    { name: "Shattered Havoc Hilt", quantity: 1, weight: 2 },
+    { name: "Haunting Guise", quantity: 1, weight: 1 }
+]);
 
-const bileSpitterLootTable = new LootTable([
-    Item.createItem("Bug Part", 13),
-    Item.createItem("Bug Part", 11),
-    Item.createItem("Chitinous Plate", 1),
-    Item.createItem("Chitinous Plate", 2),
-    Item.createItem("Vitriol", 2),
-    Item.createItem("Venomous Gland", 1),
-    Item.createItem("Ring of Venom", 1)
-    ],[64,32,16,8,4,2,1]
-);
+const bileSpitterLootTable = genLootTable([
+    { name: "Bug Part", quantity: 13, weight: 64 },
+    { name: "Bug Part", quantity: 11, weight: 32 },
+    { name: "Chitinous Plate", quantity: 1, weight: 16 },
+    { name: "Chitinous Plate", quantity: 2, weight: 8 },
+    { name: "Vitriol", quantity: 2, weight: 4 },
+    { name: "Venomous Gland", quantity: 1, weight: 2 },
+    { name: "Shattered Havoc Hilt", quantity: 1, weight: 2 },
+    { name: "Ring of Venom", quantity: 1, weight: 1 }
+]);
 
-const desertZealotLootTable = new LootTable([
-    Item.createItem("Cloth Scrap", 12),
-    Item.createItem("Cloth Scrap", 13),
-    Item.createItem("Cloth Scrap", 14),
-    Item.createItem("Gold Coin", 13),
-    Item.createItem("Gold Coin", 23),
-    Item.createItem("Gold Coin", 33),
-    Item.createItem("Blasting Wand", 1),
-    Item.createItem("Killer Gloves", 1),
-    Item.createItem("Water Jar", 1),
-    Item.createItem("Stormstrike", 1)
-    ],[21,19,17,13,11,7,5,4,2,1]
-);
+const desertZealotLootTable = genLootTable([
+    { name: "Cloth Scrap", quantity: 12, weight: 21 },
+    { name: "Cloth Scrap", quantity: 13, weight: 19 },
+    { name: "Cloth Scrap", quantity: 14, weight: 17 },
+    { name: "Gold Coin", quantity: 13, weight: 13 },
+    { name: "Gold Coin", quantity: 23, weight: 11 },
+    { name: "Gold Coin", quantity: 33, weight: 7 },
+    { name: "Broken Havoc Blade", quantity: 1, weight: 5 },
+    { name: "Killer Gloves", quantity: 1, weight: 4 },
+    { name: "Water Jar", quantity: 1, weight: 2 },
+    { name: "Zealot Essence", quantity: 2, weight: 2 }
+]);
 
-const sandstoneGolemLootTable = new LootTable([
-    Item.createItem("Lame Rocks", 9),
-    Item.createItem("Cracked Gem", 1),
-    Item.createItem("Sandstone Brick", 1),
-    Item.createItem("Broken Circuitry", 5),
-    Item.createItem("Broken Circuitry", 4),
-    Item.createItem("Broken Circuitry", 3),
-    Item.createItem("Sandstone Brick", 2),
-    Item.createItem("Token of Faith", 1),
-    Item.createItem("Gauntlets of Sheer Force", 1),
-    ],[8,10,12,6,8,10,4,2,1]
-);
+const sandstoneGolemLootTable = genLootTable([
+    { name: "Lame Rocks", quantity: 9, weight: 8 },
+    { name: "Cracked Gem", quantity: 1, weight: 10 },
+    { name: "Sandstone Brick", quantity: 1, weight: 12 },
+    { name: "Broken Circuitry", quantity: 5, weight: 6 },
+    { name: "Broken Circuitry", quantity: 4, weight: 8 },
+    { name: "Broken Circuitry", quantity: 3, weight: 10 },
+    { name: "Sandstone Brick", quantity: 2, weight: 4 },
+    { name: "Token of Faith", quantity: 1, weight: 2 },
+    { name: "Gauntlets of Sheer Force", quantity: 1, weight: 1 }
+]);
 
 // HELL WORLD
 
-const blazingBovineLootTable = new LootTable([
-    Item.createItem("Weary Soul", 6),
-    Item.createItem("Repressed Memory", 6),
-    Item.createItem("Broken Dream", 6),
-    Item.createItem("Shattered Innocence", 6),
-    Item.createItem("Memento of the Bovine", 1),
-    Item.createItem("Wraps of Temptation", 1),
-    Item.createItem("Stone of James", 1)
-    ],[12,12,12,12,3,1,1]
-);
+const blazingBovineLootTable = genLootTable([
+    { name: "Weary Soul", quantity: 6, weight: 12 },
+    { name: "Repressed Memory", quantity: 6, weight: 12 },
+    { name: "Broken Dream", quantity: 6, weight: 12 },
+    { name: "Shattered Innocence", quantity: 6, weight: 12 },
+    { name: "Memento of the Bovine", quantity: 1, weight: 3 },
+    { name: "Wraps of Temptation", quantity: 1, weight: 1 },
+    { name: "Stone of James", quantity: 1, weight: 1 }
+]);
 
-const infernalInsectLootTable = new LootTable([
-    Item.createItem("Weary Soul", 6),
-    Item.createItem("Repressed Memory", 6),
-    Item.createItem("Broken Dream", 6),
-    Item.createItem("Shattered Innocence", 6),
-    Item.createItem("Memento of the Insect", 1),
-    Item.createItem("Crown of the Corpseeater", 1),
-    Item.createItem("Blade of One Thousand Hooks", 1)
-    ],[12,12,12,12,3,1,1]
-);
+const infernalInsectLootTable = genLootTable([
+    { name: "Weary Soul", quantity: 6, weight: 12 },
+    { name: "Repressed Memory", quantity: 6, weight: 12 },
+    { name: "Broken Dream", quantity: 6, weight: 12 },
+    { name: "Shattered Innocence", quantity: 6, weight: 12 },
+    { name: "Memento of the Insect", quantity: 1, weight: 3 },
+    { name: "Crown of the Corpseeater", quantity: 1, weight: 1 },
+    { name: "Blade of One Thousand Hooks", quantity: 1, weight: 1 }
+]);
 
-const sinfulSuccubusLootTable = new LootTable([
-    Item.createItem("Weary Soul", 6),
-    Item.createItem("Repressed Memory", 6),
-    Item.createItem("Broken Dream", 6),
-    Item.createItem("Shattered Innocence", 6),
-    Item.createItem("Memento of the Succubus", 1),
-    Item.createItem("Wraps of Temptation", 1),
-    Item.createItem("Promise Ring", 1)
-    ],[12,12,12,12,3,1,1]
-);
+const sinfulSuccubusLootTable = genLootTable([
+    { name: "Weary Soul", quantity: 6, weight: 12 },
+    { name: "Repressed Memory", quantity: 6, weight: 12 },
+    { name: "Broken Dream", quantity: 6, weight: 12 },
+    { name: "Shattered Innocence", quantity: 6, weight: 12 },
+    { name: "Memento of the Succubus", quantity: 1, weight: 3 },
+    { name: "Wraps of Temptation", quantity: 1, weight: 1 },
+    { name: "Promise Ring", quantity: 1, weight: 1 }
+]);
 
-const fieryFangtoothLootTable = new LootTable([
-    Item.createItem("Weary Soul", 6),
-    Item.createItem("Repressed Memory", 6),
-    Item.createItem("Broken Dream", 6),
-    Item.createItem("Shattered Innocence", 6),
-    Item.createItem("Memento of the Fangtooth", 1),
-    Item.createItem("Tooth Necklace", 1),
-    Item.createItem("Treads of Crushing Depths", 1)
-    ],[12,12,12,12,3,1,1]
-);
+const fieryFangtoothLootTable = genLootTable([
+    { name: "Weary Soul", quantity: 6, weight: 12 },
+    { name: "Repressed Memory", quantity: 6, weight: 12 },
+    { name: "Broken Dream", quantity: 6, weight: 12 },
+    { name: "Shattered Innocence", quantity: 6, weight: 12 },
+    { name: "Memento of the Fangtooth", quantity: 1, weight: 3 },
+    { name: "Tooth Necklace", quantity: 1, weight: 1 },
+    { name: "Treads of Crushing Depths", quantity: 1, weight: 1 }
+]);
 
-const dreadfulDinoLootTable = new LootTable([
-    Item.createItem("Weary Soul", 6),
-    Item.createItem("Repressed Memory", 6),
-    Item.createItem("Broken Dream", 6),
-    Item.createItem("Shattered Innocence", 6),
-    Item.createItem("Memento of the Dino", 1),
-    Item.createItem("Tooth Necklace", 1),
-    Item.createItem("Fossil Blade", 1)
-    ],[12,12,12,12,3,1,1]
-);
+const dreadfulDinoLootTable = genLootTable([
+    { name: "Weary Soul", quantity: 6, weight: 12 },
+    { name: "Repressed Memory", quantity: 6, weight: 12 },
+    { name: "Broken Dream", quantity: 6, weight: 12 },
+    { name: "Shattered Innocence", quantity: 6, weight: 12 },
+    { name: "Memento of the Dino", quantity: 1, weight: 3 },
+    { name: "Tooth Necklace", quantity: 1, weight: 1 },
+    { name: "Fossil Blade", quantity: 1, weight: 1 }
+]);
 
-const vileVultureLootTable = new LootTable([
-    Item.createItem("Weary Soul", 6),
-    Item.createItem("Repressed Memory", 6),
-    Item.createItem("Broken Dream", 6),
-    Item.createItem("Shattered Innocence", 6),
-    Item.createItem("Memento of the Vulture", 1),
-    Item.createItem("Crown of the Corpseeater", 1),
-    Item.createItem("Emesis Amulet", 1)
-    ],[12,12,12,12,3,1,1]
-);
+const vileVultureLootTable = genLootTable([
+    { name: "Weary Soul", quantity: 6, weight: 12 },
+    { name: "Repressed Memory", quantity: 6, weight: 12 },
+    { name: "Broken Dream", quantity: 6, weight: 12 },
+    { name: "Shattered Innocence", quantity: 6, weight: 12 },
+    { name: "Memento of the Vulture", quantity: 1, weight: 3 },
+    { name: "Crown of the Corpseeater", quantity: 1, weight: 1 },
+    { name: "Emesis Amulet", quantity: 1, weight: 1 }
+]);
 
 // ICE WORLD
 
-const iceologerLootTable = new LootTable([
-    Item.createItem("Fur Scrap", 7),
-    Item.createItem("Fur Scrap", 5),
-    Item.createItem("Fur Scrap", 3),
-    Item.createItem("Magical Essence", 3),
-    Item.createItem("Gold Coin", 144),
-    Item.createItem("Gold Coin", 73),
-    Item.createItem("Ice Bear Fur Shawl", 1),
-    Item.createItem("Frozen Gemstone Amulet", 1)
-    ],[6,9,12,9,9,12,1,1]
-);
+const iceologerLootTable = genLootTable([
+    { name: "Fur Scrap", quantity: 7, weight: 6 },
+    { name: "Fur Scrap", quantity: 5, weight: 9 },
+    { name: "Fur Scrap", quantity: 3, weight: 12 },
+    { name: "Magical Essence", quantity: 3, weight: 9 },
+    { name: "Gold Coin", quantity: 144, weight: 9 },
+    { name: "Gold Coin", quantity: 73, weight: 12 },
+    { name: "Ice Bear Fur Shawl", quantity: 1, weight: 1 },
+    { name: "Cracked Gemstone Amulet", quantity: 1, weight: 1 },
+    { name: "Frozen Essence", quantity: 1, weight: 1 }
+]);
 
-const spookyRevenantLootTable = new LootTable([
-    Item.createItem("Weary Soul", 1),
-    Item.createItem("Repressed Memory", 1),
-    Item.createItem("Broken Dream", 1),
-    Item.createItem("Shattered Innocence", 1),
-    Item.createItem("Terror Mask", 1)
-    ],[15,15,15,15,1]
-);
+const spookyRevenantLootTable = genLootTable([
+    { name: "Weary Soul", quantity: 1, weight: 15 },
+    { name: "Repressed Memory", quantity: 1, weight: 15 },
+    { name: "Broken Dream", quantity: 1, weight: 15 },
+    { name: "Shattered Innocence", quantity: 1, weight: 15 },
+    { name: "Terror Mask", quantity: 1, weight: 1 },
+    { name: "Frozen Essence", quantity: 1, weight: 1 }
+]);
 
-const iceBearLootTable = new LootTable([
-    Item.createItem("Fur Scrap", 10),
-    Item.createItem("Fur Scrap", 12),
-    Item.createItem("Fur Scrap", 14),
-    Item.createItem("Broken Nail", 1),
-    Item.createItem("Ice Bear Paw Mitts", 1),
-    Item.createItem("Ice Bear Fur Shawl", 1),
-    Item.createItem("Nature's Wrath", 1)
-    ],[30,20,10,4,3,3,1]
-);
+const iceBearLootTable = genLootTable([
+    { name: "Fur Scrap", quantity: 10, weight: 30 },
+    { name: "Fur Scrap", quantity: 12, weight: 20 },
+    { name: "Fur Scrap", quantity: 14, weight: 10 },
+    { name: "Broken Nail", quantity: 1, weight: 4 },
+    { name: "Ice Bear Paw Mitts", quantity: 1, weight: 3 },
+    { name: "Ice Bear Fur Shawl", quantity: 1, weight: 3 },
+    { name: "Nature's Wrath", quantity: 1, weight: 1 },
+    { name: "Frozen Essence", quantity: 1, weight: 1 }
+]);
 
-const animatedWeaponLootTable = new LootTable([
-    Item.createItem("Broken Blade", 1),
-    Item.createItem("Magical Essence", 2),
-    Item.createItem("Magical Essence", 4),
-    Item.createItem("Magical Essence", 5),
-    Item.createItem("Magical Essence", 7),
-    Item.createItem("Mote of Arcane Power", 1)
-    ],[144,30,25,20,15,1]
-);
+const animatedWeaponLootTable = genLootTable([
+    { name: "Broken Blade", quantity: 1, weight: 144 },
+    { name: "Magical Essence", quantity: 2, weight: 30 },
+    { name: "Magical Essence", quantity: 4, weight: 25 },
+    { name: "Magical Essence", quantity: 5, weight: 20 },
+    { name: "Magical Essence", quantity: 7, weight: 15 },
+    { name: "Mote of Arcane Power", quantity: 1, weight: 1 },
+    { name: "Frozen Essence", quantity: 1, weight: 1 }
+]);
 
-const foulNecromancerLootTable = new LootTable([
-    Item.createItem("Cloth Scrap", 20),
-    Item.createItem("Cloth Scrap", 17),
-    Item.createItem("Cloth Scrap", 15),
-    Item.createItem("Gold Coin", 244),
-    Item.createItem("Gold Coin", 151),
-    Item.createItem("Magical Essence", 3),
-    Item.createItem("Magical Essence", 5),
-    Item.createItem("Bone Chip", 1),
-    Item.createItem("Ice Bear Fur Shawl", 1),
-    Item.createItem("Dread Loop", 1)
-    ],[12,18,24,30,39,18,24,6,2,1]
-);
+const foulNecromancerLootTable = genLootTable([
+    { name: "Cloth Scrap", quantity: 20, weight: 12 },
+    { name: "Cloth Scrap", quantity: 17, weight: 18 },
+    { name: "Cloth Scrap", quantity: 15, weight: 24 },
+    { name: "Gold Coin", quantity: 244, weight: 30 },
+    { name: "Gold Coin", quantity: 151, weight: 39 },
+    { name: "Magical Essence", quantity: 3, weight: 18 },
+    { name: "Magical Essence", quantity: 5, weight: 24 },
+    { name: "Bone Chip", quantity: 1, weight: 6 },
+    { name: "Ice Bear Fur Shawl", quantity: 1, weight: 2 },
+    { name: "Dread Loop", quantity: 1, weight: 1 },
+    { name: "Frozen Essence", quantity: 1, weight: 1 }
+]);
 
 // DRAGON SWAMP WORLD
 
-const juvenileDrakeLootTable = new LootTable([
-    Item.createItem("Dragon Scale", 5),
-    Item.createItem("Dragon Scale", 4),
-    Item.createItem("Dragon Scale", 3),
-    Item.createItem("Dragon Scale", 2),
-    Item.createItem("Dragon Scale", 1),
-    Item.createItem("Sticky Dragon Mucus", 1),
-    Item.createItem("Baby Dragon Fang", 1),
-    Item.createItem("Second Seal", 1),
-    ],[4,8,12,16,20,2,1,1]
-);
+const juvenileDrakeLootTable = genLootTable([
+    { name: "Dragon Scale", quantity: 5, weight: 4 },
+    { name: "Dragon Scale", quantity: 4, weight: 8 },
+    { name: "Dragon Scale", quantity: 3, weight: 12 },
+    { name: "Dragon Scale", quantity: 2, weight: 16 },
+    { name: "Dragon Scale", quantity: 1, weight: 20 },
+    { name: "Sticky Dragon Mucus", quantity: 1, weight: 2 },
+    { name: "Baby Dragon Fang", quantity: 1, weight: 1 },
+    { name: "Second Seal", quantity: 1, weight: 1 }
+]);
 
-const adolescentDrakeLootTable = new LootTable([
-    Item.createItem("Dragon Scale", 7),
-    Item.createItem("Dragon Scale", 6),
-    Item.createItem("Dragon Scale", 5),
-    Item.createItem("Dragon Scale", 4),
-    Item.createItem("Dragon Scale", 3),
-    Item.createItem("Gold Coin", 541),
-    Item.createItem("Gold Coin", 610),
-    Item.createItem("Sticky Dragon Mucus", 1),
-    Item.createItem("Juvenile Dragon Talon", 1),
-    Item.createItem("Second Seal", 1),
-    ],[4,8,12,16,20,10,20,2,1,1]
-);
+const adolescentDrakeLootTable = genLootTable([
+    { name: "Dragon Scale", quantity: 7, weight: 4 },
+    { name: "Dragon Scale", quantity: 6, weight: 8 },
+    { name: "Dragon Scale", quantity: 5, weight: 12 },
+    { name: "Dragon Scale", quantity: 4, weight: 16 },
+    { name: "Dragon Scale", quantity: 3, weight: 20 },
+    { name: "Gold Coin", quantity: 541, weight: 10 },
+    { name: "Gold Coin", quantity: 610, weight: 20 },
+    { name: "Sticky Dragon Mucus", quantity: 1, weight: 2 },
+    { name: "Juvenile Dragon Talon", quantity: 1, weight: 1 },
+    { name: "Second Seal", quantity: 1, weight: 1 }
+]);
 
-const greenDrakeLootTable = new LootTable([
-    Item.createItem("Dragon Scale", 10),
-    Item.createItem("Dragon Scale", 9),
-    Item.createItem("Dragon Scale", 8),
-    Item.createItem("Dragon Scale", 7),
-    Item.createItem("Dragon Scale", 6),
-    Item.createItem("Gold Coin", 813),
-    Item.createItem("Gold Coin", 910),
-    Item.createItem("Green Dragonscale Cape", 1),
-    Item.createItem("Dragon Mucus Tincture", 1),
-    Item.createItem("Second Seal", 1),
-    ],[4,8,12,16,20,10,20,2,1,1]
-);
+const greenDrakeLootTable = genLootTable([
+    { name: "Dragon Scale", quantity: 10, weight: 4 },
+    { name: "Dragon Scale", quantity: 9, weight: 8 },
+    { name: "Dragon Scale", quantity: 8, weight: 12 },
+    { name: "Dragon Scale", quantity: 7, weight: 16 },
+    { name: "Dragon Scale", quantity: 6, weight: 20 },
+    { name: "Gold Coin", quantity: 813, weight: 10 },
+    { name: "Gold Coin", quantity: 910, weight: 20 },
+    { name: "Green Cape", quantity: 1, weight: 2 },
+    { name: "Dragon Mucus Tincture", quantity: 1, weight: 1 },
+    { name: "Second Seal", quantity: 1, weight: 1 }
+]);
 
-const blackDrakeLootTable = new LootTable([
-    Item.createItem("Dragon Scale", 11),
-    Item.createItem("Dragon Scale", 10),
-    Item.createItem("Dragon Scale", 9),
-    Item.createItem("Dragon Scale", 8),
-    Item.createItem("Dragon Scale", 7),
-    Item.createItem("Gold Coin", 860),
-    Item.createItem("Gold Coin", 990),
-    Item.createItem("Black Dragonscale Cape", 1),
-    Item.createItem("Dragon Mucus Tincture", 1),
-    Item.createItem("Second Seal", 1),
-    ],[4,8,12,16,20,10,20,2,1,1]
-);
+const blackDrakeLootTable = genLootTable([
+    { name: "Dragon Scale", quantity: 11, weight: 4 },
+    { name: "Dragon Scale", quantity: 10, weight: 8 },
+    { name: "Dragon Scale", quantity: 9, weight: 12 },
+    { name: "Dragon Scale", quantity: 8, weight: 16 },
+    { name: "Dragon Scale", quantity: 7, weight: 20 },
+    { name: "Gold Coin", quantity: 860, weight: 10 },
+    { name: "Gold Coin", quantity: 990, weight: 20 },
+    { name: "Black Cape", quantity: 1, weight: 2 },
+    { name: "Dragon Mucus Tincture", quantity: 1, weight: 1 },
+    { name: "Second Seal", quantity: 1, weight: 1 }
+]);
 
-const blueDrakeLootTable = new LootTable([
-    Item.createItem("Dragon Scale", 12),
-    Item.createItem("Dragon Scale", 11),
-    Item.createItem("Dragon Scale", 10),
-    Item.createItem("Dragon Scale", 9),
-    Item.createItem("Dragon Scale", 8),
-    Item.createItem("Gold Coin", 900),
-    Item.createItem("Gold Coin", 1031),
-    Item.createItem("Blue Dragonscale Cape", 1),
-    Item.createItem("Dragon Mucus Tincture", 1),
-    Item.createItem("Second Seal", 1),
-    ],[4,8,12,16,20,10,20,2,1,1]
-);
+const blueDrakeLootTable = genLootTable([
+    { name: "Dragon Scale", quantity: 12, weight: 4 },
+    { name: "Dragon Scale", quantity: 11, weight: 8 },
+    { name: "Dragon Scale", quantity: 10, weight: 12 },
+    { name: "Dragon Scale", quantity: 9, weight: 16 },
+    { name: "Dragon Scale", quantity: 8, weight: 20 },
+    { name: "Gold Coin", quantity: 900, weight: 10 },
+    { name: "Gold Coin", quantity: 1031, weight: 20 },
+    { name: "Blue Cape", quantity: 1, weight: 2 },
+    { name: "Dragon Mucus Tincture", quantity: 1, weight: 1 },
+    { name: "Second Seal", quantity: 1, weight: 1 }
+]);
 
-const redDrakeLootTable = new LootTable([
-    Item.createItem("Dragon Scale", 13),
-    Item.createItem("Dragon Scale", 12),
-    Item.createItem("Dragon Scale", 11),
-    Item.createItem("Dragon Scale", 10),
-    Item.createItem("Dragon Scale", 9),
-    Item.createItem("Gold Coin", 919),
-    Item.createItem("Gold Coin", 1108),
-    Item.createItem("Red Dragonscale Cape", 1),
-    Item.createItem("Dragon Mucus Tincture", 1),
-    Item.createItem("Second Seal", 1),
-    ],[4,8,12,16,20,10,20,2,1,1]
-);
+const redDrakeLootTable = genLootTable([
+    { name: "Dragon Scale", quantity: 13, weight: 4 },
+    { name: "Dragon Scale", quantity: 12, weight: 8 },
+    { name: "Dragon Scale", quantity: 11, weight: 12 },
+    { name: "Dragon Scale", quantity: 10, weight: 16 },
+    { name: "Dragon Scale", quantity: 9, weight: 20 },
+    { name: "Gold Coin", quantity: 919, weight: 10 },
+    { name: "Gold Coin", quantity: 1108, weight: 20 },
+    { name: "Red Cape", quantity: 1, weight: 2 },
+    { name: "Dragon Mucus Tincture", quantity: 1, weight: 1 },
+    { name: "Second Seal", quantity: 1, weight: 1 }
+]);
 
-const giantAnacondaLootTable = new LootTable([
-    Item.createItem("Grody Man-meat", 7),
-    Item.createItem("Grody Man-meat", 3),
-    Item.createItem("Grody Man-meat", 2),
-    Item.createItem("Gold Coin", 101),
-    Item.createItem("Gold Coin", 203),
-    Item.createItem("Gold Coin", 341),
-    Item.createItem("Gold Coin", 391),
-    Item.createItem("Gold Coin", 431),
-    Item.createItem("Gold Coin", 781),
-    Item.createItem("Gold Coin", 919),
-    Item.createItem("Gold Coin", 1108),
-    Item.createItem("Rotten Meat", 1),
-    Item.createItem("Snake-eye Chain", 1),
-    Item.createItem("Second Seal", 1),
-    Item.createItem("Platinum Coin", 1),
-    ],[4,8,12,13,12,11,10,9,8,7,6,2,1,1,1]
-);
+const giantAnacondaLootTable = genLootTable([
+    { name: "Grody Man-meat", quantity: 7, weight: 4 },
+    { name: "Grody Man-meat", quantity: 3, weight: 8 },
+    { name: "Grody Man-meat", quantity: 2, weight: 12 },
+    { name: "Gold Coin", quantity: 101, weight: 13 },
+    { name: "Gold Coin", quantity: 203, weight: 12 },
+    { name: "Gold Coin", quantity: 341, weight: 11 },
+    { name: "Gold Coin", quantity: 391, weight: 10 },
+    { name: "Gold Coin", quantity: 431, weight: 9 },
+    { name: "Gold Coin", quantity: 781, weight: 8 },
+    { name: "Gold Coin", quantity: 919, weight: 7 },
+    { name: "Gold Coin", quantity: 1108, weight: 6 },
+    { name: "Rotten Meat", quantity: 1, weight: 2 },
+    { name: "Snake-eye Chain", quantity: 1, weight: 1 },
+    { name: "Second Seal", quantity: 1, weight: 1 },
+    { name: "Platinum Coin", quantity: 1, weight: 1 }
+]);
 
-const vaingloriousDragonHunter = new LootTable([
-    Item.createItem("Dragon Scale", 4),
-    Item.createItem("Dragon Scale", 3),
-    Item.createItem("Dragon Scale", 2),
-    Item.createItem("Gold Coin", 354),
-    Item.createItem("Gold Coin", 300),
-    Item.createItem("Dragonheart Piercer", 1),
-    Item.createItem("Devastating Crossbow", 1),
-    Item.createItem("Platinum Coin", 1),
-    Item.createItem("Second Seal", 1),
-    ],[4,8,12,16,20,6,3,1,1]
-);
+const vaingloriousDragonHunter = genLootTable([
+    { name: "Dragon Scale", quantity: 4, weight: 4 },
+    { name: "Dragon Scale", quantity: 3, weight: 8 },
+    { name: "Dragon Scale", quantity: 2, weight: 12 },
+    { name: "Gold Coin", quantity: 354, weight: 16 },
+    { name: "Gold Coin", quantity: 300, weight: 20 },
+    { name: "Dragonheart Piercer", quantity: 1, weight: 6 },
+    { name: "Devastating Crossbow", quantity: 1, weight: 3 },
+    { name: "Platinum Coin", quantity: 1, weight: 1 },
+    { name: "Second Seal", quantity: 1, weight: 1 }
+]);
 
 // GOLD WORLD
 
-const bossGoblinLootTable = new LootTable([
-    Item.createItem("Gold Coin", 1770),
-    Item.createItem("Gold Coin", 2080),
-    Item.createItem("Broken Rubber Band", 1),
-    Item.createItem("Ring of Greed", 1),
-    Item.createItem("Boss Goblin's Gilded Fountain Pen", 1),
-    Item.createItem("First Seal", 1),
-    ],[50,39,8,2,1,1]
-);
+const bossGoblinLootTable = genLootTable([
+    { name: "Gold Coin", quantity: 1770, weight: 50 },
+    { name: "Gold Coin", quantity: 2080, weight: 39 },
+    { name: "Broken Rubber Band", quantity: 1, weight: 8 },
+    { name: "Ring of Greed", quantity: 1, weight: 2 },
+    { name: "Boss Goblin's Gilded Fountain Pen", quantity: 1, weight: 1 },
+    { name: "First Seal", quantity: 1, weight: 1 }
+]);
 
-const goblinLoanmasterLootTable = new LootTable([
-    Item.createItem("Gold Coin", 1420),
-    Item.createItem("Gold Coin", 1790),
-    Item.createItem("Broken Rubber Band", 1),
-    Item.createItem("Ring of Greed", 1),
-    Item.createItem("Goblin Ledger", 1),
-    Item.createItem("First Seal", 1),
-    ],[50,39,8,2,1,1]
-);
+const goblinLoanmasterLootTable = genLootTable([
+    { name: "Gold Coin", quantity: 1420, weight: 50 },
+    { name: "Gold Coin", quantity: 1790, weight: 39 },
+    { name: "Broken Rubber Band", quantity: 1, weight: 8 },
+    { name: "Ring of Greed", quantity: 1, weight: 2 },
+    { name: "Goblin Ledger", quantity: 1, weight: 1 },
+    { name: "First Seal", quantity: 1, weight: 1 }
+]);
 
-const goblinHeadcrackerLootTable = new LootTable([
-    Item.createItem("Gold Coin", 1020),
-    Item.createItem("Gold Coin", 1330),
-    Item.createItem("Broken Tire Iron", 1),
-    Item.createItem("Ring of Greed", 1),
-    Item.createItem("Headcracker Mitts", 1),
-    Item.createItem("First Seal", 1),
-    ],[50,39,8,2,1,1]
-);
+const goblinHeadcrackerLootTable = genLootTable([
+    { name: "Gold Coin", quantity: 1020, weight: 50 },
+    { name: "Gold Coin", quantity: 1330, weight: 39 },
+    { name: "Broken Tire Iron", quantity: 1, weight: 8 },
+    { name: "Ring of Greed", quantity: 1, weight: 2 },
+    { name: "Headcracker Mitts", quantity: 1, weight: 1 },
+    { name: "First Seal", quantity: 1, weight: 1 }
+]);
 
-const goldGoblinGolemLootTable = new LootTable([
-    Item.createItem("Gold Coin", 2040),
-    Item.createItem("Gold Coin", 2680),
-    Item.createItem("Gold Coin", 3120),
-    Item.createItem("Gold Coin", 3810),
-    Item.createItem("Gold Coin", 4250),
-    Item.createItem("Gold Coin", 4600),
-    Item.createItem("Gold Coin", 6400),
-    Item.createItem("Gold Coin", 9800),
-    Item.createItem("First Seal", 1),
-    ],[50,45,40,35,30,25,10,5,1]
-);
+const goldGoblinGolemLootTable = genLootTable([
+    { name: "Gold Coin", quantity: 2040, weight: 50 },
+    { name: "Gold Coin", quantity: 2680, weight: 45 },
+    { name: "Gold Coin", quantity: 3120, weight: 40 },
+    { name: "Gold Coin", quantity: 3810, weight: 35 },
+    { name: "Gold Coin", quantity: 4250, weight: 30 },
+    { name: "Gold Coin", quantity: 4600, weight: 25 },
+    { name: "Gold Coin", quantity: 6400, weight: 10 },
+    { name: "Gold Coin", quantity: 9800, weight: 5 },
+    { name: "First Seal", quantity: 1, weight: 1 }
+]);
 
 // DEFAULT WORLD PART 2
 
-const uncommonBanditLootTable = new LootTable([
-    Item.createItem("Epic Sword", 1),
-    Item.createItem("Deadly Poison", 1),
-    Item.createItem("Gold Coin", 12),
-    Item.createItem("Gold Coin", 8),
-    Item.createItem("Gold Coin", 4),
-    Item.createItem("Lame Rocks", 16),
-    Item.createItem("Lame Rocks", 8),
-    Item.createItem("Lame Rocks", 4),
-    Item.createItem("Devious Dagger", 1),
-    Item.createItem("Ratkickers", 1)
-    ],[1,2,4,6,8,10,14,16,2,41]
-);
+const uncommonBanditLootTable = genLootTable([
+    { name: "Epic Sword", quantity: 1, weight: 1 },
+    { name: "Deadly Poison", quantity: 1, weight: 2 },
+    { name: "Gold Coin", quantity: 12, weight: 4 },
+    { name: "Gold Coin", quantity: 8, weight: 6 },
+    { name: "Gold Coin", quantity: 4, weight: 8 },
+    { name: "Cloth Scrap", quantity: 4, weight: 10 },
+    { name: "Lame Rocks", quantity: 8, weight: 14 },
+    { name: "Lame Rocks", quantity: 4, weight: 16 },
+    { name: "Ratkickers", quantity: 1, weight: 41 }
+]);
 
-const filthyGoblinLootTable = new LootTable([
-    Item.createItem("Rotten Food", 2),
-    Item.createItem("Gold Coin", 16),
-    Item.createItem("Gold Coin", 8),
-    Item.createItem("Lame Rocks", 16),
-    Item.createItem("Lame Rocks", 8),
-    Item.createItem("Lame Rocks", 4),
-    Item.createItem("Devious Dagger", 1),
-    Item.createItem("Ratkickers", 1),
-    Item.createItem("Greedy Goldgrubber Grips",1)
-    ],[2,6,8,10,14,16,2,1,1]
-);
+const filthyGoblinLootTable = genLootTable([
+    { name: "Rotten Food", quantity: 2, weight: 2 },
+    { name: "Gold Coin", quantity: 16, weight: 6 },
+    { name: "Gold Coin", quantity: 8, weight: 8 },
+    { name: "Cloth Scrap", quantity: 4, weight: 10 },
+    { name: "Lame Rocks", quantity: 8, weight: 14 },
+    { name: "Lame Rocks", quantity: 4, weight: 16 },
+    { name: "Ratkickers", quantity: 1, weight: 1 },
+    { name: "Greedy Goldgrubber Grips", quantity: 1, weight: 1 }
+]);
 
-const overgrownVoleLootTable = new LootTable([
-    Item.createItem("Fur Scrap", 2),
-    Item.createItem("Fur Scrap", 1),
-    Item.createItem("Bitter Morsel", 1),
-    Item.createItem("Big Tooth", 1),
-    Item.createItem("Pilfered Shiny", 1),
-    Item.createItem("Greedy Goldgrubber Grips",1)
-    ],[12,24,7,2,1,1]
-);
+const overgrownVoleLootTable = genLootTable([
+    { name: "Fur Scrap", quantity: 2, weight: 12 },
+    { name: "Fur Scrap", quantity: 1, weight: 24 },
+    { name: "Bitter Morsel", quantity: 1, weight: 7 },
+    { name: "Big Tooth", quantity: 1, weight: 2 },
+    { name: "Pilfered Shiny", quantity: 1, weight: 1 },
+    { name: "Greedy Goldgrubber Grips", quantity: 1, weight: 1 }
+]);
 
 // SPECIAL SPAWN
 
-const treasureGoblinLootTable = new LootTable([
-    Item.createItem("Gold Coin", 1),
-    Item.createItem("Gold Coin", 10),
-    Item.createItem("Gold Coin", 100),
-    Item.createItem("Gold Coin", 1000),
-    Item.createItem("Gold Cloak", 1),
-    ],[80,40,20,10,1]
-);
+const treasureGoblinLootTable = genLootTable([
+    { name: "Gold Coin", quantity: 1, weight: 80 },
+    { name: "Gold Coin", quantity: 10, weight: 40 },
+    { name: "Gold Coin", quantity: 100, weight: 20 },
+    { name: "Gold Coin", quantity: 1000, weight: 10 },
+    { name: "Gold Cloak", quantity: 1, weight: 1 }
+]);
 
 // ARCANE WORLD
 
-const keeperOfSealsLootTable = new LootTable([
-    Item.createItem("Magical Essence", 13),
-    Item.createItem("Magical Essence", 15),
-    Item.createItem("Magical Essence", 17),
-    Item.createItem("Magical Essence", 19),
-    Item.createItem("Third Seal", 1),
-    Item.createItem("Fourth Seal", 1),
-    Item.createItem("Fifth Seal", 1),
-    Item.createItem("Sixth Seal", 1),
-    Item.createItem("Seventh Seal", 1),
-    Item.createItem("Helmet of Arcane Protection", 1),
-    Item.createItem("Vest of Arcane Devotion", 1),
-    Item.createItem("Gauntlets of Arcane Postmultiplication", 1),
-    Item.createItem("Treads of Arcane Stabilization", 1),
-    Item.createItem("Staff of Arcane Domination", 1),
-    ],[120,100,80,60,4,4,4,4,4,1,1,1,1,1]
-);
+const keeperOfSealsLootTable = genLootTable([
+    { name: "Magical Essence", quantity: 13, weight: 100 },
+    { name: "Magical Essence", quantity: 15, weight: 80 },
+    { name: "Magical Essence", quantity: 17, weight: 60 },
+    { name: "Magical Essence", quantity: 19, weight: 40 },
+    { name: "Third Seal", quantity: 1, weight: 4 },
+    { name: "Fourth Seal", quantity: 1, weight: 4 },
+    { name: "Fifth Seal", quantity: 1, weight: 4 },
+    { name: "Sixth Seal", quantity: 1, weight: 4 },
+    { name: "Seventh Seal", quantity: 1, weight: 4 },
+    { name: "Arcane Helmet", quantity: 1, weight: 1 },
+    { name: "Arcane Vest", quantity: 1, weight: 1 },
+    { name: "Arcane Gauntlets", quantity: 1, weight: 1 },
+    { name: "Arcane Treads", quantity: 1, weight: 1 },
+    { name: "Arcane Staff", quantity: 1, weight: 1 }
+]);
 
 // ARCANE WORLD PART 2
 
-const arcaneSoulStitcherLootTable = new LootTable([
-    Item.createItem("Arcane Star Jar", 1),
-    Item.createItem("Magical Essence", 15),
-    Item.createItem("Magical Essence", 17),
-    Item.createItem("Magical Essence", 19),
-    Item.createItem("Gauntlets of Arcane Postmultiplication", 1),
-    Item.createItem("Arcane Phylactery", 1),
-    ],[2,50,40,30,1,1]
-);
+const arcaneSoulStitcherLootTable = genLootTable([
+    { name: "Arcane Star Jar", quantity: 1, weight: 3 },
+    { name: "Magical Essence", quantity: 15, weight: 50 },
+    { name: "Magical Essence", quantity: 17, weight: 40 },
+    { name: "Magical Essence", quantity: 19, weight: 30 },
+    { name: "Arcane Gauntlets", quantity: 1, weight: 1 },
+    { name: "Arcane Phylactery", quantity: 1, weight: 1 }
+]);
 
-const arcaneKnightLootTable = new LootTable([
-    Item.createItem("Arcane Star Jar", 1),
-    Item.createItem("Magical Essence", 17),
-    Item.createItem("Magical Essence", 19),
-    Item.createItem("Magical Essence", 21),
-    Item.createItem("Helmet of Arcane Protection", 1),
-    Item.createItem("Arcane Shield", 1),
-    ],[2,50,40,30,1,1]
-);
+const arcaneKnightLootTable = genLootTable([
+    { name: "Arcane Star Jar", quantity: 1, weight: 3 },
+    { name: "Magical Essence", quantity: 17, weight: 50 },
+    { name: "Magical Essence", quantity: 19, weight: 40 },
+    { name: "Magical Essence", quantity: 21, weight: 30 },
+    { name: "Arcane Helmet", quantity: 1, weight: 1 },
+    { name: "Arcane Shield", quantity: 1, weight: 1 }
+]);
 
-const arcaneDevoteeLootTable = new LootTable([
-    Item.createItem("Arcane Star Jar", 1),
-    Item.createItem("Magical Essence", 13),
-    Item.createItem("Magical Essence", 15),
-    Item.createItem("Magical Essence", 17),
-    Item.createItem("Vest of Arcane Devotion", 1),
-    Item.createItem("Arcane Iris", 1),
-    ],[2,50,40,30,1,1]
-);
+const arcaneDevoteeLootTable = genLootTable([
+    { name: "Arcane Star Jar", quantity: 1, weight: 3 },
+    { name: "Magical Essence", quantity: 13, weight: 50 },
+    { name: "Magical Essence", quantity: 15, weight: 40 },
+    { name: "Magical Essence", quantity: 17, weight: 30 },
+    { name: "Arcane Staff", quantity: 1, weight: 1 },
+    { name: "Arcane Iris", quantity: 1, weight: 1 }
+]);
 
-const arcaneBattlemageLootTable = new LootTable([
-    Item.createItem("Arcane Star Jar", 1),
-    Item.createItem("Magical Essence", 15),
-    Item.createItem("Magical Essence", 17),
-    Item.createItem("Magical Essence", 19),
-    Item.createItem("Staff of Arcane Domination", 1),
-    Item.createItem("Arcane Focusing Gem", 1),
-    ],[2,50,40,30,1,1]
-);
+const arcaneBattlemageLootTable = genLootTable([
+    { name: "Arcane Star Jar", quantity: 1, weight: 3 },
+    { name: "Magical Essence", quantity: 15, weight: 50 },
+    { name: "Magical Essence", quantity: 17, weight: 40 },
+    { name: "Magical Essence", quantity: 19, weight: 30 },
+    { name: "Arcane Vest", quantity: 1, weight: 1 },
+    { name: "Arcane Focusing Gem", quantity: 1, weight: 1 }
+]);
 
-const arcaneGolemLootTable = new LootTable([
-    Item.createItem("Arcane Star Jar", 1),
-    Item.createItem("Magical Essence", 19),
-    Item.createItem("Magical Essence", 21),
-    Item.createItem("Magical Essence", 23),
-    Item.createItem("Treads of Arcane Stabilization", 1),
-    Item.createItem("Arcane Circuitboard", 1),
-    ],[2,50,40,30,1,1]
-);
+const arcaneGolemLootTable = genLootTable([
+    { name: "Arcane Star Jar", quantity: 1, weight: 3 },
+    { name: "Magical Essence", quantity: 19, weight: 50 },
+    { name: "Magical Essence", quantity: 21, weight: 40 },
+    { name: "Magical Essence", quantity: 23, weight: 30 },
+    { name: "Arcane Treads", quantity: 1, weight: 1 },
+    { name: "Arcane Circuitboard", quantity: 1, weight: 1 }
+]);
 
 // SPACE WORLD
 
-const moonRockGolemLootTable = new LootTable([
-    Item.createItem("Useless Moon Rock", 7),
-    Item.createItem("Useless Moon Rock", 6),
-    Item.createItem("Useless Moon Rock", 5),
-    Item.createItem("Useless Moon Rock", 4),
-    Item.createItem("Useless Moon Rock", 3),
-    Item.createItem("Useless Moon Rock", 2),
-    Item.createItem("Useless Moon Rock", 1),
-    Item.createItem("Moon Blasting Super Smashers", 1),
-    Item.createItem("Nebula Gemstone", 1),
-    ],[4,8,12,16,20,24,28,1,1]
-);
+const moonRockGolemLootTable = genLootTable([
+    { name: "Useless Moon Rock", quantity: 7, weight: 4 },
+    { name: "Useless Moon Rock", quantity: 6, weight: 8 },
+    { name: "Useless Moon Rock", quantity: 5, weight: 12 },
+    { name: "Useless Moon Rock", quantity: 4, weight: 16 },
+    { name: "Useless Moon Rock", quantity: 3, weight: 20 },
+    { name: "Useless Moon Rock", quantity: 2, weight: 24 },
+    { name: "Useless Moon Rock", quantity: 1, weight: 28 },
+    { name: "Moon Blasting Super Smashers", quantity: 1, weight: 1 },
+    { name: "Nebula Gemstone", quantity: 1, weight: 1 }
+]);
 
-const livingCometLootTable = new LootTable([
-    Item.createItem("Useless Moon Rock", 7),
-    Item.createItem("Useless Moon Rock", 6),
-    Item.createItem("Useless Moon Rock", 5),
-    Item.createItem("Useless Moon Rock", 4),
-    Item.createItem("Useless Moon Rock", 3),
-    Item.createItem("Useless Moon Rock", 2),
-    Item.createItem("Useless Moon Rock", 1),
-    Item.createItem("Astral Hammer", 1),
-    Item.createItem("Nebula Gemstone", 1),
-    ],[4,8,12,16,20,24,28,1,1]
-);
+const livingCometLootTable = genLootTable([
+    { name: "Useless Moon Rock", quantity: 7, weight: 4 },
+    { name: "Useless Moon Rock", quantity: 6, weight: 8 },
+    { name: "Useless Moon Rock", quantity: 5, weight: 12 },
+    { name: "Useless Moon Rock", quantity: 4, weight: 16 },
+    { name: "Useless Moon Rock", quantity: 3, weight: 20 },
+    { name: "Useless Moon Rock", quantity: 2, weight: 24 },
+    { name: "Useless Moon Rock", quantity: 1, weight: 28 },
+    { name: "Astral Hammer", quantity: 1, weight: 1 },
+    { name: "Nebula Gemstone", quantity: 1, weight: 1 }
+]);
 
-const greyLaserAlienLootTable = new LootTable([
-    Item.createItem("Broken Laser Gun", 1),
-    Item.createItem("Alien Sludge", 1),
-    Item.createItem("Universal Credit", 1),
-    Item.createItem("Grey Laser Blaster", 1),
-    Item.createItem("Laser Gigawatt Charger", 1),
-    ],[78,12,12,3,1]
-);
+const greyLaserAlienLootTable = genLootTable([
+    { name: "Broken Laser Gun", quantity: 1, weight: 78 },
+    { name: "Alien Sludge", quantity: 1, weight: 12 },
+    { name: "Universal Credit", quantity: 1, weight: 12 },
+    { name: "Grey Laser Blaster", quantity: 1, weight: 3 },
+    { name: "Laser Gigawatt Charger", quantity: 1, weight: 1 }
+]);
 
-const greenLaserAlienLootTable = new LootTable([
-    Item.createItem("Broken Laser Gun", 1),
-    Item.createItem("Alien Sludge", 1),
-    Item.createItem("Universal Credit", 1),
-    Item.createItem("Green Laser Blaster", 1),
-    Item.createItem("Laser Gigawatt Charger", 1),
-    ],[78,12,12,3,1]
-);
+const greenLaserAlienLootTable = genLootTable([
+    { name: "Broken Laser Gun", quantity: 1, weight: 78 },
+    { name: "Alien Sludge", quantity: 1, weight: 12 },
+    { name: "Universal Credit", quantity: 1, weight: 12 },
+    { name: "Green Laser Blaster", quantity: 1, weight: 3 },
+    { name: "Laser Gigawatt Charger", quantity: 1, weight: 1 }
+]);
 
-const uglyBugAlienLootTable = new LootTable([
-    Item.createItem("Bug Part", 101),
-    Item.createItem("Alien Sludge", 1),
-    Item.createItem("Universal Credit", 1),
-    Item.createItem("Freaky Bug Eye", 1),
-    Item.createItem("Laser Gigawatt Charger", 1),
-    ],[78,12,12,3,1]
-);
+const uglyBugAlienLootTable = genLootTable([
+    { name: "Bug Part", quantity: 101, weight: 78 },
+    { name: "Alien Sludge", quantity: 1, weight: 12 },
+    { name: "Universal Credit", quantity: 1, weight: 12 },
+    { name: "Freaky Bug Eye", quantity: 1, weight: 3 },
+    { name: "Laser Gigawatt Charger", quantity: 1, weight: 1 }
+]);
 
-const superstellarSpaceRaiderLootTable = new LootTable([
-    Item.createItem("Random Alien Junk", 1),
-    Item.createItem("Freaky Moon Boots", 1),
-    Item.createItem("Keys to the Galaxy", 1),
-    Item.createItem("Alien Sludge", 1),
-    Item.createItem("Universal Credit", 1),
-    Item.createItem("Universal Credit", 2),
-    Item.createItem("Laser-powered Goblin Smasher", 1),
-    Item.createItem("Laser Gigawatt Charger", 1),
-    ],[50,23,15,13,10,4,1,1]
-);
+const superstellarSpaceRaiderLootTable = genLootTable([
+    { name: "Random Alien Junk", quantity: 1, weight: 50 },
+    { name: "Freaky Moon Boots", quantity: 1, weight: 23 },
+    { name: "Keys to the Galaxy", quantity: 1, weight: 15 },
+    { name: "Alien Sludge", quantity: 1, weight: 13 },
+    { name: "Universal Credit", quantity: 1, weight: 10 },
+    { name: "Universal Credit", quantity: 2, weight: 4 },
+    { name: "Laser-powered Goblin Smasher", quantity: 1, weight: 1 },
+    { name: "Laser Gigawatt Charger", quantity: 1, weight: 1 }
+]);
 
 // VOLCANO PLANET WORLD
 
-const obsidianSphereLootTable = new LootTable([
-    Item.createItem("Rapidly Cooled Rock", 1),
-    Item.createItem("Rapidly Cooled Rock", 2),
-    Item.createItem("Rapidly Cooled Rock", 3),
-    Item.createItem("Trace Metal Ore", 1),
-    Item.createItem("Universal Credit", 4),
-    Item.createItem("The Obsidian Band", 1),
-    Item.createItem("Volcano Badge", 1),
-    Item.createItem("Deep Black Mask", 1),
-    ],[50,25,15,5,3,2,1,1]
-);
+const obsidianSphereLootTable = genLootTable([
+    { name: "Rapidly Cooled Rock", quantity: 1, weight: 50 },
+    { name: "Rapidly Cooled Rock", quantity: 2, weight: 25 },
+    { name: "Rapidly Cooled Rock", quantity: 3, weight: 15 },
+    { name: "Trace Metal Ore", quantity: 1, weight: 5 },
+    { name: "Universal Credit", quantity: 4, weight: 3 },
+    { name: "The Obsidian Band", quantity: 1, weight: 2 },
+    { name: "Volcano Badge", quantity: 1, weight: 1 },
+    { name: "Deep Black Mask", quantity: 1, weight: 1 },
+    { name: "Volcano Planet Essence", quantity: 1, weight: 10 }
+]);
 
-const lavaScorpionLootTable = new LootTable([
-    Item.createItem("Molten Shell Fragment", 1),
-    Item.createItem("Molten Shell Fragment", 2),
-    Item.createItem("Molten Shell Fragment", 3),
-    Item.createItem("Molted Shell Fragment", 1),
-    Item.createItem("Universal Credit", 4),
-    Item.createItem("Amulet of Vitriolic Withering", 1),
-    Item.createItem("Volcano Badge", 1),
-    Item.createItem("Lava Scorpion Exoskeleton", 1),
-    ],[50,25,15,5,3,2,1,1]
-);
+const lavaScorpionLootTable = genLootTable([
+    { name: "Molten Shell Fragment", quantity: 1, weight: 50 },
+    { name: "Molten Shell Fragment", quantity: 2, weight: 25 },
+    { name: "Molten Shell Fragment", quantity: 3, weight: 15 },
+    { name: "Molted Shell Fragment", quantity: 1, weight: 5 },
+    { name: "Universal Credit", quantity: 4, weight: 3 },
+    { name: "Amulet of Vitriolic Withering", quantity: 1, weight: 2 },
+    { name: "Volcano Badge", quantity: 1, weight: 1 },
+    { name: "Lava Scorpion Exoskeleton", quantity: 1, weight: 1 },
+    { name: "Volcano Planet Essence", quantity: 1, weight: 10 }
+]);
 
-const magmaDrinkerLootTable = new LootTable([
-    Item.createItem("Rapidly Cooled Rock", 2),
-    Item.createItem("Rapidly Cooled Rock", 3),
-    Item.createItem("Rapidly Cooled Rock", 4),
-    Item.createItem("Permineralization Skull Fragment", 1),
-    Item.createItem("Universal Credit", 4),
-    Item.createItem("Horn of Doom", 1),
-    Item.createItem("Volcano Badge", 1),
-    Item.createItem("Sulfur Respirator", 1),
-    ],[50,25,15,5,3,2,1,1]
-);
+const magmaDrinkerLootTable = genLootTable([
+    { name: "Rapidly Cooled Rock", quantity: 2, weight: 50 },
+    { name: "Rapidly Cooled Rock", quantity: 3, weight: 25 },
+    { name: "Rapidly Cooled Rock", quantity: 4, weight: 15 },
+    { name: "Permineralized Skull Fragment", quantity: 1, weight: 5 },
+    { name: "Universal Credit", quantity: 4, weight: 3 },
+    { name: "Horn of Doom", quantity: 1, weight: 2 },
+    { name: "Volcano Badge", quantity: 1, weight: 1 },
+    { name: "Sulfur Respirator", quantity: 1, weight: 1 },
+    { name: "Volcano Planet Essence", quantity: 1, weight: 10 }
+]);
 
-const basaltGolemLootTable = new LootTable([
-    Item.createItem("Rapidly Cooled Rock", 3),
-    Item.createItem("Rapidly Cooled Rock", 4),
-    Item.createItem("Rapidly Cooled Rock", 5),
-    Item.createItem("Basaltic Fragment", 1),
-    Item.createItem("Universal Credit", 4),
-    Item.createItem("Signet of Trembling", 1),
-    Item.createItem("Volcano Badge", 1),
-    Item.createItem("Destroyer Greaves", 1),
-    ],[50,25,15,5,3,2,1,1]
-);
+const basaltGolemLootTable = genLootTable([
+    { name: "Rapidly Cooled Rock", quantity: 3, weight: 50 },
+    { name: "Rapidly Cooled Rock", quantity: 4, weight: 25 },
+    { name: "Rapidly Cooled Rock", quantity: 5, weight: 15 },
+    { name: "Basaltic Fragment", quantity: 1, weight: 5 },
+    { name: "Universal Credit", quantity: 4, weight: 3 },
+    { name: "Signet of Trembling", quantity: 1, weight: 2 },
+    { name: "Volcano Badge", quantity: 1, weight: 1 },
+    { name: "Destroyer Greaves", quantity: 1, weight: 1 },
+    { name: "Volcano Planet Essence", quantity: 1, weight: 10 }
+]);
 
-const fieryDreadbeastLootTable = new LootTable([
-    Item.createItem("Molten Shell Fragment", 1),
-    Item.createItem("Molten Shell Fragment", 2),
-    Item.createItem("Molten Shell Fragment", 3),
-    Item.createItem("Dripping Fang", 1),
-    Item.createItem("Universal Credit", 4),
-    Item.createItem("Steps of Worldshaking", 1),
-    Item.createItem("Volcano Badge", 1),
-    Item.createItem("Dreadbeast Trophy", 1),
-    ],[100,50,30,10,6,4,2,1]
-);
+const fieryDreadbeastLootTable = genLootTable([
+    { name: "Molten Shell Fragment", quantity: 1, weight: 100 },
+    { name: "Molten Shell Fragment", quantity: 2, weight: 50 },
+    { name: "Molten Shell Fragment", quantity: 3, weight: 30 },
+    { name: "Dripping Fang", quantity: 1, weight: 10 },
+    { name: "Universal Credit", quantity: 4, weight: 6 },
+    { name: "Steps of Worldshaking", quantity: 1, weight: 4 },
+    { name: "Volcano Badge", quantity: 1, weight: 2 },
+    { name: "Dreadbeast Trophy", quantity: 1, weight: 1 },
+    { name: "Volcano Planet Essence", quantity: 1, weight: 10 }
+]);
 
-const moltenGiantLootTable = new LootTable([
-    Item.createItem("Rapidly Cooled Rock", 4),
-    Item.createItem("Rapidly Cooled Rock", 5),
-    Item.createItem("Rapidly Cooled Rock", 6),
-    Item.createItem("Eye of Molten Giant", 1),
-    Item.createItem("Universal Credit", 4),
-    Item.createItem("Heart of Molten Giant", 1),
-    Item.createItem("Volcano Badge", 1),
-    Item.createItem("Kor'As, Obliteration Blade", 1),
-    ],[50,25,15,5,3,2,1,1]
-);
+const moltenGiantLootTable = genLootTable([
+    { name: "Rapidly Cooled Rock", quantity: 4, weight: 50 },
+    { name: "Rapidly Cooled Rock", quantity: 5, weight: 25 },
+    { name: "Rapidly Cooled Rock", quantity: 6, weight: 15 },
+    { name: "Eye of Molten Giant", quantity: 1, weight: 5 },
+    { name: "Universal Credit", quantity: 4, weight: 3 },
+    { name: "Heart of Molten Giant", quantity: 1, weight: 2 },
+    { name: "Volcano Badge", quantity: 1, weight: 1 },
+    { name: "Kor'As, Obliteration Blade", quantity: 1, weight: 1 },
+    { name: "Volcano Planet Essence", quantity: 1, weight: 10 }
+]);
 
 // PLEASURE WORLD
 
-const underworldGangsterLootTable = new LootTable([
-    Item.createItem("Cloth Scrap", 113),
-    Item.createItem("Cloth Scrap", 135),
-    Item.createItem("Cloth Scrap", 190),
-    Item.createItem("Universal Credit", 6),
-    Item.createItem("Reworked Goblin Tech", 1),
-    Item.createItem("Mysterious Pleasure Juice", 1),
-    Item.createItem("Badass Cloak", 1),
-    ],[50,25,15,3,2,1,1]
-);
+const underworldGangsterLootTable = genLootTable([
+    { name: "Cloth Scrap", quantity: 113, weight: 50 },
+    { name: "Cloth Scrap", quantity: 135, weight: 25 },
+    { name: "Cloth Scrap", quantity: 190, weight: 15 },
+    { name: "Universal Credit", quantity: 6, weight: 3 },
+    { name: "Reworked Goblin Tech", quantity: 1, weight: 2 },
+    { name: "Mysterious Pleasure Juice", quantity: 1, weight: 1 },
+    { name: "Badass Cloak", quantity: 1, weight: 1 },
+    { name: "Pleasure Essence", quantity: 1, weight: 10 }
+]);
 
-const uncompromisingHedonistLootTable = new LootTable([
-    Item.createItem("Spoils of the Flesh", 1),
-    Item.createItem("Spoils of the Flesh", 2),
-    Item.createItem("Spoils of the Flesh", 3),
-    Item.createItem("Secret Tool", 1),
-    Item.createItem("Universal Credit", 6),
-    Item.createItem("Flesh Den Entry Token", 1),
-    Item.createItem("Mysterious Pleasure Juice", 1),
-    Item.createItem("Overtuned Grippers", 1),
-    ],[50,25,15,5,3,2,1,1]
-);
+const uncompromisingHedonistLootTable = genLootTable([
+    { name: "Spoils of the Flesh", quantity: 1, weight: 50 },
+    { name: "Spoils of the Flesh", quantity: 2, weight: 25 },
+    { name: "Spoils of the Flesh", quantity: 3, weight: 15 },
+    { name: "Secret Tool", quantity: 1, weight: 5 },
+    { name: "Universal Credit", quantity: 6, weight: 3 },
+    { name: "Flesh Den Entry Token", quantity: 1, weight: 2 },
+    { name: "Mysterious Pleasure Juice", quantity: 1, weight: 1 },
+    { name: "Overtuned Grippers", quantity: 1, weight: 1 },
+    { name: "Pleasure Essence", quantity: 1, weight: 10 }
+]);
 
-const alienPimpLootTable = new LootTable([
-    Item.createItem("Spoils of the Flesh", 2),
-    Item.createItem("Spoils of the Flesh", 3),
-    Item.createItem("Spoils of the Flesh", 4),
-    Item.createItem("Secret Tool", 1),
-    Item.createItem("Universal Credit", 6),
-    Item.createItem("Off-world Beast Fur Shawl", 1),
-    Item.createItem("Mysterious Pleasure Juice", 1),
-    Item.createItem("Dual-purpose Cane", 1),
-    ],[50,25,15,5,3,2,1,1]
-);
+const alienPimpLootTable = genLootTable([
+    { name: "Spoils of the Flesh", quantity: 2, weight: 50 },
+    { name: "Spoils of the Flesh", quantity: 3, weight: 25 },
+    { name: "Spoils of the Flesh", quantity: 4, weight: 15 },
+    { name: "Secret Tool", quantity: 1, weight: 5 },
+    { name: "Universal Credit", quantity: 6, weight: 3 },
+    { name: "Off-world Beast Fur Shawl", quantity: 1, weight: 2 },
+    { name: "Mysterious Pleasure Juice", quantity: 1, weight: 1 },
+    { name: "Dual-purpose Cane", quantity: 1, weight: 1 },
+    { name: "Pleasure Essence", quantity: 1, weight: 10 }
+]);
 
-const subterraneanLootTable = new LootTable([
-    Item.createItem("Neutralized Anti-matter", 3),
-    Item.createItem("Neutralized Anti-matter", 4),
-    Item.createItem("Neutralized Anti-matter", 5),
-    Item.createItem("Sigil of the Survivor", 1),
-    Item.createItem("Universal Credit", 6),
-    Item.createItem("Ambush Sensor", 1),
-    Item.createItem("Mysterious Pleasure Juice", 1),
-    Item.createItem("Hyper Cutter", 1),
-    ],[50,25,15,5,3,2,1,1]
-);
+const subterraneanLootTable = genLootTable([
+    { name: "Neutralized Anti-matter", quantity: 3, weight: 50 },
+    { name: "Neutralized Anti-matter", quantity: 4, weight: 25 },
+    { name: "Neutralized Anti-matter", quantity: 5, weight: 15 },
+    { name: "Sigil of the Survivor", quantity: 1, weight: 5 },
+    { name: "Universal Credit", quantity: 6, weight: 3 },
+    { name: "Ambush Sensor", quantity: 1, weight: 2 },
+    { name: "Mysterious Pleasure Juice", quantity: 1, weight: 1 },
+    { name: "Hyper Cutter", quantity: 1, weight: 1 },
+    { name: "Pleasure Essence", quantity: 1, weight: 10 }
+]);
 
-const veiledDreadbeastLootTable = new LootTable([
-    Item.createItem("Essence of Twisting Nether", 31),
-    Item.createItem("Essence of Twisting Nether", 37),
-    Item.createItem("Essence of Twisting Nether", 41),
-    Item.createItem("Shadow Fang", 1),
-    Item.createItem("Universal Credit", 6),
-    Item.createItem("Universal Credit", 8),
-    Item.createItem("Cape of Cunning", 1),
-    Item.createItem("Mysterious Pleasure Juice", 1),
-    Item.createItem("Dreadbeast Trophy", 1),
-    ],[100,50,30,10,6,3,4,2,1]
-);
+const veiledDreadbeastLootTable = genLootTable([
+    { name: "Essence of Twisting Nether", quantity: 31, weight: 100 },
+    { name: "Essence of Twisting Nether", quantity: 37, weight: 50 },
+    { name: "Essence of Twisting Nether", quantity: 41, weight: 30 },
+    { name: "Shadow Fang", quantity: 1, weight: 10 },
+    { name: "Universal Credit", quantity: 6, weight: 6 },
+    { name: "Universal Credit", quantity: 8, weight: 3 },
+    { name: "Cape of Cunning", quantity: 1, weight: 4 },
+    { name: "Mysterious Pleasure Juice", quantity: 1, weight: 2 },
+    { name: "Dreadbeast Trophy", quantity: 1, weight: 1 },
+    { name: "Pleasure Essence", quantity: 1, weight: 10 }
+]);
 
-const chaosInfiltratorLootTable = new LootTable([
-    Item.createItem("Essence of Twisting Nether", 41),
-    Item.createItem("Essence of Twisting Nether", 43),
-    Item.createItem("Essence of Twisting Nether", 47),
-    Item.createItem("Chaos Blade", 1),
-    Item.createItem("Universal Credit", 6),
-    Item.createItem("Universal Credit", 8),
-    Item.createItem("Chaos Vambrace", 1),
-    Item.createItem("Mysterious Pleasure Juice", 1),
-    Item.createItem("Ak'Olp, Incineration Wand", 1),
-    ],[50,25,15,5,3,3,2,1,1]
-);
+const chaosInfiltratorLootTable = genLootTable([
+    { name: "Essence of Twisting Nether", quantity: 41, weight: 50 },
+    { name: "Essence of Twisting Nether", quantity: 43, weight: 25 },
+    { name: "Essence of Twisting Nether", quantity: 47, weight: 15 },
+    { name: "Chaos Blade", quantity: 1, weight: 5 },
+    { name: "Universal Credit", quantity: 6, weight: 3 },
+    { name: "Universal Credit", quantity: 8, weight: 3 },
+    { name: "Chaos Vambrace", quantity: 1, weight: 2 },
+    { name: "Mysterious Pleasure Juice", quantity: 1, weight: 1 },
+    { name: "Ak'Olp, Incineration Wand", quantity: 1, weight: 1 },
+    { name: "Pleasure Essence", quantity: 1, weight: 10 }
+]);
 
 // A.M. WORLD
 
-const clangingMechanotentacleLootTable = new LootTable([
-    Item.createItem("Random Mechanojunk", 1),
-    Item.createItem("Random Mechanojunk", 2),
-    Item.createItem("Random Mechanojunk", 3),
-    Item.createItem("Perpetual Dynamo", 1),
-    Item.createItem("Universal Credit", 20),
-    Item.createItem("Strangler Mitts", 1),
-    Item.createItem("Electric Eye", 1),
-    Item.createItem("Repurposed Digital Gauge", 1),
-    ],[50,25,15,5,3,2,1,1]
-);
+const clangingMechanotentacleLootTable = genLootTable([
+    { name: "Random Mechanojunk", quantity: 1, weight: 50 },
+    { name: "Random Mechanojunk", quantity: 2, weight: 25 },
+    { name: "Random Mechanojunk", quantity: 3, weight: 15 },
+    { name: "Perpetual Dynamo", quantity: 1, weight: 5 },
+    { name: "Universal Credit", quantity: 20, weight: 3 },
+    { name: "Strangler Mitts", quantity: 1, weight: 2 },
+    { name: "Electric Eye", quantity: 1, weight: 1 },
+    { name: "Repurposed Digital Gauge", quantity: 1, weight: 1 },
+    { name: "A.M. Essence", quantity: 1, weight: 10 }
+]);
 
-const razorSpitterLootTable = new LootTable([
-    Item.createItem("Random Mechanojunk", 2),
-    Item.createItem("Random Mechanojunk", 3),
-    Item.createItem("Random Mechanojunk", 4),
-    Item.createItem("Perpetual Dynamo", 1),
-    Item.createItem("Universal Credit", 20),
-    Item.createItem("Slicing Gloves", 1),
-    Item.createItem("Electric Eye", 1),
-    Item.createItem("Damaged Exosuit", 1),
-    ],[50,25,15,5,3,2,1,1]
-);
+const razorSpitterLootTable = genLootTable([
+    { name: "Random Mechanojunk", quantity: 2, weight: 50 },
+    { name: "Random Mechanojunk", quantity: 3, weight: 25 },
+    { name: "Random Mechanojunk", quantity: 4, weight: 15 },
+    { name: "Perpetual Dynamo", quantity: 1, weight: 5 },
+    { name: "Universal Credit", quantity: 20, weight: 3 },
+    { name: "Slicing Gloves", quantity: 1, weight: 2 },
+    { name: "Electric Eye", quantity: 1, weight: 1 },
+    { name: "Damaged Exosuit", quantity: 1, weight: 1 },
+    { name: "A.M. Essence", quantity: 1, weight: 10 }
+    
+]);
 
-const resurrectedMeatSludgeLootTable = new LootTable([
-    Item.createItem("Destroyed Flesh", 2),
-    Item.createItem("Destroyed Flesh", 3),
-    Item.createItem("Destroyed Flesh", 4),
-    Item.createItem("Still-beating Heart", 1),
-    Item.createItem("Universal Credit", 20),
-    Item.createItem("Inexplicable Ribs", 1),
-    Item.createItem("Electric Eye", 1),
-    Item.createItem("Butcher's Apron", 1),
-    ],[50,25,15,5,3,2,1,1]
-);
+const resurrectedMeatSludgeLootTable = genLootTable([
+    { name: "Destroyed Flesh", quantity: 2, weight: 50 },
+    { name: "Destroyed Flesh", quantity: 3, weight: 25 },
+    { name: "Destroyed Flesh", quantity: 4, weight: 15 },
+    { name: "Still-beating Heart", quantity: 1, weight: 5 },
+    { name: "Universal Credit", quantity: 20, weight: 3 },
+    { name: "Inexplicable Ribs", quantity: 1, weight: 2 },
+    { name: "Electric Eye", quantity: 1, weight: 1 },
+    { name: "Butcher's Apron", quantity: 1, weight: 1 },
+    { name: "A.M. Essence", quantity: 1, weight: 10 }
+]);
 
-const warpedManLootTable = new LootTable([
-    Item.createItem("Destroyed Flesh", 3),
-    Item.createItem("Destroyed Flesh", 4),
-    Item.createItem("Destroyed Flesh", 5),
-    Item.createItem("Soul Remnant", 1),
-    Item.createItem("Universal Credit", 20),
-    Item.createItem("Symbol of Everlasting Humanity", 1),
-    Item.createItem("Electric Eye", 1),
-    Item.createItem("Ring of the Unbroken Stare", 1),
-    ],[50,25,15,5,3,2,1,1]
-);
+const warpedManLootTable = genLootTable([
+    { name: "Destroyed Flesh", quantity: 3, weight: 50 },
+    { name: "Destroyed Flesh", quantity: 4, weight: 25 },
+    { name: "Destroyed Flesh", quantity: 5, weight: 15 },
+    { name: "Soul Remnant", quantity: 1, weight: 5 },
+    { name: "Universal Credit", quantity: 20, weight: 3 },
+    { name: "Symbol of Everlasting Humanity", quantity: 1, weight: 2 },
+    { name: "Electric Eye", quantity: 1, weight: 1 },
+    { name: "Ring of the Unbroken Stare", quantity: 1, weight: 1 },
+    { name: "A.M. Essence", quantity: 1, weight: 10 }
+]);
 
-const hairyDreadbeastLootTable = new LootTable([
-    Item.createItem("Pile of Beast Fur", 31),
-    Item.createItem("Pile of Beast Fur", 37),
-    Item.createItem("Pile of Beast Fur", 41),
-    Item.createItem("Brutal Fang", 1),
-    Item.createItem("Universal Credit", 20),
-    Item.createItem("Universal Credit", 24),
-    Item.createItem("Perfect Diamond Amulet", 1),
-    Item.createItem("Electric Eye", 1),
-    Item.createItem("Dreadbeast Trophy", 1),
-    ],[100,50,30,10,6,3,4,2,1]
-);
+const hairyDreadbeastLootTable = genLootTable([
+    { name: "Pile of Beast Fur", quantity: 31, weight: 100 },
+    { name: "Pile of Beast Fur", quantity: 37, weight: 50 },
+    { name: "Pile of Beast Fur", quantity: 41, weight: 30 },
+    { name: "Brutal Fang", quantity: 1, weight: 10 },
+    { name: "Universal Credit", quantity: 20, weight: 6 },
+    { name: "Universal Credit", quantity: 24, weight: 3 },
+    { name: "Perfect Diamond Amulet", quantity: 1, weight: 4 },
+    { name: "Electric Eye", quantity: 1, weight: 2 },
+    { name: "Dreadbeast Trophy", quantity: 1, weight: 1 },
+    { name: "A.M. Essence", quantity: 1, weight: 10 }
+]);
 
-const amPlaythingLootTable = new LootTable([
-    Item.createItem("Broken Circuitry", 111),
-    Item.createItem("Broken Circuitry", 133),
-    Item.createItem("Broken Circuitry", 177),
-    Item.createItem("Cage of Inexorable Torment", 1),
-    Item.createItem("Universal Credit", 10),
-    Item.createItem("Universal Credit", 12),
-    Item.createItem("Tabis of Inexorable Torment", 1),
-    Item.createItem("Electric Eye", 1),
-    Item.createItem("Gar'Ahan, Fleshstripper", 1),
-    ],[50,25,15,5,3,3,2,1,1]
-);
+const amPlaythingLootTable = genLootTable([
+    { name: "Broken Circuitry", quantity: 111, weight: 50 },
+    { name: "Broken Circuitry", quantity: 133, weight: 25 },
+    { name: "Broken Circuitry", quantity: 177, weight: 15 },
+    { name: "Cage of Inexorable Torment", quantity: 1, weight: 5 },
+    { name: "Universal Credit", quantity: 10, weight: 3 },
+    { name: "Universal Credit", quantity: 12, weight: 3 },
+    { name: "Tabis of Inexorable Torment", quantity: 1, weight: 2 },
+    { name: "Electric Eye", quantity: 1, weight: 1 },
+    { name: "Gar'Ahan, Fleshstripper", quantity: 1, weight: 1 },
+    { name: "A.M. Essence", quantity: 1, weight: 10 }
+]);
 
 // STELLAR REMNANT WORLD
 
-const impactSurvivorLootTable = new LootTable([
-    Item.createItem("Space Junk", 1),
-    Item.createItem("Space Junk", 2),
-    Item.createItem("Space Junk", 3),
-    Item.createItem("Element Collector", 1),
-    Item.createItem("Universal Credit", 14),
-    Item.createItem("Stolen Hope", 1),
-    Item.createItem("Collapse Clasp", 1),
-    Item.createItem("Degenerate Star Coat", 1),
-    ],[50,25,15,5,3,2,1,1]
-);
+const impactSurvivorLootTable = genLootTable([
+    { name: "Space Junk", quantity: 1, weight: 50 },
+    { name: "Space Junk", quantity: 2, weight: 25 },
+    { name: "Space Junk", quantity: 3, weight: 15 },
+    { name: "Element Collector", quantity: 1, weight: 5 },
+    { name: "Universal Credit", quantity: 14, weight: 3 },
+    { name: "Stolen Hope", quantity: 1, weight: 2 },
+    { name: "Collapse Clasp", quantity: 1, weight: 1 },
+    { name: "Essence-Starved Coat", quantity: 1, weight: 1 },
+    { name: "Stellar Remnant Essence", quantity: 1, weight: 10 }
+]);
 
-const ionBreatherLootTable = new LootTable([
-    Item.createItem("Solar Debris", 1),
-    Item.createItem("Solar Debris", 2),
-    Item.createItem("Solar Debris", 3),
-    Item.createItem("Element Collector", 1),
-    Item.createItem("Universal Credit", 14),
-    Item.createItem("Ion Chimes", 1),
-    Item.createItem("Collapse Clasp", 1),
-    Item.createItem("Degenerate Star Hood", 1),
-    ],[50,25,15,5,3,2,1,1]
-);
+const ionBreatherLootTable = genLootTable([
+    { name: "Solar Debris", quantity: 1, weight: 50 },
+    { name: "Solar Debris", quantity: 2, weight: 25 },
+    { name: "Solar Debris", quantity: 3, weight: 15 },
+    { name: "Element Collector", quantity: 1, weight: 5 },
+    { name: "Universal Credit", quantity: 14, weight: 3 },
+    { name: "Ion Chimes", quantity: 1, weight: 2 },
+    { name: "Collapse Clasp", quantity: 1, weight: 1 },
+    { name: "Essence-Starved Hood", quantity: 1, weight: 1 },
+    { name: "Stellar Remnant Essence", quantity: 1, weight: 10 }
+]);
 
-const plasmaJunkerLootTable = new LootTable([
-    Item.createItem("Solar Debris", 2),
-    Item.createItem("Solar Debris", 3),
-    Item.createItem("Solar Debris", 4),
-    Item.createItem("Element Collector", 1),
-    Item.createItem("Universal Credit", 14),
-    Item.createItem("Anti-matter Aegis", 1),
-    Item.createItem("Collapse Clasp", 1),
-    Item.createItem("Degenerate Star Belt", 1),
-    ],[50,25,15,5,3,2,1,1]
-);
+const plasmaJunkerLootTable = genLootTable([
+    { name: "Solar Debris", quantity: 2, weight: 50 },
+    { name: "Solar Debris", quantity: 3, weight: 25 },
+    { name: "Solar Debris", quantity: 4, weight: 15 },
+    { name: "Element Collector", quantity: 1, weight: 5 },
+    { name: "Universal Credit", quantity: 14, weight: 3 },
+    { name: "Anti-matter Aegis", quantity: 1, weight: 2 },
+    { name: "Collapse Clasp", quantity: 1, weight: 1 },
+    { name: "Essence-Starved Belt", quantity: 1, weight: 1 },
+    { name: "Stellar Remnant Essence", quantity: 1, weight: 10 }
+]);
 
-const poststellarScreamerLootTable = new LootTable([
-    Item.createItem("Solar Debris", 3),
-    Item.createItem("Solar Debris", 4),
-    Item.createItem("Solar Debris", 5),
-    Item.createItem("Astral Essence", 1),
-    Item.createItem("Universal Credit", 14),
-    Item.createItem("Impossibly Dense Chain", 1),
-    Item.createItem("Collapse Clasp", 1),
-    Item.createItem("Degenerate Star Boots", 1),
-    ],[50,25,15,5,3,2,1,1]
-);
+const poststellarScreamerLootTable = genLootTable([
+    { name: "Solar Debris", quantity: 3, weight: 50 },
+    { name: "Solar Debris", quantity: 4, weight: 25 },
+    { name: "Solar Debris", quantity: 5, weight: 15 },
+    { name: "Astral Dust", quantity: 1, weight: 5 },
+    { name: "Universal Credit", quantity: 14, weight: 3 },
+    { name: "Impossibly Dense Chain", quantity: 1, weight: 2 },
+    { name: "Collapse Clasp", quantity: 1, weight: 1 },
+    { name: "Essence-Starved Boots", quantity: 1, weight: 1 },
+    { name: "Stellar Remnant Essence", quantity: 1, weight: 10 }
+]);
 
-const superDreadbeastLootTable = new LootTable([
-    Item.createItem("Solar Debris", 4),
-    Item.createItem("Solar Debris", 5),
-    Item.createItem("Solar Debris", 6),
-    Item.createItem("Supermassive Fang", 1),
-    Item.createItem("Universal Credit", 14),
-    Item.createItem("Universal Credit", 16),
-    Item.createItem("Magnetar Pendant", 1),
-    Item.createItem("Collapse Clasp", 1),
-    Item.createItem("Dreadbeast Trophy", 1),
-    ],[100,50,30,10,6,3,4,2,1]
-);
+const superDreadbeastLootTable = genLootTable([
+    { name: "Solar Debris", quantity: 4, weight: 100 },
+    { name: "Solar Debris", quantity: 5, weight: 50 },
+    { name: "Solar Debris", quantity: 6, weight: 30 },
+    { name: "Supermassive Fang", quantity: 1, weight: 10 },
+    { name: "Universal Credit", quantity: 14, weight: 6 },
+    { name: "Universal Credit", quantity: 16, weight: 3 },
+    { name: "Magnetar Pendant", quantity: 1, weight: 4 },
+    { name: "Collapse Clasp", quantity: 1, weight: 2 },
+    { name: "Dreadbeast Trophy", quantity: 1, weight: 1 },
+    { name: "Stellar Remnant Essence", quantity: 1, weight: 10 }
+]);
 
-const studentofSyzygyLootTable = new LootTable([
-    Item.createItem("Solar Debris", 5),
-    Item.createItem("Solar Debris", 6),
-    Item.createItem("Solar Debris", 7),
-    Item.createItem("Cape of the White Dwarf", 1),
-    Item.createItem("Universal Credit", 14),
-    Item.createItem("Universal Credit", 16),
-    Item.createItem("Cape of the Neutron Star", 1),
-    Item.createItem("Collapse Clasp", 1),
-    Item.createItem("Degenerate Star Tome", 1),
-    ],[50,25,15,5,3,3,2,1,1]
-);
+const studentofSyzygyLootTable = genLootTable([
+    { name: "Solar Debris", quantity: 5, weight: 50 },
+    { name: "Solar Debris", quantity: 6, weight: 25 },
+    { name: "Solar Debris", quantity: 7, weight: 15 },
+    { name: "Cape of the White Dwarf", quantity: 1, weight: 5 },
+    { name: "Universal Credit", quantity: 14, weight: 3 },
+    { name: "Universal Credit", quantity: 16, weight: 3 },
+    { name: "Cape of the Neutron Star", quantity: 1, weight: 2 },
+    { name: "Collapse Clasp", quantity: 1, weight: 1 },
+    { name: "Essence-Starved Tome", quantity: 1, weight: 1 },
+    { name: "Stellar Remnant Essence", quantity: 1, weight: 10 }
+]);
 
 // MYTH WORLD
 
-const mythEnemyLootTable = new LootTable([
-    Item.createItem("Myth Essence", 1),
-    Item.createItem("Greater Myth Essence", 1),
-    Item.createItem("Aura Scanner", 1),
-    Item.createItem("Gauntlets of Transcendent Faith", 1),
-    Item.createItem("Shard of Light", 1),
-    Item.createItem("Shard of Darkness", 1),
-    Item.createItem("Symbol of Trinity", 1),
-    Item.createItem("Singularity of Purpose", 1),
-    Item.createItem("Blazer of the Screaming Eagle", 1),
-    ],[75,15,5,3,2,1,1,1,1,1]
-);
+const mythEnemyLootTable = genLootTable([
+    { name: "Myth Essence", quantity: 1, weight: 75 },
+    { name: "Greater Myth Essence", quantity: 1, weight: 15 },
+    { name: "Aura Scanner", quantity: 1, weight: 5 },
+    { name: "Gauntlets of Transcendent Faith", quantity: 1, weight: 3 },
+    { name: "Shard of Light", quantity: 1, weight: 2 },
+    { name: "Shard of Darkness", quantity: 1, weight: 1 },
+    { name: "Symbol of Trinity", quantity: 1, weight: 1 },
+    { name: "Singularity of Purpose", quantity: 1, weight: 1 },
+    { name: "Blazer of the Screaming Eagle", quantity: 1, weight: 1 }
+]);
 
 // DEFAULT WORLD PART 3
 
-const defaultWorldPartThreeEnemyLootTable = new LootTable([
-    Item.createItem("Life Essence", 1),
-    Item.createItem("God Cinch", 1),
-    Item.createItem("Chaos Emerald", 1),
-    Item.createItem("God Bulwark", 1),
-    Item.createItem("God Helm", 1),
-    Item.createItem("Spiral Augment", 1),
-    Item.createItem("Critical Augment", 1),
-    Item.createItem("Charging Augment", 1),
-    Item.createItem("Flaring Augment", 1),
-    ],[200,1,1,1,1,2,2,2,2]
-);
+const defaultWorldPartThreeEnemyLootTable = genLootTable([
+    { name: "Life Essence", quantity: 1, weight: 200 },
+    { name: "God Cinch", quantity: 1, weight: 1 },
+    { name: "Chaos Emerald", quantity: 1, weight: 1 },
+    { name: "God Bulwark", quantity: 1, weight: 1 },
+    { name: "God Helm", quantity: 1, weight: 1 },
+    { name: "Spiral Augment", quantity: 1, weight: 2 },
+    { name: "Critical Augment", quantity: 1, weight: 2 },
+    { name: "Charging Augment", quantity: 1, weight: 2 },
+    { name: "Flaring Augment", quantity: 1, weight: 2 }
+]);
 
 // DEFAULT WORLD PART 4
 
-const defaultWorldPartFourEnemyLootTable = new LootTable([
-    Item.createItem("Life Essence", 1),
-    Item.createItem("God Plate", 1),
-    Item.createItem("Balance Ruby", 1),
-    Item.createItem("God Cape", 1),
-    Item.createItem("God Gloves", 1),
-    Item.createItem("Spiral Augment", 1),
-    Item.createItem("Critical Augment", 1),
-    Item.createItem("Charging Augment", 1), 
-    Item.createItem("Flaring Augment", 1),
-    ],[200,1,1,1,1,2,2,2,2]
-);
+const defaultWorldPartFourEnemyLootTable = genLootTable([
+    { name: "Life Essence", quantity: 1, weight: 200 },
+    { name: "God Plate", quantity: 1, weight: 1 },
+    { name: "Balance Ruby", quantity: 1, weight: 1 },
+    { name: "God Cape", quantity: 1, weight: 1 },
+    { name: "God Gloves", quantity: 1, weight: 1 },
+    { name: "Spiral Augment", quantity: 1, weight: 2 },
+    { name: "Critical Augment", quantity: 1, weight: 2 },
+    { name: "Charging Augment", quantity: 1, weight: 2 },
+    { name: "Flaring Augment", quantity: 1, weight: 2 }
+]);
 
 // DESERT WORLD PART 2
 
-const desertWorldPartTwoEnemyLootTable = new LootTable([
-    Item.createItem("Life Essence", 1),
-    Item.createItem("Truesilver Greathammer", 1),
-    Item.createItem("Order Sapphire", 1),
-    Item.createItem("Truesilver Greataxe", 1),
-    Item.createItem("Truesilver Greatsword", 1),
-    Item.createItem("Spiral Augment", 1),
-    Item.createItem("Critical Augment", 1),
-    Item.createItem("Charging Augment", 1),
-    Item.createItem("Flaring Augment", 1),
-    ],[200,1,1,1,1,2,2,2,2]
-);
+const desertWorldPartTwoEnemyLootTable = genLootTable([
+    { name: "Life Essence", quantity: 1, weight: 200 },
+    { name: "Truesilver Greathammer", quantity: 1, weight: 1 },
+    { name: "Order Sapphire", quantity: 1, weight: 1 },
+    { name: "Truesilver Greataxe", quantity: 1, weight: 1 },
+    { name: "Truesilver Greatsword", quantity: 1, weight: 1 },
+    { name: "Spiral Augment", quantity: 1, weight: 2 },
+    { name: "Critical Augment", quantity: 1, weight: 2 },
+    { name: "Charging Augment", quantity: 1, weight: 2 },
+    { name: "Flaring Augment", quantity: 1, weight: 2 }
+]);
+
+// TITAN BOSS WORLD
+
+const bulwarkTitanLootTable = genLootTable([
+    { name: "Titan Essence", quantity: 1, weight: 47 },
+    { name: "Titanic Bulwark", quantity: 1, weight: 2 },
+    { name: "Titanic Smasher", quantity: 1, weight: 1 },
+]);

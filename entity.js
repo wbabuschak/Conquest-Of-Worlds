@@ -1,21 +1,31 @@
 class Entity{
-    constructor(name, maxHealth, lootTable, armor = 0){
+    constructor(name, mobLevel, lootTable, armorClass = 0){
         this.name = name;
-        this.maxHealth = maxHealth;
-        this.HP = maxHealth;
+        this.mobLevel = mobLevel;
+        this.maxHealth = this.randomizeMaxHealth(mobLevel);
+        this.HP = this.maxHealth;
         this.destroyed = false;
         this.lootTable = lootTable;
-        this.armor = armor;
+        this.armor = Math.floor((mobLevel * (2 * mobLevel + 9)) * armorClass);
         this.loot = null;
-        this.xp = Math.max(Math.floor(maxHealth / 100), 1);
+        this.xp = this.calculateXP(mobLevel);
     }
 
     damage(damage){
         if (this.HP > 0) this.HP-= Math.max(0,damage - this.armor);
+        //console.log(this.HP + " - " + Math.max(0,damage - this.armor))
          if (this.HP <= 0 && !this.destroyed) {
             this.destroyed = true;
             this.name += " (destroyed)";
          }
+    }
+
+    randomizeMaxHealth(mobLevel){
+        return Math.floor((mobLevel * (2 * mobLevel + 9)) * (0.9 + Math.random() * .2));
+    }
+
+    calculateXP(mobLevel){
+        return Math.floor(mobLevel * mobLevel + 5);
     }
 
     getLoot(drops) {
