@@ -4,7 +4,7 @@
     <div id="tooltip" style ="display: none"></div>
     <div id="top-content" style="flex-grow: 1; justify-content: space-between; display: flex; max-width: 100%; height: max-content; width: max-content;  margin: 0vw 1vw; gap: 1vw;   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif ;">
         <script>
-            const currentVersion = "0.1.0";
+            const currentVersion = "0.1.1";
             const savedVersion = localStorage.getItem("gameVersion");
             if (savedVersion !== currentVersion) {
                 localStorage.setItem("gameVersion", currentVersion);
@@ -47,15 +47,7 @@
     </div>
     <div id="main-container" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; padding:1vw; font-size: 18px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif ;">
 
-    
-    <div id="left-content" style="flex-grow: 1; max-width: 32%; width: max-content; background-color: #00000020; padding: 1vw; border-radius: 1vw;">
-        <p id = "entityDisplay"></p>
-        <p id = "lootDisplay">&nbsp;</p>
-        <button id="attackButton">Attack!</button>
-        <p id = "dpsDisplay"></p>
-        <p id = "dropTableDisplay"></p>
-    </div>
-    <div id="middle-content" style="flex-grow: 1; max-width: 32%; width: max-content; background-color: #00000020; padding: 1vw; border-radius: 1vw;">
+    <div id="middle-content" style="flex-grow: 1; max-width: 24%; width: max-content; background-color: #00000020; padding: 1vw; border-radius: 1vw;">
         <button id="equipButton">Equip</button>
         <select id="equipSelect"></select>
         <p></p>
@@ -63,7 +55,16 @@
         <select id="unequipSelect"></select>
         <p id = "equippedItems"></p>
     </div>
-    <div id="right-content" style="flex-grow: 1; max-width: 32%; width: max-content;">
+
+    <div id="left-content" style="flex-grow: 1; max-width: 36%; width: max-content; background-color: #00000020; padding: 1vw; border-radius: 1vw;">
+        <p id = "entityDisplay"></p>
+        <p id = "lootDisplay">&nbsp;</p>
+        <button id="attackButton">Attack!</button>
+        <p id = "dpsDisplay"></p>
+        <p id = "dropTableDisplay"></p>
+    </div>
+    
+    <div id="right-content" style="flex-grow: 1; max-width: 36%; width: max-content;">
         <div id="crafting-content" style="background-color: #00000020; padding: 1vw; border-radius: 1vw;">
             <p id = "craftDisplay"></p>
             <button id = "recipeToggle">Hide Recipes</button>
@@ -227,11 +228,39 @@
                     
                     const wrapper = document.createElement("span");
                     const type = item.equippable;
+                    const color = item.color;
 
-                    const typeSpan = document.createElement("span");
-                    typeSpan.textContent = type + "- ";
-                    typeSpan.style.color = "";
-                    wrapper.appendChild(typeSpan);
+                    const img = document.createElement("img");
+                    img.src = 'icons/' + type + '.png';
+                    img.width = 16;
+                    img.height = 16;
+                    img.style.verticalAlign = 'middle';
+                    
+                    // color filter
+                    switch(color){
+                        case "#2b814fff":
+                            img.style.filter = 'brightness(100%) invert(42%) sepia(20%) saturate(1173%) hue-rotate(92deg) brightness(94%) contrast(93%)';
+                            break;
+                        case "#17467cff":
+                            img.style.filter = 'brightness(100%) invert(19%) sepia(69%) saturate(1395%) hue-rotate(188deg) brightness(98%) contrast(90%)';
+                            break;
+                        case "#9a50c5ff":
+                            img.style.filter = 'brightness(100%) invert(59%) sepia(99%) saturate(4322%) hue-rotate(246deg) brightness(81%) contrast(88%)';
+                            break;
+                        case "#aa2a0aff":
+                            img.style.filter = 'brightness(100%) invert(19%) sepia(22%) saturate(7489%) hue-rotate(356deg) brightness(102%) contrast(98%)';
+                            break;
+                    }
+                    
+
+
+                    wrapper.appendChild(img);
+
+                    // const typeSpan = document.createElement("span");
+                    // typeSpan.textContent = type + "- ";
+                    // typeSpan.style.color = "";
+                    
+                    // wrapper.appendChild(typeSpan);
 
                     const temp = { items: [item], list: Inventory.prototype.list };
                     const itemFragment = temp.list.call({ items: [item], }, false);
@@ -283,9 +312,19 @@
                 .join("<br>");
             
             document.getElementById("crafting-content").style.display = craftDisplay.innerHTML === "" ? "none" : "block";
-            if (document.getElementById("recipe-content").style.display != "none") document.getElementById("recipe-content").style.display = recipeDisplay.innerHTML === "" ? "none" : "block";
-            if (document.getElementById("crafting-content").style.display === "none" && recipeDisplay.innerHTML != "") document.getElementById("recipe-content").style.display = "block";
-            document.getElementById("recipeToggle").innerHTML = craftDisplay.style.display === "none" ? "Show Recipes" : "Hide Recipes";  
+            // only attempt to show recipes is some are learned
+            showRecipes(learnedRecipesWithIndex.length > 0);
+        }
+
+        // try to turn on recipes are turned on if some exist and (button is turned on or if crafting is hidden)
+        function showRecipes(attempt){
+            if (attempt){
+                document.getElementById("recipe-content").style.display = "block";
+                document.getElementById("recipeToggle").innerHTML = "Hide Recipes";
+            } else {
+                document.getElementById("recipe-content").style.display = "none";
+                document.getElementById("recipeToggle").innerHTML = "Show Recipes";
+            }
         }
 
         function updateEquipSelect() {
@@ -320,8 +359,8 @@
             worlds.push(WORLD_DEFS["Default World"]);
 
             // default world part 2
-            let dirtyShoes = inventory.items.find(i => i.name == "Dirty Shoes");
-            if (dirtyShoes && (dirtyShoes.quantity >= 10 || (dirtyShoes.quantity >= 9 && itemEquipped("Dirty Shoes")))){
+            let shinedShoes = inventory.items.find(i => i.name == "Shined Shoes");
+            if (shinedShoes|| itemEquipped("Shined Shoes")){
                 worlds.push(WORLD_DEFS["Default World (Part 2)"]);
             }
 
@@ -515,6 +554,7 @@
             document.getElementById("entityLevel").style.color = "";
             if (level > activeEntity.mobLevel) document.getElementById("entityLevel").style.color = "#c5c5c5ff";
             document.getElementById("knownWorlds").innerHTML = `${knownWorlds.size} / ${Object.keys(WORLD_DEFS).length}`;
+            // console.log(knownWorlds);
             updateDPSDisplay();
             updateDropTableDisplay();
         }
@@ -830,11 +870,10 @@
                 experience = 0;
                 level = 0;
                 updateWorldSelect();
-                activeEntity = randomEnemy(worldSelect.value);
-                updateEntityDisplay(-1);
                 updateRecipesDisplays();
                 saveGame();
                 loadGame();
+                newStart();
             }
         });
         document.addEventListener("mousemove", e=> {
@@ -855,13 +894,10 @@
             }
         });
         document.getElementById("recipeToggle").addEventListener("click", () => {
-            if (document.getElementById("recipe-content").style.display === "none"){
-                document.getElementById("recipe-content").style.display = "block";
-                document.getElementById("recipeToggle").innerHTML = "Hide Recipes";
-            } else {
-                document.getElementById("recipe-content").style.display = "none";
-                document.getElementById("recipeToggle").innerHTML = "Show Recipes";
-            }
+            // show recipes is they are being hidden, otherwise attempt to hide
+            recipeToggledOff = document.getElementById("recipe-content").style.display == "none";
+            showRecipes(recipeToggledOff);
+            // console.log("attempting to show: " + recipeToggledOff);
         });
     </script>
 
@@ -921,13 +957,17 @@
             }
             return enemy;
         }
+
+        function newStart(){
+            updateFocus();
+            knownWorlds.add(worldSelect.value);
+            activeEntity = randomEnemy(worldSelect.value);
+            updateEntityDisplay(-1);
+        }
     </script>
 
     <script>
-        updateFocus();
-        knownWorlds.add(worldSelect.value);
-        activeEntity = randomEnemy(worldSelect.value);
-        updateEntityDisplay(-1);
+        newStart();
     </script>
 
 </body>

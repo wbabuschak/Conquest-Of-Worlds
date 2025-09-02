@@ -2,6 +2,11 @@ const recipes = [
     
     // DEFAULT WORLD
     new Recipe([
+    Item.createItem("Dirty Shoes", 1),
+    Item.createItem("Gold Coin", 5),
+    ], Item.createItem("Shined Shoes", 1)),
+
+    new Recipe([
     Item.createItem("Gold Coin", 180),
     Item.createItem("Common Dagger"),
     ], Item.createItem("Gilded Dagger", 1)),
@@ -14,7 +19,8 @@ const recipes = [
     // SPIRIT WORLD
     
     new Recipe([
-    Item.createItem("Dirty Shoes", 10),
+    Item.createItem("Shined Shoes", 1),
+    Item.createItem("Bone Chip", 2),
     Item.createItem("Greater Spectral Essence"),
     ], Item.createItem("Skullstompers", 1)),
 
@@ -141,5 +147,17 @@ const recipes = [
     Item.createItem("Solar Debris", 999),
     Item.createItem("Essence-Starved Coat", 1),
     ], Item.createItem("Degenerate Star Coat", 1)),
+
+    // TITAN BOSS WORLD
+
+    new Recipe([
+    Item.createItem("Titan Essence", 6),
+    Item.createItem("Wraps of Temptation")
+    ], Item.createItem("Wraps of the Great Deceiver", 1)),
+
+    new Recipe([
+    Item.createItem("Titan Essence", 6),
+    Item.createItem("Treads of Crushing Depths")
+    ], Item.createItem("Treads of Unfathomable Pressure", 1)),
 
 ]

@@ -258,5 +258,7 @@ const ItemStaticEffects = {
     "Degenerate Star Hood": s => { s.starSetBonus++; },
     "Degenerate Star Coat": s => { s.starSetBonus++; },
     "Titanic Smasher": s => { s.dmgMult += 4.00},
+    "Vestaments of the Great Deceiver": s => { s.dmg += 69; s.dmgMult += 1.69; s.missChance += 0.6; },
+    "Treads of Unfathomable Pressure": s => { s.dmgMult -= 0.60; s.missMult = 0.85; },
 };
 

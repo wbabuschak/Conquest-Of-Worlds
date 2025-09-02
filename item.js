@@ -70,6 +70,10 @@ class Item{
                 return new Item(name,quantity,null,null,CRAFTING_BROWN);
             case "Titan Essence":
                 return new Item(name,quantity,null,null,CRAFTING_BROWN);
+            case "Cloth Scrap":
+                return new Item(name,quantity,null,null,CRAFTING_BROWN);
+            case "Bone Chip":
+                return new Item(name,quantity,null,null,CRAFTING_BROWN);
             // 0.1.0 "The Big Update" crafted items
             case "Gilded Dagger":
                 return new Item(name,quantity,"weapon","+6 dmg",DARK_BLUE);
@@ -103,6 +107,8 @@ class Item{
                 return new Item(name,quantity,"chest","+25 dmg for each degenerate star item, deal 2.00x dmg on the fifth of every 5 attacks",RED);
             case "Symbol of the Desert":
                 return new Item(name,quantity,null,null,LIGHT_BLUE);
+            case "Shined Shoes":
+                return new Item(name,quantity,"feet","+1 style",GRAY);
             // 0.1.0 "The Big Update" new and updated drops
             case "Gravegrips":
                 return new Item(name,quantity,"hands","4% dmg",GREEN);
@@ -443,6 +449,10 @@ class Item{
                 return new Item(name,quantity,"weapon","+700 dmg, 350% dmg, 300 armor break, 2.50x armor break",RED);
             case "Truesilver Greatsword":
                 return new Item(name,quantity,"weapon","+600 dmg, 300% dmg, 400 armor break, 3.00x armor break",RED);
+            case "Vestaments of the Great Deceiver":
+                return new Item(name,quantity,"chest","+69 dmg, 169% dmg, 60% chance to miss",DARK_BLUE);
+            case "Treads of Unfathomable Pressure":
+                return new Item(name,quantity,"feet","-60% dmg, your attacks that would miss deal 85% dmg",RED);
             default:
                 return new Item(name,quantity);
         }
