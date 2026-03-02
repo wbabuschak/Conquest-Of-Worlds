@@ -55,6 +55,7 @@ const spiritEaterLootTable = genLootTable([
     { name: "Ectoplasm", quantity: 6, weight: 36 },
     { name: "Gold Coin", quantity: 1, weight: 14 },
     { name: "Bone Chip", quantity: 1, weight: 4 },
+    { name: "Bone Chip", quantity: 2, weight: 1 },
     { name: "Greater Spectral Essence", quantity: 1, weight: 2 },
     { name: "Ring of Slaying", quantity: 1, weight: 2 },
     { name: "Gravegrips", quantity: 1, weight: 1 }
@@ -65,8 +66,17 @@ const ghastlyHorrorLootTable = genLootTable([
     { name: "Brain Slime", quantity: 2, weight: 8 },
     { name: "Brain Slime", quantity: 1, weight: 6 },
     { name: "Bone Chip", quantity: 1, weight: 4 },
+    { name: "Bone Chip", quantity: 2, weight: 1 },
     { name: "Mummy Wraps", quantity: 1, weight: 2 },
     { name: "Ring of Slaying", quantity: 1, weight: 2 },
+    { name: "Gravegrips", quantity: 1, weight: 1 }
+]);
+
+const bansheeScreamerLootTable = genLootTable([
+    { name: "Ectoplasm", quantity: 12, weight: 62 },
+    { name: "Ectoplasm", quantity: 18, weight: 32 },
+    { name: "Shackled Spirit", quantity: 2, weight: 8 },
+    { name: "Soul Binding I", quantity: 1, weight: 2 },
     { name: "Gravegrips", quantity: 1, weight: 1 }
 ]);
 
@@ -145,13 +155,13 @@ const infernalInsectLootTable = genLootTable([
 ]);
 
 const sinfulSuccubusLootTable = genLootTable([
-    { name: "Weary Soul", quantity: 6, weight: 12 },
-    { name: "Repressed Memory", quantity: 6, weight: 12 },
-    { name: "Broken Dream", quantity: 6, weight: 12 },
-    { name: "Shattered Innocence", quantity: 6, weight: 12 },
+    { name: "Weary Soul", quantity: 6, weight: 11 },
+    { name: "Repressed Memory", quantity: 6, weight: 11 },
+    { name: "Broken Dream", quantity: 6, weight: 11 },
+    { name: "Shattered Innocence", quantity: 6, weight: 11 },
     { name: "Memento of the Succubus", quantity: 1, weight: 3 },
     { name: "Wraps of Temptation", quantity: 1, weight: 1 },
-    { name: "Promise Ring", quantity: 1, weight: 1 }
+    { name: "Promise Ring", quantity: 1, weight: 5 }
 ]);
 
 const fieryFangtoothLootTable = genLootTable([
@@ -203,6 +213,7 @@ const spookyRevenantLootTable = genLootTable([
     { name: "Repressed Memory", quantity: 1, weight: 15 },
     { name: "Broken Dream", quantity: 1, weight: 15 },
     { name: "Shattered Innocence", quantity: 1, weight: 15 },
+    { name: "Necromantic Residue", quantity: 1, weight: 9 },
     { name: "Terror Mask", quantity: 1, weight: 1 },
     { name: "Frozen Essence", quantity: 1, weight: 1 }
 ]);
@@ -225,22 +236,66 @@ const animatedWeaponLootTable = genLootTable([
     { name: "Magical Essence", quantity: 5, weight: 20 },
     { name: "Magical Essence", quantity: 7, weight: 15 },
     { name: "Mote of Arcane Power", quantity: 1, weight: 1 },
+    { name: "Necromantic Residue", quantity: 1, weight: 9 },
     { name: "Frozen Essence", quantity: 1, weight: 1 }
 ]);
 
 const foulNecromancerLootTable = genLootTable([
-    { name: "Cloth Scrap", quantity: 20, weight: 12 },
-    { name: "Cloth Scrap", quantity: 17, weight: 18 },
-    { name: "Cloth Scrap", quantity: 15, weight: 24 },
-    { name: "Gold Coin", quantity: 244, weight: 30 },
-    { name: "Gold Coin", quantity: 151, weight: 39 },
-    { name: "Magical Essence", quantity: 3, weight: 18 },
-    { name: "Magical Essence", quantity: 5, weight: 24 },
-    { name: "Bone Chip", quantity: 1, weight: 6 },
+    { name: "Cloth Scrap", quantity: 20, weight: 10 },
+    { name: "Cloth Scrap", quantity: 17, weight: 14 },
+    { name: "Cloth Scrap", quantity: 15, weight: 20 },
+    { name: "Gold Coin", quantity: 244, weight: 20 },
+    { name: "Gold Coin", quantity: 151, weight: 29 },
+    { name: "Magical Essence", quantity: 3, weight: 16 },
+    { name: "Magical Essence", quantity: 5, weight: 22 },
+    { name: "Necromantic Residue", quantity: 1, weight: 9 },
     { name: "Ice Bear Fur Shawl", quantity: 1, weight: 2 },
     { name: "Dread Loop", quantity: 1, weight: 1 },
+    { name: "Soul Binding II", quantity: 1, weight: 1 },
     { name: "Frozen Essence", quantity: 1, weight: 1 }
 ]);
+
+const bossYetiLootTable = genLootTable([
+    { name: "Yeti Fur", quantity: 10, weight: 10 },
+    { name: "Yeti Fur", quantity: 7, weight: 16 },
+    { name: "Yeti Fur", quantity: 5, weight: 22 },
+    { name: "Gold Coin", quantity: 304, weight: 20 },
+    { name: "Gold Coin", quantity: 253, weight: 29 },
+    { name: "Poor Quality Yeti Fur", quantity: 31, weight: 16 },
+    { name: "Poor Quality Yeti Fur", quantity: 14, weight: 20 },
+    { name: "Boss Yeti Trophy", quantity: 1, weight: 1 },
+    { name: "Yeti Snot", quantity: 2, weight: 10 },
+    { name: "Supreme Yeti Fur", quantity: 1, weight: 2 },
+    { name: "Soul Binding II", quantity: 1, weight: 1 },
+    { name: "Frozen Essence", quantity: 1, weight: 1 }
+]);
+
+const alphaYetiTable = genLootTable([
+    { name: "Yeti Fur", quantity: 16, weight: 8 },
+    { name: "Yeti Fur", quantity: 12, weight: 12 },
+    { name: "Yeti Fur", quantity: 9, weight: 14 },
+    { name: "Gold Coin", quantity: 380, weight: 16 },
+    { name: "Yeti Snot", quantity: 3, weight: 12 },
+    { name: "Supreme Yeti Fur", quantity: 1, weight: 3 },
+    { name: "Magical Essence", quantity: 20, weight: 3 },
+    { name: "Frozen Essence", quantity: 2, weight: 1 },
+    { name: "Magical Essence", quantity: 20, weight: 3 },
+    { name: "Soul Binding II", quantity: 1, weight: 1 },
+    { name: "Never-Melting Ice", quantity: 1, weight: 15 },
+]);
+
+const alphaYetiUnderlingTable = genLootTable([
+    { name: "Yeti Fur", quantity: 8, weight: 12 },
+    { name: "Yeti Fur", quantity: 6, weight: 18 },
+    { name: "Yeti Fur", quantity: 3, weight: 24 },
+    { name: "Poor Quality Yeti Fur", quantity: 31, weight: 20 },
+    { name: "Poor Quality Yeti Fur", quantity: 14, weight: 64 },
+    { name: "Yeti Snot", quantity: 1, weight: 15 },
+    { name: "Supreme Yeti Fur", quantity: 1, weight: 3 },
+    { name: "Magical Essence", quantity: 18, weight: 1 },
+    { name: "Soul Binding II", quantity: 1, weight: 1 },
+]);
+
 
 // DRAGON SWAMP WORLD
 
@@ -346,7 +401,7 @@ const vaingloriousDragonHunter = genLootTable([
     { name: "Gold Coin", quantity: 300, weight: 20 },
     { name: "Dragonheart Piercer", quantity: 1, weight: 6 },
     { name: "Devastating Crossbow", quantity: 1, weight: 3 },
-    { name: "Platinum Coin", quantity: 1, weight: 1 },
+    { name: "Platinum Coin", quantity: 1, weight: 3 },
     { name: "Second Seal", quantity: 1, weight: 1 }
 ]);
 
@@ -867,15 +922,16 @@ const studentofSyzygyLootTable = genLootTable([
 // MYTH WORLD
 
 const mythEnemyLootTable = genLootTable([
-    { name: "Myth Essence", quantity: 1, weight: 75 },
-    { name: "Greater Myth Essence", quantity: 1, weight: 15 },
-    { name: "Aura Scanner", quantity: 1, weight: 5 },
-    { name: "Gauntlets of Transcendent Faith", quantity: 1, weight: 3 },
-    { name: "Shard of Light", quantity: 1, weight: 2 },
-    { name: "Shard of Darkness", quantity: 1, weight: 1 },
-    { name: "Symbol of Trinity", quantity: 1, weight: 1 },
-    { name: "Singularity of Purpose", quantity: 1, weight: 1 },
-    { name: "Blazer of the Screaming Eagle", quantity: 1, weight: 1 }
+    { name: "Myth Essence", quantity: 1, weight: 249 },
+    { name: "Greater Myth Essence", quantity: 1, weight: 30 },
+    { name: "Aura Scanner", quantity: 1, weight: 10 },
+    { name: "Gauntlets of Transcendent Faith", quantity: 1, weight: 4 },
+    { name: "Shard of Light", quantity: 1, weight: 4 },
+    { name: "Shard of Darkness", quantity: 1, weight: 2 },
+    { name: "Symbol of Trinity", quantity: 1, weight: 2 },
+    { name: "Singularity of Purpose", quantity: 1, weight: 2 },
+    { name: "Blazer of the Screaming Eagle", quantity: 1, weight: 2 },
+    { name: "Soul Binding III", quantity: 1, weight: 1 }
 ]);
 
 // DEFAULT WORLD PART 3

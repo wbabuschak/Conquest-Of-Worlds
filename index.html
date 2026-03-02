@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <link rel="icon" type="png" href="/icons/icon.png">
+    <script>
+        
+    </script>
+</head>
 <body>
     <div id="tooltip" style ="display: none"></div>
     <div id="top-content" style="flex-grow: 1; justify-content: space-between; display: flex; max-width: 100%; height: max-content; width: max-content;  margin: 0vw 1vw; gap: 1vw;   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif ;">
         <script>
-            const currentVersion = "0.1.1";
+            const currentVersion = "0.2.0";
             const savedVersion = localStorage.getItem("gameVersion");
             if (savedVersion !== currentVersion) {
                 localStorage.setItem("gameVersion", currentVersion);
@@ -47,17 +53,25 @@
     </div>
     <div id="main-container" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; padding:1vw; font-size: 18px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif ;">
 
-    <div id="middle-content" style="flex-grow: 1; max-width: 24%; width: max-content; background-color: #00000020; padding: 1vw; border-radius: 1vw;">
+    <div id="left-content" style="flex-grow: 1; max-width: 24%; width: max-content; background-color: #00000020; padding: 1vw; border-radius: 1vw;">
         <button id="equipButton">Equip</button>
         <select id="equipSelect"></select>
         <p></p>
         <button id="unequipButton">Unquip</button>
         <select id="unequipSelect"></select>
         <p id = "equippedItems"></p>
+        <p id = "statsDisplay" style="white-space: pre-line;"></p>
     </div>
 
-    <div id="left-content" style="flex-grow: 1; max-width: 36%; width: max-content; background-color: #00000020; padding: 1vw; border-radius: 1vw;">
-        <p id = "entityDisplay"></p>
+    <div id="middle-content" style="flex-grow: 1; max-width: 36%; width: max-content; background-color: #00000020; padding: 1vw; border-radius: 1vw;">
+        <div id = "entityDivider">
+            <p id = "entityNameDisplay"></p>
+            <div id="entityPortrait">
+                
+                <img id = "entityIcon"></img>
+                <p id = "entityHealthDisplay"></p>
+            </div>
+        </div>
         <p id = "lootDisplay">&nbsp;</p>
         <button id="attackButton">Attack!</button>
         <p id = "dpsDisplay"></p>
@@ -66,6 +80,7 @@
     
     <div id="right-content" style="flex-grow: 1; max-width: 36%; width: max-content;">
         <div id="crafting-content" style="background-color: #00000020; padding: 1vw; border-radius: 1vw;">
+            <button id = "craftingToggle">Hide Crafting</button>
             <p id = "craftDisplay"></p>
             <button id = "recipeToggle">Hide Recipes</button>
         </div>
@@ -73,6 +88,9 @@
             <p id = "recipeDisplay"></p>
         </div>
         <p id = "inventory" style="background-color: #00000020; margin: 1vw 0vw; padding: 1vw; border-radius: 1vw;"></p>
+    </div>
+
+    <div id="dev-content" style="flex-grow: 1; max-width: 60%; width: max-content; background-color: #00000020; padding: 1vw; border-radius: 1vw; display: none;">
     </div>
     
     <script src="entity.js?v=1.0"></script>
@@ -88,8 +106,18 @@
     <script src="worlds.js?v=1.0"></script>
 
     <style>
-        #entityDisplay {
+        #entityNameDisplay {
+            font-size: 32px;
+            font-weight: bold;
+        }
+        #recipeToggle {
+            display: block
+        }
+        #entityPortrait {
             font-size: 24px;
+            display:flex;
+            align-items: left;
+            gap: 10px;
         }
         #attackButton {
             font-size: 36px;
@@ -136,19 +164,25 @@
             border: 2px solid #000;
             opacity: 0.95;
             padding: 3px;
+            z-index: 9999;
+            flex-direction: column;
         }
         #inventory{
             white-space: "no-wrap";
         }
+        #entityIcon{
+            image-rendering: pixelated;
+        }
     </style>
 
     <script>
-        // const worldMusic = {
-        //     0: "music/Live-Today.wav",
-        //     1: "music/Wasted-Time.wav",
-        //     2: "music/Thinking-Of-You.wav",
-        //     7: "music/Overdose.wav",
-        // }
+        const worldMusic = {
+            2: "music/Live-Today.wav",
+            3: "music/Wasted-Time.wav",
+            4: "music/Thinking-Of-You.wav",
+            1: "music/Overdose.wav",
+            5: "music/Overture.wav",
+        }
         
         let activeEntity;
         let inventory = new Inventory;
@@ -160,8 +194,10 @@
         let lastHits = [];
         let kills = 0;
         let dropCount = 1;
-        // let music = false;
+        let dropBonus = 0.0;
+        let music = false;
         let volume;
+        let dev = false;
 
         let precomputedDamage = {
             baseDmg: 1,
@@ -172,6 +208,7 @@
             arcaneCount: 0,
             arcaneSetBonus: 0,
             starSetBonus: 0,
+            necroSetBonus: 0,
             setBase: -1
         };
 
@@ -179,7 +216,7 @@
         let level = 0;
 
         function gainExperience(entity){
-            let xp_to_level = 2 * (1 + level) * (1 + level) * (20 + level);
+            let xp_to_level = 1 * (12 + level) * (12 + level) * (12 + level);
             if (entity){
                 let exp = entity.xp;
                 if (entity.mobLevel >= level){
@@ -199,7 +236,7 @@
             }
             
             document.getElementById("xpBar").style.width = (100 * experience / xp_to_level) + '%';
-            document.getElementById("xpText").innerHTML =`Level: ${level}<br>XP: ${experience } / ${xp_to_level}`;
+            document.getElementById("xpText").innerHTML =`Level: ${level}<br>XP: ${toShort(experience) } / ${toShort(xp_to_level)}`;
         }
 
         gainExperience();
@@ -232,9 +269,10 @@
 
                     const img = document.createElement("img");
                     img.src = 'icons/' + type + '.png';
-                    img.width = 16;
-                    img.height = 16;
+                    img.width = 32;
+                    img.height = 32;
                     img.style.verticalAlign = 'middle';
+                    img.style.imageRendering = 'pixelated';
                     
                     // color filter
                     switch(color){
@@ -249,6 +287,12 @@
                             break;
                         case "#aa2a0aff":
                             img.style.filter = 'brightness(100%) invert(19%) sepia(22%) saturate(7489%) hue-rotate(356deg) brightness(102%) contrast(98%)';
+                            break;
+                        case "#53404fff":
+                            img.style.filter = 'brightness(100%) invert(22%) sepia(19%) saturate(616%) hue-rotate(261deg) brightness(97%) contrast(83%);';
+                            break;
+                        case "#723e67ff":
+                            img.style.filter = 'brightness(100%) invert(26%) sepia(48%) saturate(554%) hue-rotate(261deg) brightness(96%) contrast(88%);';
                             break;
                     }
                     
@@ -284,12 +328,14 @@
                 .map((recipe, idx) => [recipe, idx]).filter(([recipe]) => 
                 recipe.materials.every(material => {
                     const item = inventory.items.find(i => i.name == material.name);
+                    //console.log("1. " + material.name + " found in " + recipe.output + ": " + item);
                     return item && item.quantity >= material.quantity;
                 }));
             const learnedRecipesWithIndex = recipes
                 .map((recipe, idx) => [recipe, idx]).filter(([recipe]) => 
                 recipe.materials.every(material => {
-                    const item = knownItems.has(material.name);
+                    const item = inventory.knownItems.has(material.name);
+                    //console.log("2. " + material.name + " found in " + recipe.output + ": " + item);
                     return item;
                 }));
 
@@ -312,16 +358,28 @@
                 .join("<br>");
             
             document.getElementById("crafting-content").style.display = craftDisplay.innerHTML === "" ? "none" : "block";
-            // only attempt to show recipes is some are learned
-            showRecipes(learnedRecipesWithIndex.length > 0);
         }
 
         // try to turn on recipes are turned on if some exist and (button is turned on or if crafting is hidden)
-        function showRecipes(attempt){
-            if (attempt){
+        function showRecipes(){
+            let showing = document.getElementById("recipe-content").style.display === "block";
+            if (!showing){
                 document.getElementById("recipe-content").style.display = "block";
                 document.getElementById("recipeToggle").innerHTML = "Hide Recipes";
             } else {
+                document.getElementById("recipe-content").style.display = "none";
+                document.getElementById("recipeToggle").innerHTML = "Show Recipes";
+            }
+        }
+
+        function showCrafting(){
+            let showing = document.getElementById("craftDisplay").style.display === "block";
+            if (!showing){
+                document.getElementById("craftDisplay").style.display = "block";
+                document.getElementById("craftingToggle").innerHTML = "Hide Crafting";
+            } else {
+                document.getElementById("craftDisplay").style.display = "none";
+                document.getElementById("craftingToggle").innerHTML = "Show Crafting";
                 document.getElementById("recipe-content").style.display = "none";
                 document.getElementById("recipeToggle").innerHTML = "Show Recipes";
             }
@@ -391,6 +449,14 @@
                 worlds.push(WORLD_DEFS["Ice World"]);
             }
 
+            let yetiCaveItem1 = itemEquipped("Yeti Fur Mitts") || itemEquipped("Enchanted Yeti Fur Mitts") || itemEquipped("Necromancer Mitts");
+            let yetiCaveItem2 = itemEquipped("Yeti Fur Hood") || itemEquipped("Enchanted Yeti Fur Hood") || itemEquipped("Necromancer Hood");
+            let yetiCaveItem3 = itemEquipped("Yeti Fur Coat") || itemEquipped("Enchanted Yeti Fur Coat") || itemEquipped("Necromancer Coat");
+
+            if (yetiCaveItem1 && yetiCaveItem2 && yetiCaveItem3){
+                worlds.push(WORLD_DEFS["Yeti Cave World"]);
+            }
+
             if (level >= 15){
                 worlds.push(WORLD_DEFS["Dragon Swamp World"]);
             }
@@ -426,10 +492,10 @@
             let universalCredit = inventory.items.find(i => i.name == "Universal Credit");
 
             if (universalCredit){
-                if (universalCredit.quantity >= 10) worlds.push(WORLD_DEFS["Volcano Planet World"]);
-                if (universalCredit.quantity >= 100) worlds.push(WORLD_DEFS["Pleasure World"]);
-                if (universalCredit.quantity >= 500) worlds.push(WORLD_DEFS["A.M. World"]);
-                if (universalCredit.quantity >= 1250) worlds.push(WORLD_DEFS["Stellar Remnant World"]);
+                if (level > 50) worlds.push(WORLD_DEFS["Volcano Planet World"]);
+                if (level > 58) worlds.push(WORLD_DEFS["Pleasure World"]);
+                if (level > 66) worlds.push(WORLD_DEFS["A.M. World"]);
+                if (level > 74) worlds.push(WORLD_DEFS["Stellar Remnant World"]);
             }
 
             // REWORK MYTH UNLOCK - LEVEL 100
@@ -445,7 +511,7 @@
             for (const world of worlds) {
                 let option = document.createElement("option");
                 option.value = world.name;
-                option.text = world.name;
+                option.text = "Act " + toRoman(world.act) + "- " + world.name;
                 select.add(option);
             }
 
@@ -468,6 +534,9 @@
             let worldEnemies = WORLD_DEFS[worldSelect.value].enemies;
             worldEnemies.sort((a,b) => (ENEMY_DEFS[a].mobLevel - ENEMY_DEFS[b].mobLevel));
             for (const enemyName of worldEnemies){
+                if (enemyNames.includes(enemyName)){
+                    continue;
+                }
                 enemyNames.push(enemyName);
             }
             //console.log(enemyNames);
@@ -507,35 +576,43 @@
 
         function addToLastHits(damage){
             lastHits.push(damage);
-            if (lastHits.length > 100){
+            if (lastHits.length > 1000){
                 lastHits.shift();
             }
         }
 
         function updateEntityDisplay(lastHit = -1) {
-            const display = document.getElementById("entityDisplay");
-            display.innerHTML = ""; // clear previous content
+            const icon = document.getElementById("entityIcon");
+            const nameDisplay = document.getElementById("entityNameDisplay");
+            const healthDisplay = document.getElementById("entityHealthDisplay");
+            nameDisplay.innerHTML = "";
+            healthDisplay.innerHTML = "";
 
             let entityName = document.createElement("strong");
             entityName.id = "entityName";
             entityName.textContent = activeEntity.name;
-            display.appendChild(entityName);
-
+            entityName.onmouseover = () => {
+                if (activeEntity.desc != ""){
+                    document.getElementById("tooltip").style.display="block";
+                    document.getElementById("tooltip").innerHTML = activeEntity.desc;
+                }
+            }
+            entityName.onmouseout = () => document.getElementById("tooltip").style.display = "none";
+            nameDisplay.appendChild(entityName);
 
             let entityLevel = document.createElement("strong");
             entityLevel.id = "entityLevel";
             entityLevel.textContent = " (" + activeEntity.mobLevel + ")";
-            display.appendChild(entityLevel);
+            nameDisplay.appendChild(entityLevel);
 
-            display.appendChild(document.createElement("br"));
 
             let entityHP = document.createElement("strong");
             entityHP.id = "entityHP";
             entityHP.textContent = activeEntity.HP;
-            display.appendChild(entityHP);
+            healthDisplay.appendChild(entityHP);
 
             if (lastHit > -1) {
-                display.appendChild(document.createTextNode(" "));
+                healthDisplay.appendChild(document.createTextNode(" "));
 
                 let entityDamage = document.createElement("span");
                 entityDamage.id = "entityLastHit";
@@ -548,13 +625,25 @@
                     entityDamage.innerHTML = `(-${lastHit})`;
                 }
 
-                display.appendChild(entityDamage);
+                healthDisplay.appendChild(entityDamage);
                 addToLastHits(lastHit);
             }
             document.getElementById("entityLevel").style.color = "";
             if (level > activeEntity.mobLevel) document.getElementById("entityLevel").style.color = "#c5c5c5ff";
             document.getElementById("knownWorlds").innerHTML = `${knownWorlds.size} / ${Object.keys(WORLD_DEFS).length}`;
             // console.log(knownWorlds);
+
+            icon.src = 'icons/entities/' + activeEntity.icon + '.png';
+            icon.width = 64;
+            icon.height = 64;
+            icon.style.verticalAlign = 'middle';
+            if (activeEntity.hue){
+                icon.style.filter = 'invert(0) sepia(0.5) saturate(1000%) hue-rotate(' + activeEntity.hue + ')';
+            } else {
+                icon.style.filter = '';
+            }
+            // console.log('icons/' + activeEntity.icon + '.png -> ' + img.src);
+
             updateDPSDisplay();
             updateDropTableDisplay();
         }
@@ -568,7 +657,7 @@
                 return dropTable.weights[bI] - dropTable.weights[aI];
             });
 
-            const intersection = sortedItems.filter(item => knownItems.has(item.name));
+            const intersection = sortedItems.filter(item => inventory.knownItems.has(item.name));
 
             const dropTableDisplay = document.getElementById("dropTableDisplay");
             dropTableDisplay.innerHTML = "";
@@ -585,6 +674,7 @@
 
                 const temp = { items: [item], list: Inventory.prototype.list };
                 const itemFragment = temp.list.call({ items: [item] });
+                wrapper.onmouseout = () => document.getElementById("tooltip").style.display = "none";
                 wrapper.appendChild(itemFragment);
 
                 dropTableDisplay.appendChild(wrapper);
@@ -669,12 +759,14 @@
                 dmg: 1,
                 dmgMult: 1.0,
                 moreMult: 1.0,
-                missChance: 0.0,
+                missChance: 0.05,
                 missMult: 0,
                 arcaneCount: 0,
                 arcaneSetBonus: 0,
                 starSetBonus: 0,
+                necroSetBonus: 0,
                 setBase: -1,
+                dropBonus: 1.0,
             };
 
             for (let i of equipped) {
@@ -686,6 +778,9 @@
 
             state.dmg += state.starSetBonus * state.starSetBonus * 25;
             state.dmgMult += state.arcaneCount * state.arcaneSetBonus * 0.03;
+            state.missChance -= state.necroSetBonus * state.necroSetBonus * .02;
+            dropCount = Math.floor(state.dropBonus);
+            dropBonus = state.dropBonus % 1;
 
             if (state.setBase !== -1) state.dmg = state.setBase;
 
@@ -698,9 +793,96 @@
                 arcaneCount: state.arcaneCount,
                 arcaneSetBonus: state.arcaneSetBonus,
                 starSetBonus: state.starSetBonus,
+                necroSetBonus: state.necroSetBonus,
                 setBase: state.setBase,
             };
+
+            updateStatsDisplay();
+        }
+
+        function updateStatsDisplay(){
+            statsDisplay = document.getElementById("statsDisplay");
+            statsDisplay.innerHTML = "";
+            statsDisplay.innerHTML += "+" + precomputedDamage.baseDmg + " dmg\n";
+            if ((precomputedDamage.dmgMult) > 1) statsDisplay.innerHTML += Math.floor(precomputedDamage.dmgMult * 100) + "% dmg\n";
+            if ((precomputedDamage.moreMult) > 1) statsDisplay.innerHTML += truncateDecimal(precomputedDamage.moreMult,3) + "x dmg\n";
+            statsDisplay.innerHTML += Math.floor(100 - precomputedDamage.missChance * 100) + "% chance to hit\n";
+            if ((dropCount + dropBonus) > 1) statsDisplay.innerHTML += truncateDecimal(100 * (dropCount + dropBonus),4) + "% drops\n";
+        }
+
+        function loadDevDisplay(){
+            let display = document.getElementById("dev-content");
+            display.replaceChildren();
+            let noActs = 1;
+            for (let world of Object.values(WORLD_DEFS)){
+                    if (world.act > noActs){
+                        noActs = world.act
+                    }
+                }
+            for (let i = 1; i <= noActs; i++){
+                const actDiv = document.createElement("divider");
+                actDiv.style.display = "block";
+                for (const worldName in WORLD_DEFS){
+                    const world = WORLD_DEFS[worldName];
+                    if (world.act != i){
+                        continue;
+                    }
+                    
+                    const worldDiv = document.createElement("divider");
+                    worldDiv.style.display = "block";
+                    worldDiv.style.backgroundColor = world.worldColor;
+                    let usedEnemies = [];
+                    for (const enemyName of world.enemies){
+                        if (usedEnemies.includes(enemyName)){
+                            continue;
+                        }
+                        usedEnemies.push(enemyName);
+                        const enemy = spawnEnemy(enemyName);
+                        const img = document.createElement("img");
+                        img.src = 'icons/entities/' + enemy.icon + '.png';
+                        img.width = 48;
+                        img.height = 48;
+                        img.style.verticalAlign = 'middle';
+                        img.style.imageRendering = 'pixelated';
+                        if (enemy.hue){
+                            img.style.filter = 'invert(0) sepia(0.5) saturate(1000%) hue-rotate(' + enemy.hue + ')';
+                        } else {
+                            img.style.filter = '';
+                        }
+                        img.onmouseover = () => {
+                            document.getElementById("tooltip").style.display="flex";
+                            document.getElementById("tooltip").replaceChildren();
+                            const nameDiv = document.createElement("divider");
+                            nameDiv.innerHTML = enemy.name + " (" + worldName + ")";
+                            const descDiv = document.createElement("divider");
+                            descDiv.innerHTML = enemy.desc;
+                            descDiv.style.fontStyle = "italic";
+                            tooltip.appendChild(nameDiv);
+                            tooltip.appendChild(descDiv);
+                        }
+                        img.onmouseout = () => document.getElementById("tooltip").style.display = "none";
+                        worldDiv.appendChild(img);
+                        //console.log("loaded " + img.src)
+                    }
+                    actDiv.appendChild(worldDiv);
+                    
+                }
+                display.appendChild(actDiv);
             }
+        }
+
+        function toggleDevDisplay(){
+            let showing = document.getElementById("dev-content").style.display == "flex";
+            if (!showing){
+                loadDevDisplay();
+                document.getElementById("dev-content").style.display = "flex";
+                document.getElementById("dev-content").style.flexDirection = "column";
+                document.getElementById("dev-content").style.gap = "20px";
+            } else {
+                document.getElementById("dev-content").style.display = "none";
+            }
+        }
+
 
         function itemInSlot(slot){
             for (let item of equipped){
@@ -714,7 +896,7 @@
         function saveGame() {
             const saveData = {
                 items: inventory.serialize(),
-                knownItems: Array.from(knownItems),
+                knownItems: Array.from(inventory.knownItems),
                 knownWorlds: Array.from(knownWorlds),
                 equipped: equipped,
                 level: level,
@@ -739,11 +921,11 @@
                 experience = savedData.xp || 0;
                 gainExperience();
 
-                knownItems.clear();
+                inventory.knownItems.clear();
                 knownWorlds.clear();
                 if (savedData.knownItems) {
                     for (const item of savedData.knownItems) {
-                        knownItems.add(item);
+                        inventory.knownItems.add(item);
                     }
                 }
                 if (savedData.knownWorlds) {
@@ -771,17 +953,21 @@
         }, 1000);
         document.getElementById("worldTimer").textContent = "You have been in Default World for 0 seconds";
 
-        // const musicPlayer = new Audio();
-        // musicPlayer.loop = true;
-        // function playMusic(){
-        //     musicPlayer.pause();
-        //     if (worldMusic[worldSelect.value]) {
-        //         musicPlayer.src = worldMusic[worldSelect.value];
-        //         musicPlayer.currentTime = 0;
-        //         musicPlayer.play();
-        //     }
+        const musicPlayer = new Audio();
+        musicPlayer.loop = true;
+        function playMusic(){
+            //console.log(worldMusic[WORLD_DEFS[worldSelect.value].act]);
+            if (worldMusic[WORLD_DEFS[worldSelect.value].act]) {
+                let newSrc = worldMusic[WORLD_DEFS[worldSelect.value].act];
+                if (newSrc != musicPlayer.getAttribute("src")){
+                    musicPlayer.pause();
+                    musicPlayer.src = newSrc;
+                    musicPlayer.currentTime = 0;
+                    musicPlayer.play();
+                }
+            }
             
-        // }
+        }
 
         worldSelect.addEventListener("change", () => {
             worldTimer = 0;
@@ -790,7 +976,7 @@
             knownWorlds.add(worldSelect.value);
             updateFocus();
             updateEntityDisplay();
-            // playMusic();
+            playMusic();
         });
 
         // musicPlayer.onerror = (e) => {
@@ -799,7 +985,7 @@
 
         document.getElementById("volumeSlider").addEventListener("change", () => {
             volume = document.getElementById("volumeSlider").value;
-            // musicPlayer.volume = volume / 100.0;
+            musicPlayer.volume = volume / 100.0;
         })
 
         window.onload = loadGame;
@@ -809,8 +995,8 @@
         updateInventory();
         updateEquipped();
         updateWorldSelect();
-        // playMusic();
-        // musicPlayer.volume = volume / 100.0;
+        //playMusic();
+        musicPlayer.volume = volume / 100.0;
     </script>
 
     <script>
@@ -822,7 +1008,7 @@
             attackCount++;
             enemyAttacks++;
             if (activeEntity.destroyed){
-                if (loot = activeEntity.getLoot(dropCount)){
+                if (loot = activeEntity.getLoot(dropCount, dropBonus)){
                     document.getElementById("lootDisplay").innerHTML = "Got: ";
                     for (let item of loot){
                         inventory.addItem(item);
@@ -864,7 +1050,7 @@
                 autoMode = false;
                 document.getElementById("attackButton").innerHTML = "Attack!";
                 clearInterval(autoInterval);
-                knownItems.clear();
+                inventory.knownItems.clear();
                 knownWorlds.clear();
                 
                 experience = 0;
@@ -883,6 +1069,9 @@
         })
         document.getElementById("attackButton").addEventListener("click", () => {
             autoMode = !autoMode;
+            if (!music){
+                playMusic();
+            }
             if (autoMode){
                 document.getElementById("attackButton").innerHTML = "Stop Attacking";
                 autoInterval = setInterval(() => {
@@ -894,11 +1083,26 @@
             }
         });
         document.getElementById("recipeToggle").addEventListener("click", () => {
-            // show recipes is they are being hidden, otherwise attempt to hide
-            recipeToggledOff = document.getElementById("recipe-content").style.display == "none";
-            showRecipes(recipeToggledOff);
+            showRecipes();
             // console.log("attempting to show: " + recipeToggledOff);
         });
+        document.getElementById("craftingToggle").addEventListener("click", () => {
+            showCrafting();
+        });
+
+        if (dev){
+            document.addEventListener("keydown", e => {
+                if (e.key === "l") toggleDevDisplay();
+                if (e.key === "k"){
+                    document.getElementById("attackButton").innerHTML = "Stop Attacking (turbo)";
+                    clearInterval(autoInterval);
+                    autoInterval = setInterval(() => {
+                        hit();
+                    }, 10);
+                    autoMode = true;
+                }
+            });
+        }
     </script>
 
     <script>
@@ -963,6 +1167,8 @@
             knownWorlds.add(worldSelect.value);
             activeEntity = randomEnemy(worldSelect.value);
             updateEntityDisplay(-1);
+            document.getElementById("recipe-content").style.display = "block";
+            document.getElementById("craftDisplay").style.display = "block";
         }
     </script>
 

@@ -1,5 +1,5 @@
 class Entity{
-    constructor(name, mobLevel, lootTable, armorClass = 0){
+    constructor(name, mobLevel, lootTable, armorClass = 0, icon = "defaultEnemy", hue = NO_HUE, desc = ""){
         this.name = name;
         this.mobLevel = mobLevel;
         this.maxHealth = this.randomizeMaxHealth(mobLevel);
@@ -9,6 +9,9 @@ class Entity{
         this.armor = Math.floor((mobLevel * (2 * mobLevel + 9)) * armorClass);
         this.loot = null;
         this.xp = this.calculateXP(mobLevel);
+        this.icon = icon;
+        this.hue = hue;
+        this.desc = desc;
     }
 
     damage(damage){
@@ -28,8 +31,15 @@ class Entity{
         return Math.floor(mobLevel * mobLevel + 5);
     }
 
-    getLoot(drops) {
+    getLoot(drops, remainder) {
+        
        if (this.destroyed){
+            let breakthrough = Math.random();
+                //console.log(remainder + ">" + breakthrough);
+                if (remainder > breakthrough){
+                    drops++;
+                    //console.log("bonus drop");
+            }
             if (this.lootTable != null) {
                 return this.lootTable.getDrop(drops);
             } else {

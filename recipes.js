@@ -24,6 +24,21 @@ const recipes = [
     Item.createItem("Greater Spectral Essence"),
     ], Item.createItem("Skullstompers", 1)),
 
+    new Recipe([
+    Item.createItem("Soul Binding I", 1),
+    Item.createItem("Shackled Spirit", 5),
+    Item.createItem("Bone Chip", 5),
+    Item.createItem("Ectoplasm", 75),
+    ], Item.createItem("Lesser Spirit Enchantment", 1)),
+
+    new Recipe([
+    Item.createItem("Lesser Spirit Enchantment", 4),
+    Item.createItem("Soul Binding I", 4),
+    Item.createItem("Shackled Spirit", 20),
+    Item.createItem("Bone Chip", 20),
+    Item.createItem("Ectoplasm", 300),
+    ], Item.createItem("Greater Spirit Enchantment", 1)),
+
     // DESERT WORLD
 
     new Recipe([
@@ -39,7 +54,7 @@ const recipes = [
     Item.createItem("Drained Spirit", 1),
     ], Item.createItem("Symbol of the Desert", 1)),
 
-    // ICE WORLD
+    // ICE WORLD & YETI CAVE WORLD
 
     new Recipe([
     Item.createItem("Cracked Gemstone Amulet"),
@@ -51,6 +66,87 @@ const recipes = [
     Item.createItem("Magical Essence", 30),
     Item.createItem("Nature's Wrath"),
     ], Item.createItem("Nature's Fury", 1)),
+
+    new Recipe([
+    Item.createItem("Soul Binding II", 1),
+    Item.createItem("Never-Melting Ice", 5),
+    Item.createItem("Necromantic Residue", 3),
+    Item.createItem("Frozen Essence", 2),
+    Item.createItem("Yeti Fur", 75),
+    ], Item.createItem("Lesser Frost Enchantment", 1)),
+
+    new Recipe([
+    Item.createItem("Lesser Frost Enchantment", 4),
+    Item.createItem("Soul Binding II", 4),
+    Item.createItem("Never-Melting Ice", 20),
+    Item.createItem("Necromantic Residue", 12),
+    Item.createItem("Frozen Essence", 8),
+    Item.createItem("Yeti Fur", 300),
+    ], Item.createItem("Greater Frost Enchantment", 1)),
+
+    new Recipe([
+    Item.createItem("Yeti Fur", 18),
+    ], Item.createItem("Yeti Fur Mitts", 1)),
+
+    new Recipe([
+    Item.createItem("Yeti Fur", 30),
+    Item.createItem("Yeti Snot", 1),
+    ], Item.createItem("Yeti Fur Hood", 1)),
+
+    new Recipe([
+    Item.createItem("Magical Essence", 110),
+    Item.createItem("Yeti Snot", 3),
+    Item.createItem("Supreme Yeti Fur", 1),
+    ], Item.createItem("Yeti Fur Coat", 1)),
+
+    new Recipe([
+    Item.createItem("Magical Essence", 60),
+    Item.createItem("Frozen Essence", 3),
+    Item.createItem("Supreme Yeti Fur", 1),
+    Item.createItem("Never-Melting Ice", 3),
+     Item.createItem("Yeti Fur Mitts"),
+    ], Item.createItem("Enchanted Yeti Fur Mitts", 1)),
+
+    new Recipe([
+    Item.createItem("Magical Essence", 60),
+    Item.createItem("Frozen Essence", 3),
+    Item.createItem("Supreme Yeti Fur", 2),
+    Item.createItem("Never-Melting Ice", 3),
+    Item.createItem("Yeti Fur Hood"),
+    ], Item.createItem("Enchanted Yeti Fur Hood", 1)),
+
+    new Recipe([
+    Item.createItem("Magical Essence", 60),
+    Item.createItem("Frozen Essence", 3),
+    Item.createItem("Supreme Yeti Fur", 3),
+    Item.createItem("Never-Melting Ice", 3),
+    Item.createItem("Yeti Fur Coat"),
+    ], Item.createItem("Enchanted Yeti Fur Coat", 1)),
+
+    new Recipe([
+    Item.createItem("Magical Essence", 100),
+    Item.createItem("Necromantic Residue", 5),
+    Item.createItem("Frozen Essence", 4),
+    Item.createItem("Spectral Essence", 2),
+     Item.createItem("Enchanted Yeti Fur Mitts"),
+    ], Item.createItem("Necromancer Mitts", 1)),
+
+    new Recipe([
+    Item.createItem("Magical Essence", 100),
+    Item.createItem("Necromantic Residue", 8),
+    Item.createItem("Frozen Essence", 4),
+    Item.createItem("Spectral Essence", 2),
+    Item.createItem("Enchanted Yeti Fur Hood"),
+    ], Item.createItem("Necromancer Hood", 1)),
+
+    new Recipe([
+    Item.createItem("Magical Essence", 100),
+    Item.createItem("Necromantic Residue", 15),
+    Item.createItem("Frozen Essence", 4),
+    Item.createItem("Spectral Essence", 2),
+    Item.createItem("Enchanted Yeti Fur Coat"),
+    ], Item.createItem("Necromancer Coat", 1)),
+
 
     // DRAGON SWAMP WORLD
 
@@ -147,6 +243,21 @@ const recipes = [
     Item.createItem("Solar Debris", 999),
     Item.createItem("Essence-Starved Coat", 1),
     ], Item.createItem("Degenerate Star Coat", 1)),
+    
+    // MYTH WORLD
+
+    new Recipe([
+    Item.createItem("Soul Binding III", 1),
+    Item.createItem("Greater Myth Essence", 10),
+    Item.createItem("Myth Essence", 300),
+    ], Item.createItem("Lesser Myth Enchantment", 1)),
+
+    new Recipe([
+    Item.createItem("Lesser Myth Enchantment", 4),
+    Item.createItem("Soul Binding III", 4),
+    Item.createItem("Greater Myth Essence", 40),
+    Item.createItem("Myth Essence", 1200),
+    ], Item.createItem("Greater Myth Enchantment", 1)),
 
     // TITAN BOSS WORLD
 
@@ -161,3 +272,4 @@ const recipes = [
     ], Item.createItem("Treads of Unfathomable Pressure", 1)),
 
 ]
+

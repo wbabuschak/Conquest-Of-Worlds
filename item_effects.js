@@ -5,6 +5,9 @@ const ItemEffects = {
     "Red Dragonscale Cape": state => {
         if (state.attackCount % 7 === 0) state.dmgMult += 1.00;
     },
+    "Red Cape": state => {
+        if (state.attackCount % 10 === 0) state.dmgMult += 0.70;
+    },
     "Dragon Mucus Tincture": state => {
         if (state.attackCount % 7 === 0) state.dmgMult += 0.10;
     },
@@ -175,27 +178,34 @@ const ItemStaticEffects = {
     "Blasting Wand": s => { s.dmg += 10; },
     "Ice Bear Fur Shawl": s => { s.dmg += 10; },
     "Terror Mask": s => { s.missChance -= 0.20; },
-    "Dread Loop": s => { s.setBase = 16; s.missChance += 0.16; },
+    "Dread Loop": s => { s.setBase = 32; s.missChance += 0.16; },
     "Mote of Arcane Power": s => { s.missChance -= 0.40; s.dmgMult -= 0.20; s.arcaneCount++;},
     "Nature's Wrath": s => { s.dmg += 18; s.missChance -= 0.09; s.dmgMult += 0.06; },
     "Nature's Fury": s => { s.dmg += 19; s.missChance -= 0.09; s.dmgMult += 0.11; },
     "Ice Bear Paw Mitts": s => { s.dmg += 6; },
     "Activated Gemstone Amulet": s => { s.dmg += 10; },
     "Baby Dragon Fang": s => { s.dmgMult += 0.13; },
-    "Juvenile Dragon Talon": s => { s.dmg += 33; },
-    "Green Dragonscale Cape": s => { s.dmgMult += 0.07; },
-    "Black Dragonscale Cape": s => { s.moreMult += 0.10; s.missChance += 0.07; },
+    "Juvenile Dragon Talon": s => { s.dmg += 23; },
+
+    "Green Dragonscale Cape": s => { s.dmgMult += 0.10; },
+    "Black Dragonscale Cape": s => { s.moreMult += 0.10; s.missChance -= 0.07; },
     "Blue Dragonscale Cape": s => { s.dmg += 7; },
+
+    "Green Cape": s => { s.dmgMult += 0.07; },
+    "Black Cape": s => {s.missChance -= 0.07; },
+    "Blue Cape": s => { s.dmg += 7; s.missChance += 0.07;},
+
     "Dragonheart Piercer": s => { s.dmgMult += 0.07; s.dmg += 26; },
     "Devastating Crossbow": s => { s.missChance -= 10000.0; s.dmg += 21; },
     "Snake-eye Chain": s => { s.dmg += 2; },
     "Skullstompers": s => { s.dmg += 1; },
     "Devious Dagger": s => { s.dmg += 6; s.dmgMult += 0.16; },
     "Ratkickers": s => { s.dmgMult += 0.06; },
+    "Gravegrips": s => { s.dmgMult += 0.04; },
     "Gold Cloak": s => { s.dmg += 1; s.dmgMult += 0.01; s.moreMult += 0.01; s.missChance -= 0.01; },
     "Ring of Greed": s => { s.dmgMult += 0.40; },
     "Astral Hammer": s => { s.dmg += 100; s.missChance += 0.50; },
-    "Moon Blasting Super Smashers": s => { s.setBase = 40; },
+    "Moon Blasting Super Smashers": s => { s.setBase = 66; },
     "Laser Gigawatt Charger": s => {
         if (itemEquipped("Astral Hammer") || itemEquipped("Laser-powered Goblin Smasher") || itemEquipped("Green Laser Blaster") || itemEquipped("Grey Laser Blaster")) {
             s.dmgMult += 0.40;
@@ -228,6 +238,7 @@ const ItemStaticEffects = {
     "Cage of Inexorable Torment": s => { s.dmgMult += 0.40; },
     "Perfect Diamond Amulet": s => { s.missChance -= 0.30; },
     "Inexplicable Ribs": s => { s.dmgMult += 0.60; s.missChance += 0.16; },
+    "Slicing Gloves": s => { s.setBase = 100;},
     "Collapse Clasp": s => { s.dmgMult += 0.30; },
     "Magnetar Pendant": s => { s.dmg += 23; },
     "Impossibly Dense Chain": s => { s.dmgMult += 0.56; s.missChance += 0.14; },
@@ -258,7 +269,18 @@ const ItemStaticEffects = {
     "Degenerate Star Hood": s => { s.starSetBonus++; },
     "Degenerate Star Coat": s => { s.starSetBonus++; },
     "Titanic Smasher": s => { s.dmgMult += 4.00},
-    "Vestaments of the Great Deceiver": s => { s.dmg += 69; s.dmgMult += 1.69; s.missChance += 0.6; },
+    "Wraps of the Great Deceiver": s => { s.dmg += 69; s.dmgMult += 1.69; s.missChance += 0.6; },
     "Treads of Unfathomable Pressure": s => { s.dmgMult -= 0.60; s.missMult = 0.85; },
+    "Lesser Spirit Enchantment": s => { s.dropBonus += 0.01; },
+    "Greater Spirit Enchantment": s => { s.dropBonus += 0.015; },
+    "Lesser Frost Enchantment": s => { s.dropBonus += 0.014; },
+    "Greater Frost Enchantment": s => { s.dropBonus += 0.026; },
+    "Lesser Myth Enchantment": s => { s.dropBonus += 0.025; },
+    "Greater Myth Enchantment": s => { s.dropBonus += 0.034; },
+    "Enchanted Yeti Fur Hood": s => { s.dmgMult += 0.08; },
+    "Enchanted Yeti Fur Coat": s => { s.dmgMult += 0.15; },
+    "Necromancer Mitts": s => { s.dmgMult += 0.05; s.necroSetBonus++; },
+    "Necromancer Hood": s => { s.dmgMult += 0.08; s.necroSetBonus++; },
+    "Necromancer Coat": s => { s.dmgMult += 0.015; s.necroSetBonus++; },
 };
 

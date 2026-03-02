@@ -11,8 +11,13 @@ const LIGHT_YELLOW = "#e7c818ff";
 const LIGHT_GREEN = "#4e9b36ff";
 const HOT_PINK = "#c432bcff";
 const CRAFTING_BROWN = "#694e1dff";
+const LESSER_ENCHANTMENT = "#53404fff";
+const GREATER_ENCHANTMENT = "#723e67ff";
 
-const orderedSlots = ["head","back","chest","hands","waist","feet","weapon","off-hand","amulet","finger","trinket","augment"];
+
+const orderedSlots = ["head","back","chest","hands","waist","feet","weapon","off-hand","amulet","finger","trinket","augment","enchantment"];
+
+
 
 class Item{
 
@@ -42,7 +47,69 @@ class Item{
         if (!name || !quantity){
             return null;
         }
+        let color = "#000000ff";
+        // for (const recipe in recipes){
+        //     if (Recipe.isMaterial(recipe, name)){
+        //         color = CRAFTING_BROWN;
+        //     }
+        // }
+        
         switch (name){
+            // 0.2.0 "The Enchantment Update" enchantment materials
+            case "Soul Binding I":
+                return new Item(name,quantity,null,null,GRAY);
+            case "Soul Binding II":
+                return new Item(name,quantity,null,null,GRAY);
+            case "Soul Binding III":
+                return new Item(name,quantity,null,null,GRAY);
+            case "Soul Binding IV":
+                return new Item(name,quantity,null,null,GRAY);
+            case "Soul Binding V":
+                return new Item(name,quantity,null,null,GRAY);
+            case "Shackled Spirit":
+                return new Item(name,quantity,null,null,CRAFTING_BROWN);
+            case "Necromantic Residue":
+                return new Item(name,quantity,null,null,CRAFTING_BROWN);
+            case "Yeti Fur":
+                return new Item(name,quantity,null,null,CRAFTING_BROWN);
+            case "Supreme Yeti Fur":
+                return new Item(name,quantity,null,null,CRAFTING_BROWN);
+            case "Yeti Snot":
+                return new Item(name,quantity,null,null,CRAFTING_BROWN);
+            case "Never-Melting Ice":
+                return new Item(name,quantity,null,null,CRAFTING_BROWN);
+            // 0.2.0 "The Enchantment Update" enchantments
+            case "Lesser Spirit Enchantment":
+                return new Item(name,quantity,"enchantment","1% bonus drops",LESSER_ENCHANTMENT);
+            case "Greater Spirit Enchantment":
+                return new Item(name,quantity,"enchantment","1.5% bonus drops",GREATER_ENCHANTMENT);
+            case "Lesser Frost Enchantment":
+                return new Item(name,quantity,"enchantment","1.4% bonus drops",LESSER_ENCHANTMENT);
+            case "Greater Frost Enchantment":
+                return new Item(name,quantity,"enchantment","2.6% bonus drops",GREATER_ENCHANTMENT);
+            case "Lesser Myth Enchantment":
+                return new Item(name,quantity,"enchantment","2.5% bonus drops",LESSER_ENCHANTMENT);
+            case "Greater Myth Enchantment":
+                return new Item(name,quantity,"enchantment","3.4% bonus drops",GREATER_ENCHANTMENT);
+            // 0.2.0 "The Enchantment Update" items
+            case "Yeti Fur Mitts":
+                return new Item(name,quantity,"hands","15% frost resistance",GREEN);
+            case "Yeti Fur Hood":
+                return new Item(name,quantity,"head","35% frost resistance",DARK_BLUE);
+            case "Yeti Fur Coat":
+                return new Item(name,quantity,"chest","50% frost resistance",RED);
+            case "Enchanted Yeti Fur Mitts":
+                return new Item(name,quantity,"hands","5% dmg, 15% frost resistance",GREEN);
+            case "Enchanted Yeti Fur Hood":
+                return new Item(name,quantity,"head","8% dmg, 35% frost resistance",DARK_BLUE);
+            case "Enchanted Yeti Fur Coat":
+                return new Item(name,quantity,"chest","15% dmg, 50% frost resistance",RED);
+            case "Necromancer Mitts":
+                return new Item(name,quantity,"hands","+2% chance to hit per necromancer equip, 5% dmg, 15% frost resistance",GREEN);
+            case "Necromancer Hood":
+                return new Item(name,quantity,"head","+2% chance to hit per necromancer equip, 8% dmg, 35% frost resistance",DARK_BLUE);
+            case "Necromancer Coat":
+                return new Item(name,quantity,"chest","+2% chance to hit per necromancer equip, 15% dmg, 50% frost resistance",RED);
             // 0.1.0 "The Big Update" crafting materials
             case "Spectral Essence":
                 return new Item(name,quantity,null,null,CRAFTING_BROWN);
@@ -96,15 +163,15 @@ class Item{
             case "Red Dragonscale Cape":
                 return new Item(name,quantity,"back","100% dmg every 7 attacks",RED);
             case "Degenerate Star Tome":
-                return new Item(name,quantity,"weapon","+25 dmg for each degenerate star item, deal 2.00x dmg on the first of every 5 attacks",RED);
+                return new Item(name,quantity,"weapon","+25 dmg per degenerate star equip, deal 2.00x dmg on the first of every 5 attacks",RED);
             case "Degenerate Star Boots":
-                return new Item(name,quantity,"feet","+25 dmg for each degenerate star item, deal 2.00x dmg on the second of every 5 attacks",RED);
+                return new Item(name,quantity,"feet","+25 dmg per degenerate star equip, deal 2.00x dmg on the second of every 5 attacks",RED);
             case "Degenerate Star Belt":
-                return new Item(name,quantity,"waist","+25 dmg for each degenerate star item, deal 2.00x dmg on the third of every 5 attacks",RED);
+                return new Item(name,quantity,"waist","+25 dmg per degenerate star equip, deal 2.00x dmg on the third of every 5 attacks",RED);
             case "Degenerate Star Hood":
-                return new Item(name,quantity,"head","+25 dmg for each degenerate star item, deal 2.00x dmg on the fourth of every 5 attacks", RED);
+                return new Item(name,quantity,"head","+25 dmg per degenerate star equip, deal 2.00x dmg on the fourth of every 5 attacks", RED);
             case "Degenerate Star Coat":
-                return new Item(name,quantity,"chest","+25 dmg for each degenerate star item, deal 2.00x dmg on the fifth of every 5 attacks",RED);
+                return new Item(name,quantity,"chest","+25 dmg per degenerate star equip, deal 2.00x dmg on the fifth of every 5 attacks",RED);
             case "Symbol of the Desert":
                 return new Item(name,quantity,null,null,LIGHT_BLUE);
             case "Shined Shoes":
@@ -163,8 +230,10 @@ class Item{
                 return new Item(name,quantity,null,null,GRAY);
             case "Universal Credit":
                 return new Item(name,quantity,null,null,GRAY);
+            case "Myth Essence":
+                return new Item(name,quantity,null,null,CRAFTING_BROWN);
             case "Greater Myth Essence":
-                return new Item(name,quantity,null,null,LIGHT_GREEN);
+                return new Item(name,quantity,null,null,CRAFTING_BROWN);
             case "Token of Faith":
                 return new Item(name,quantity,null,null,LIGHT_BLUE);
             case "Water Jar":
@@ -222,7 +291,7 @@ class Item{
             case "Terror Mask":
                 return new Item(name,quantity,"head","+20% chance to hit",RED);
             case "Dread Loop":
-                return new Item(name,quantity,"finger","base damage is always 16, 16% chance to miss",RED);
+                return new Item(name,quantity,"finger","base damage is always 32, 16% chance to miss",RED);
             case "Mote of Arcane Power":
                 return new Item(name,quantity,"finger","+40% chance to hit, -20% dmg",RED);
             case "Ice Bear Paw Mitts":
@@ -230,7 +299,7 @@ class Item{
             case "Baby Dragon Fang":
                 return new Item(name,quantity,"amulet","13% dmg",GREEN);
             case "Juvenile Dragon Talon":
-                return new Item(name,quantity,"weapon","+33 dmg",GREEN);
+                return new Item(name,quantity,"weapon","+23 dmg",GREEN);
             case "Dragon Mucus Tincture":
                 return new Item(name,quantity,"off-hand","10% dmg every 7 attacks",GREEN);
             case "Dragonheart Piercer":
@@ -290,7 +359,7 @@ class Item{
             case "Astral Hammer":
                 return new Item(name,quantity,"weapon","+100 dmg, 50% chance to miss",RED);
             case "Moon Blasting Super Smashers":
-                return new Item(name,quantity,"hands","base damage is always 40",RED);
+                return new Item(name,quantity,"hands","base damage is always 66",RED);
             case "Laser Gigawatt Charger":
                 return new Item(name,quantity,"off-hand","40% dmg with laser weapons",GREEN);
             case "Laser-powered Goblin Smasher":
@@ -407,15 +476,6 @@ class Item{
                 return new Item(name,quantity,"finger","+50 dmg, doubles effect of Shard of Darkness",DARK_BLUE);
             case "Shard of Darkness":
                 return new Item(name,quantity,"amulet","30% dmg, +18% chance to hit",RED);
-            // case corretion for bugged item
-            case "Symbol of the Trinity":
-                return new Item("Symbol of Trinity",quantity,"trinket","33% dmg every attack, resets on 3 attacks",RED);
-            case "Symbol of Trinity":
-                return new Item(name,quantity,"trinket","33% dmg every attack, resets on 3 attacks",RED);
-            case "Singularity of Purpose":
-                return new Item(name,quantity,"weapon","+1000 dmg, -100 dmg for each item equipped",RED);
-            case "Blazer of the Screaming Eagle":
-                return new Item(name,quantity,"chest","+20 armor break, 2.00x armor break",RED);
             // default world part 3, part 4 + desert world part 2 items
             case "God Cinch":
                 return new Item(name,quantity,"waist","200% dmg, 50% chance to miss, 18% dmg + 10% chance to hit per God item",HOT_PINK);
@@ -449,12 +509,12 @@ class Item{
                 return new Item(name,quantity,"weapon","+700 dmg, 350% dmg, 300 armor break, 2.50x armor break",RED);
             case "Truesilver Greatsword":
                 return new Item(name,quantity,"weapon","+600 dmg, 300% dmg, 400 armor break, 3.00x armor break",RED);
-            case "Vestaments of the Great Deceiver":
+            case "Wraps of the Great Deceiver":
                 return new Item(name,quantity,"chest","+69 dmg, 169% dmg, 60% chance to miss",DARK_BLUE);
             case "Treads of Unfathomable Pressure":
                 return new Item(name,quantity,"feet","-60% dmg, your attacks that would miss deal 85% dmg",RED);
             default:
-                return new Item(name,quantity);
+                return new Item(name,quantity,null,null,color);
         }
     }
 }

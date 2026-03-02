@@ -1,5 +1,3 @@
-const knownItems = new Set([]);
-
 function itemKnown(itemName){
     return knownItems.has(itemName);
 }
@@ -7,6 +5,7 @@ function itemKnown(itemName){
 class Inventory{
     constructor(){
         this.items = [];
+        this.knownItems = new Set([]);
     }
 
     addItem(item){
@@ -20,13 +19,13 @@ class Inventory{
             }
         }
         this.items.push(new Item(item.name,item.quantity,item.equippable,item.desc,item.color));
-        knownItems.add(item.name);
+        this.knownItems.add(item.name);
         // console.log("added " + item.name)
     }
 
     list(showQuant = true){
         const colors = [
-            "#a7901fff", "#c432bcff", "#aa2a0aff", "#17467cff", "#2b814fff", "#9a50c5ff", "#6e1b07ff", "#316db3ff", "#c392dfff", "#e7c818ff", "#4e9b36ff", "#694e1dff", "#686868ff", "#000000"
+            "#a7901fff", "#c432bcff", "#aa2a0aff", "#17467cff", "#2b814fff", "#9a50c5ff", "#723e67ff", "#53404fff", "#6e1b07ff", "#316db3ff", "#c392dfff", "#e7c818ff", "#4e9b36ff", "#694e1dff", "#686868ff", "#000000ff", 
         ];
 
         let sorted = this.items.slice().sort((a, b) => colors.indexOf(a.color) - colors.indexOf(b.color));
@@ -118,4 +117,6 @@ class Inventory{
         this.addItem(Item.createItem(recipe.output.name,recipe.output.quantity));
         // console.log("crafted " + recipe.output.name);
     }
+
+    
 }

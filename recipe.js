@@ -3,4 +3,5 @@ class Recipe{
         this.materials = materials;
         this.output = output;
     }
+
 }

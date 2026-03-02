@@ -8,24 +8,29 @@ const WORLD_DEFS = {
     "Default World": {
         name: "Default World",
         worldColor: "#cdffccff",
+        act: 1,
         enemies: [
             "Common Thief",
             "Dirty Goblin",
             "Mysterious Villain",
+            
         ]
     },
     "Spirit World": {
         name: "Spirit World",
         worldColor: "#ebcaffff",
+        act: 1,
         enemies: [
             "Spectral Fiend",
             "Spirit Eater",
             "Ghastly Horror",
+            "Banshee Screamer",
         ]
     },
     "Desert World": {
         name: "Desert World",
         worldColor: "#ffe4aaff",
+        act: 1,
         enemies: [
             "Desert Wraith",
             "Bile Spitter",
@@ -36,6 +41,7 @@ const WORLD_DEFS = {
     "Hell World": {
         name: "Hell World",
         worldColor: "#ffceceff",
+        act: 1,
         enemies: [
             "Blazing Bovine",
             "Infernal Insect",
@@ -48,17 +54,37 @@ const WORLD_DEFS = {
     "Ice World": {
         name: "Ice World",
         worldColor: "#bbf1ffff",
+        act: 2,
         enemies: [
             "Iceologer",
             "Spooky Revenant",
             "Ice Bear",
             "Animated Weapon",
             "Foul Necromancer",
+            "Boss Yeti"
+        ]
+    },
+    "Yeti Cave World": {
+        name: "Yeti Cave World",
+        worldColor: "rgb(77, 158, 179)",
+        act: 2,
+        enemies: [
+            "Alpha Yeti",
+            "Alpha Yeti Underling",
+            "Alpha Yeti Underling",
+            "Alpha Yeti Underling",
+            "Alpha Yeti Underling",
+            "Alpha Yeti Underling",
+            "Alpha Yeti Underling",
+            "Alpha Yeti Underling",
+            "Alpha Yeti Underling",
+            "Alpha Yeti Underling",
         ]
     },
     "Dragon Swamp World": {
         name: "Dragon Swamp World",
         worldColor: "#93ffd2ff",
+        act: 2,
         enemies: [
             "Juvenile Green Drake",
             "Juvenile Red Drake",
@@ -79,6 +105,7 @@ const WORLD_DEFS = {
     "Gold World": {
         name: "Gold World",
         worldColor: "#eff8a0ff",
+        act: 2,
         enemies: [
             "Boss Goblin",
             "Goblin Loanmaster",
@@ -89,6 +116,7 @@ const WORLD_DEFS = {
     "Arcane World": {
         name: "Arcane World",
         worldColor: "#dbceffff",
+        act: 3,
         enemies: [
             "Keeper of Seals",
         ]
@@ -96,6 +124,7 @@ const WORLD_DEFS = {
     "Arcane World (Part 2)": {
         name: "Arcane World (Part 2)",
         worldColor: "#cdbaffff",
+        act: 3,
         enemies: [
             "Arcane Soul Stitcher",
             "Arcane Knight",
@@ -107,6 +136,7 @@ const WORLD_DEFS = {
     "Space World": {
         name: "Space World",
         worldColor: "#9791a7ff",
+        act: 3,
         enemies: [
             "Green Laser Alien",
             "Grey Laser Alien",
@@ -119,6 +149,7 @@ const WORLD_DEFS = {
     "Volcano Planet World": {
         name: "Volcano Planet World",
         worldColor: "#bb7a6aff",
+        act: 4,
         enemies: [
             "Obsidian Sphere",
             "Lava Scorpion",
@@ -131,6 +162,7 @@ const WORLD_DEFS = {
     "Pleasure World": {
         name: "Pleasure World",
         worldColor: "#ee94c8ff",
+        act: 4,
         enemies: [
             "Underworld Gangster",
             "Subterranean",
@@ -143,6 +175,7 @@ const WORLD_DEFS = {
     "A.M. World": {
         name: "A.M. World",
         worldColor: "#b8d5e9ff",
+        act: 4,
         enemies: [
             "Razor Spitter",
             "Warped Man",
@@ -155,6 +188,7 @@ const WORLD_DEFS = {
     "Stellar Remnant World": {
         name: "Stellar Remnant World",
         worldColor: "#bca3ccff",
+        act: 4,
         enemies: [
             "Ion Breather",
             "Impact Survivor",
@@ -167,6 +201,7 @@ const WORLD_DEFS = {
     "Default World (Part 2)": {
         name: "Default World (Part 2)",
         worldColor: "#bfffbeff",
+        act: 1,
         enemies: [
             "Uncommon Bandit",
             "Filthy Goblin",
@@ -177,6 +212,7 @@ const WORLD_DEFS = {
     "Myth World": {
         name: "Myth World",
         worldColor: "#ccbea3ff",
+        act: 5,
         enemies: [
             "Echo of Roc",
             "Echo of Medusa",
@@ -193,7 +229,8 @@ const WORLD_DEFS = {
 
     "Titan Boss World": {
         name: "Titan Boss World",
-        worldColor: "#632d2dff",
+        worldColor: "#aa7777",
+        act: 5,
         enemies: [
             "Iucophage, Bulwark Titan"
         ]
