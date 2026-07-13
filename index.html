@@ -441,11 +441,11 @@
 
             worlds.push(WORLD_DEFS["Rivertown Shire"]);
             if (level >= 3) worlds.push(WORLD_DEFS["Greater Rivertown"]);
-            if (level >= 6 && inventory.knownItems.has("Walking Boots")) worlds.push(WORLD_DEFS["The Longroad"]);
+            if (level >= 5 && inventory.knownItems.has("Walking Boots")) worlds.push(WORLD_DEFS["The Longroad"]);
             if (level >= 6 && inventory.knownItems.has("Wading Boots")) worlds.push(WORLD_DEFS["Black Swamp"]);
             if (level >= 9 && inventory.knownItems.has("Enchanted Reaper Cloak")) worlds.push(WORLD_DEFS["Spirit Realm Threshold"]);
-            if (level >= 12 && reps.get("The Longroad Authority").level() >= 2) worlds.push(WORLD_DEFS["Faraway Kingdom"]);
-            if (level >= 13 && inventory.knownItems.has("Shadow Signet") && inventory.knownItems.has("Farside Trophy")) worlds.push(WORLD_DEFS["Mountainland Foothills"]);
+            if (level >= 11 && reps.get("The Longroad Authority").level() >= 2) worlds.push(WORLD_DEFS["Faraway Kingdom"]);
+            if (level >= 12 && inventory.knownItems.has("Shadow Signet") && inventory.knownItems.has("Farside Trophy")) worlds.push(WORLD_DEFS["Mountainland Foothills"]);
             if (level >= 14 && reps.get("Mountainland Kingdom").level() >= 2) worlds.push(WORLD_DEFS["Mountainland Underworld"]);
             if (level >= 16 && reps.get("Mountainland Kingdom").level() >= 3 && reps.get("Faraway Kingdom").level() >= 3) worlds.push(WORLD_DEFS["Mountainland City"]);
             if (level >= 19 && inventory.knownItems.has("Farside Viewing Lens")) worlds.push(WORLD_DEFS["Farside Hideout"]);

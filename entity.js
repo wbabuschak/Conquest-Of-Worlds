@@ -30,11 +30,10 @@ class Entity{
     }
 
     calculateXP(mobLevel){
-        return Math.floor(Math.pow(mobLevel,1.5) + 2);
+        return Math.floor(Math.pow(mobLevel,1.7) + 4);
     }
 
     getLoot(drops, remainder) {
-        
        if (this.destroyed){
             let breakthrough = Math.random();
                 //console.log(remainder + ">" + breakthrough);
