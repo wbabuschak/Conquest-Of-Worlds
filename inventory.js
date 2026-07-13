@@ -25,7 +25,7 @@ class Inventory{
 
     list(showQuant = true){
         const colors = [
-            "#a7901fff", "#c432bcff", "#aa2a0aff", "#17467cff", "#2b814fff", "#9a50c5ff", "#723e67ff", "#53404fff", "#6e1b07ff", "#316db3ff", "#c392dfff", "#e7c818ff", "#4e9b36ff", "#694e1dff", "#686868ff", "#000000ff", 
+            "#a7901fff", "#c432bcff", "#aa2a0aff", "#17467cff", "#2b814fff", "rgb(71, 71, 71)", "#9a50c5ff", "#723e67ff", "#53404fff", "#6e1b07ff", "#316db3ff", "#c392dfff", "#e7c818ff", "#4e9b36ff", "#694e1dff", "#686868ff", "#000000ff", 
         ];
 
         let sorted = this.items.slice().sort((a, b) => colors.indexOf(a.color) - colors.indexOf(b.color));

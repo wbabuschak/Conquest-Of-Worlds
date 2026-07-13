@@ -145,7 +145,7 @@ class Item{
             case "Mussel Shell Treads":
                 return new Item(name,quantity,'feet',"+2 physical dmg",COMMON);
             case "Flame Transfuser":
-                return new Item(name,quantity,'trinket',"converts all ice/lightning dmg to fire",LEGENDARY);
+                return new Item(name,quantity,'trinket',"converts all ice/lightning dmg to fire",EPIC);
             case "Staff of Firebolt":
                 return new Item(name,quantity,'weapon',"+7/3 fire/arcane dmg",UNCOMMON);
             case "Staff of Fireball":
@@ -173,13 +173,13 @@ class Item{
             case "Fragment of Ra'oulgh":
                 return new Item(name,quantity,'finger',"+1 fire dmg, +1% hit chance",COMMON);
             case "Glyph of Ra'oulgh":
-                return new Item(name,quantity,'finger',"+2 fire dmg, +1% hit chance",COMMON);
+                return new Item(name,quantity,'finger',"+2 fire dmg, +1% hit chance",UNCOMMON);
             case "Bolt of Ra'oulgh":
-                return new Item(name,quantity,'finger',"+2 fire dmg, +2% hit chance",COMMON);
+                return new Item(name,quantity,'finger',"+2 fire dmg, +2% hit chance",RARE);
             case "Node of Ra'oulgh":
-                return new Item(name,quantity,'finger',"+2 fire dmg, +4% hit chance",COMMON);
+                return new Item(name,quantity,'finger',"+2 fire dmg, +4% hit chance",EPIC);
             case "Icon of Ra'oulgh":
-                return new Item(name,quantity,'finger',"+4 fire dmg, +4% hit chance",COMMON);
+                return new Item(name,quantity,'finger',"+4 fire dmg, +4% hit chance",LEGENDARY);
             case "Lesser Yetimagic Enchantment":
                 return new Item(name,quantity,'enchantment',"+1 ice dmg",CRAFTING_LESSER);
             case "Greater Yetimagic Enchantment":
@@ -189,7 +189,7 @@ class Item{
             case "Improved Farside Viewing Lens":
                 return new Item(name,quantity,'head',"+3 shadow dmg, 3% dmg",RARE);
             case "Perfect Farside Viewer":
-                return new Item(name,quantity,'head',"+4 shadow dmg, 4% dmg, +4% hit chance",LEGENDARY);
+                return new Item(name,quantity,'head',"+4 shadow dmg, 4% dmg, +4% hit chance",EPIC);
             case "Carving Tool":
                 return new Item(name,quantity,'weapon',"+10 physical dmg, +2% hit chance",UNCOMMON);
             case "Molding Hammer":
