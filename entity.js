@@ -26,11 +26,11 @@ class Entity{
     }
 
     randomizeMaxHealth(mobLevel){
-        return Math.floor((mobLevel * (2 * mobLevel + 9)) * (0.9 + Math.random() * .2));
+        return Math.floor((mobLevel * (2 * mobLevel + 6)) * (0.9 + Math.random() * .2));
     }
 
     calculateXP(mobLevel){
-        return Math.floor(Math.pow(mobLevel,1.5) + 1);
+        return Math.floor(Math.pow(mobLevel,1.5) + 2);
     }
 
     getLoot(drops, remainder) {

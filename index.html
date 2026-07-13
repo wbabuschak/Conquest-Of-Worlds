@@ -222,7 +222,7 @@
         let level = 0;
 
         function gainExperience(entity){
-            let xp_to_level = 1 * (12 + level) * (12 + level) * (12 + level);
+            let xp_to_level = 1 * (4 + level) * (4 + level) * (4 + level);
             if (entity){
                 let exp = entity.xp;
                 if (entity.mobLevel >= level){
@@ -237,7 +237,7 @@
                     experience -= xp_to_level;
                     level++;
                     
-                    xp_to_level = 2 * (1 + level) * (1 + level) * (20 + level);
+                    xp_to_level = 1 * (4 + level) * (4 + level) * (4 + level);
                 }
             }
             
