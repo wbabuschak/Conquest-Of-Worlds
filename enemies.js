@@ -79,7 +79,7 @@ const ENEMY_DEFS = {
         icon: 'defaultEnemy',
         hue: NO_HUE,
         desc: "This is a placeholder description!",
-        gainReps: [],
+        gainReps: ["The Longroad Authority"],
         loseReps: [],
     },
     "Footpad": {
@@ -88,7 +88,7 @@ const ENEMY_DEFS = {
         icon: 'defaultEnemy',
         hue: NO_HUE,
         desc: "This is a placeholder description!",
-        gainReps: [],
+        gainReps: ["The Longroad Authority"],
         loseReps: [],
     },
     "Longroad Alpha Dog": {
