@@ -20,6 +20,7 @@
         <div style ="border-radius: 1vw; background-color: #00000060; padding: 0.5vw 1vw;">
             <title id = "title">Conquest of Worlds</title>
             <h1 id = "gameTitle">Conquest of Worlds</h1>
+            <p id = "mode"></p>
             <p>By William Babuschak</p>
         </div>
         
@@ -205,7 +206,7 @@
         let dropBonus = 0.0;
         let music = false;
         let volume;
-        let dev = false;
+        let mode = "User";
 
         let precomputedDamage = {
             baseDmg: [new DamagePair("Physical",1)],
@@ -883,7 +884,7 @@
             localStorage.setItem("clickerGameInfo", JSON.stringify(saveData));
         }
 
-        function loadGame() {
+        async function loadGame() {
             const savedDataString = localStorage.getItem("clickerGameInfo");
             if (savedDataString) {
                 const savedData = JSON.parse(savedDataString);
@@ -932,6 +933,49 @@
             updateEquipped();
             updateWorldSelect();
             computeLoadoutStats();
+
+            try {
+                const response = await fetch("devkey");
+
+                if (!response.ok) {
+                    mode = "User";
+                    console.log("User mode online");
+                } else {
+                    const key = await response.text();
+                    if (key.trim() === "password123") {
+                        mode = "Developer";
+                        console.log("Developer mode enabled");
+                    } else {
+                        mode = "User";
+                        console.log("User mode online (incorrect passkey)");
+                    }
+                }
+
+                
+            } catch {
+                mode = "User";
+                console.log("User mode online (failed fetch)");
+            }
+
+            document.getElementById("mode").innerText = mode + " mode";
+            if (mode === "Developer"){
+                document.addEventListener("keydown", e => {
+                    if (e.key === "l") toggleDevDisplay();
+                    if (e.key === "k"){
+                        document.getElementById("attackButton").innerHTML = "Stop Attacking (turbo)";
+                        clearInterval(autoInterval);
+                        autoInterval = setInterval(() => {
+                            hit();
+                        }, 10);
+                        autoMode = true;
+                    }
+                });
+            }
+            document.getElementById("volumeSlider").addEventListener("change", () => {
+                volume = document.getElementById("volumeSlider").value;
+                musicPlayer.volume = volume / 100.0;
+            })
+            musicPlayer.volume = volume / 100.0;
         }
         
 
@@ -973,21 +1017,14 @@
         //     console.error("Audio playback error", e);
         // };
 
-        document.getElementById("volumeSlider").addEventListener("change", () => {
-            volume = document.getElementById("volumeSlider").value;
-            musicPlayer.volume = volume / 100.0;
-        })
-
-        window.onload = loadGame;
+        window.onload = loadGame();
         window.onbeforeunload = saveGame;
 
-        loadGame();
         updateInventory();
         updateReputationGuide();
         updateEquipped();
         updateWorldSelect();
         //playMusic();
-        musicPlayer.volume = volume / 100.0;
     </script>
 
     <script>
@@ -1096,20 +1133,6 @@
         document.getElementById("craftingToggle").addEventListener("click", () => {
             showCrafting();
         });
-
-        if (dev){
-            document.addEventListener("keydown", e => {
-                if (e.key === "l") toggleDevDisplay();
-                if (e.key === "k"){
-                    document.getElementById("attackButton").innerHTML = "Stop Attacking (turbo)";
-                    clearInterval(autoInterval);
-                    autoInterval = setInterval(() => {
-                        hit();
-                    }, 10);
-                    autoMode = true;
-                }
-            });
-        }
     </script>
 
     <script>
