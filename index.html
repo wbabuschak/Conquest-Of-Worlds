@@ -10,7 +10,7 @@
     <div id="tooltip" style ="display: none"></div>
     <div id="top-content" style="flex-grow: 1; justify-content: space-between; display: flex; max-width: 100%; height: max-content; width: max-content;  margin: 0vw 1vw; gap: 1vw;   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif ;">
         <script>
-            const currentVersion = "0.2.0";
+            const currentVersion = "0.3.0";
             const savedVersion = localStorage.getItem("gameVersion");
             if (savedVersion !== currentVersion) {
                 localStorage.setItem("gameVersion", currentVersion);
@@ -50,6 +50,7 @@
         
         <button id="resetButton">Reset Save Data</button>
         
+        
     </div>
     <div id="main-container" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; padding:1vw; font-size: 18px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif ;">
 
@@ -61,6 +62,9 @@
         <select id="unequipSelect"></select>
         <p id = "equippedItems"></p>
         <p id = "statsDisplay" style="white-space: pre-line;"></p>
+
+        <div id="reputation-guide" style="background-color: #00000020; margin: 1vw 0vw; padding: 1vw; border-radius: 1vw; display: flex; flex-direction: column;"></div>
+        <button id="resetReputation">Reset ALL Reputation</button>
     </div>
 
     <div id="middle-content" style="flex-grow: 1; max-width: 36%; width: max-content; background-color: #00000020; padding: 1vw; border-radius: 1vw;">
@@ -93,17 +97,19 @@
     <div id="dev-content" style="flex-grow: 1; max-width: 60%; width: max-content; background-color: #00000020; padding: 1vw; border-radius: 1vw; display: none;">
     </div>
     
-    <script src="entity.js?v=0.2.0"></script>
-    <script src="item.js?v=0.2.0"></script>
-    <script src="loot_table.js?v=0.2.0"></script>
-    <script src="inventory.js?v=0.2.0"></script>
-    <script src="loot_tables.js?v=0.2.0"></script>
-    <script src="enemies.js?v=0.2.0"></script>
-    <script src="recipe.js?v=0.2.0"></script>
-    <script src="recipes.js?v=0.2.0"></script>
-    <script src="item_effects.js?v=0.2.0"></script>
-    <script src="utility.js?v=0.2.0"></script>
-    <script src="worlds.js?v=0.2.0"></script>
+    <script src="entity.js?v=0.3.0"></script>
+    <script src="item.js?v=0.3.0"></script>
+    <script src="loot_table.js?v=0.3.0"></script>
+    <script src="inventory.js?v=0.3.0"></script>
+    <script src="loot_tables.js?v=0.3.0"></script>
+    <script src="enemies.js?v=0.3.0"></script>
+    <script src="recipe.js?v=0.3.0"></script>
+    <script src="recipes.js?v=0.3.0"></script>
+    <script src="item_effects.js?v=0.3.0"></script>
+    <script src="utility.js?v=0.3.0"></script>
+    <script src="worlds.js?v=0.3.0"></script>
+    <script src="damage_pair.js?v=0.3.0"></script>
+    <script src="reputation.js?v=0.3.0"></script>
 
     <style>
         #entityNameDisplay {
@@ -197,10 +203,10 @@
         let dropBonus = 0.0;
         let music = false;
         let volume;
-        let dev = false;
+        let dev = true;
 
         let precomputedDamage = {
-            baseDmg: 1,
+            baseDmg: [new DamagePair("Physical",1)],
             dmgMult: 1.0,
             moreMult: 1.0,
             missChance: 0.0,
@@ -240,6 +246,21 @@
         }
 
         gainExperience();
+
+        function gainReputation(entity) {
+            if (!entity) return;
+            if (entity.gainReps){
+                entity.gainReps.forEach(name => {
+                    reps.get(name)?.gainRep();
+                });
+            }
+            if (entity.loseReps){
+                entity.loseReps.forEach(name => {
+                    reps.get(name)?.loseRep();
+                });
+            }
+            
+        }
 
         function updateInventory(){
             const inventoryElement = document.getElementById("inventory");
@@ -413,100 +434,21 @@
             select.innerHTML = "";
 
             let worlds = [];
-            // default world
-            worlds.push(WORLD_DEFS["Default World"]);
+            // // TEMP CREATIVE MODE
+            // for (const key in WORLD_DEFS){
+            //     worlds.push(WORLD_DEFS[key])
+            // }
 
-            // default world part 2
-            let shinedShoes = inventory.items.find(i => i.name == "Shined Shoes");
-            if (shinedShoes|| itemEquipped("Shined Shoes")){
-                worlds.push(WORLD_DEFS["Default World (Part 2)"]);
-            }
-
-            // spirit world
-            if (itemEquipped("Spectral Cowl") || itemEquipped("Skullstompers") || itemEquipped("Activated Gemstone Amulet")){
-                worlds.push(WORLD_DEFS["Spirit World"]);
-            }
-            // desert world
-            if (level >= 5){
-                worlds.push(WORLD_DEFS["Desert World"]);
-            }
-
-            let hellItem = inventory.items.find(i => i.name == "Symbol of the Desert");
-            if (hellItem){
-                worlds.push(WORLD_DEFS["Hell World"]);
-            }
-
-            let mountainItem1 = inventory.items.find(i => i.name == "Memento of the Vulture");
-            let mountainItem2 = inventory.items.find(i => i.name == "Memento of the Dino");
-            let mountainItem3 = inventory.items.find(i => i.name == "Memento of the Fangtooth");
-            let mountainItem4 = inventory.items.find(i => i.name == "Memento of the Succubus");
-            let mountainItem5 = inventory.items.find(i => i.name == "Memento of the Insect");
-            let mountainItem6 = inventory.items.find(i => i.name == "Memento of the Bovine");
-
-            let hasPromiseRing = itemEquipped("Promise Ring") || inventory.items.find(i => i.name == "Promise Ring");
-
-            if (mountainItem1 && mountainItem2 && mountainItem3 && mountainItem4 && mountainItem5 && mountainItem6 && hasPromiseRing){
-                worlds.push(WORLD_DEFS["Ice World"]);
-            }
-
-            let yetiCaveItem1 = itemEquipped("Yeti Fur Mitts") || itemEquipped("Enchanted Yeti Fur Mitts") || itemEquipped("Necromancer Mitts");
-            let yetiCaveItem2 = itemEquipped("Yeti Fur Hood") || itemEquipped("Enchanted Yeti Fur Hood") || itemEquipped("Necromancer Hood");
-            let yetiCaveItem3 = itemEquipped("Yeti Fur Coat") || itemEquipped("Enchanted Yeti Fur Coat") || itemEquipped("Necromancer Coat");
-
-            if (yetiCaveItem1 && yetiCaveItem2 && yetiCaveItem3){
-                worlds.push(WORLD_DEFS["Yeti Cave World"]);
-            }
-
-            if (level >= 15){
-                worlds.push(WORLD_DEFS["Dragon Swamp World"]);
-            }
-
-            let platinumCoins = inventory.items.find(i => i.name == "Platinum Coin");
-            if (platinumCoins){
-                worlds.push(WORLD_DEFS["Gold World"]);
-            }
-
-            // magic world
-            let firstSeal = inventory.items.find(i => i.name == "First Seal");
-            let secondSeal = inventory.items.find(i => i.name == "Second Seal");
-            if (firstSeal && secondSeal){
-                worlds.push(WORLD_DEFS["Arcane World"]);
-            }
-
-            // magic world part 2
-            let thirdSeal = inventory.items.find(i => i.name == "Third Seal");
-            let fourthSeal = inventory.items.find(i => i.name == "Fourth Seal");
-            let fifthSeal = inventory.items.find(i => i.name == "Fifth Seal");
-            let sixthSeal = inventory.items.find(i => i.name == "Sixth Seal");
-            let seventhSeal = inventory.items.find(i => i.name == "Seventh Seal");
-            if (thirdSeal && fourthSeal && fifthSeal && sixthSeal && seventhSeal){
-                worlds.push(WORLD_DEFS["Arcane World (Part 2)"]);
-            }
-
-            // space world
-            let starJars = inventory.items.find(i => i.name == "Arcane Star Jar");
-            if (starJars && starJars.quantity >= 10){
-                worlds.push(WORLD_DEFS["Space World"]);
-            }
-
-            let universalCredit = inventory.items.find(i => i.name == "Universal Credit");
-
-            if (universalCredit){
-                if (level > 50) worlds.push(WORLD_DEFS["Volcano Planet World"]);
-                if (level > 58) worlds.push(WORLD_DEFS["Pleasure World"]);
-                if (level > 66) worlds.push(WORLD_DEFS["A.M. World"]);
-                if (level > 74) worlds.push(WORLD_DEFS["Stellar Remnant World"]);
-            }
-
-            // REWORK MYTH UNLOCK - LEVEL 100
-
-            if (level >= 100){
-                worlds.push(WORLD_DEFS["Myth World"]);
-            }
-
-            if (level >= 120){
-                worlds.push(WORLD_DEFS["Titan Boss World"]);
-            }
+            worlds.push(WORLD_DEFS["Rivertown Shire"]);
+            if (level >= 3) worlds.push(WORLD_DEFS["Greater Rivertown"]);
+            if (level >= 6 && inventory.knownItems.has("Walking Boots")) worlds.push(WORLD_DEFS["The Longroad"]);
+            if (level >= 6 && inventory.knownItems.has("Wading Boots")) worlds.push(WORLD_DEFS["Black Swamp"]);
+            if (level >= 9 && inventory.knownItems.has("Enchanted Reaper Cloak")) worlds.push(WORLD_DEFS["Spirit Realm Threshold"]);
+            if (level >= 12 && reps.get("The Longroad Authority").level() >= 2) worlds.push(WORLD_DEFS["Faraway Kingdom"]);
+            if (level >= 13 && inventory.knownItems.has("Shadow Signet") && inventory.knownItems.has("Farside Trophy")) worlds.push(WORLD_DEFS["Mountainland Foothills"]);
+            if (level >= 14 && reps.get("Mountainland Kingdom").level() >= 2) worlds.push(WORLD_DEFS["Mountainland Underworld"]);
+            if (level >= 16 && reps.get("Mountainland Kingdom").level() >= 3 && reps.get("Faraway Kingdom").level() >= 3) worlds.push(WORLD_DEFS["Mountainland City"]);
+            if (level >= 19 && inventory.knownItems.has("Farside Viewing Lens")) worlds.push(WORLD_DEFS["Farside Hideout"]);
 
             for (const world of worlds) {
                 let option = document.createElement("option");
@@ -529,18 +471,14 @@
 
             select.innerHTML = "";
 
-            let enemyNames = [];
-            enemyNames.push("None");
-            let worldEnemies = WORLD_DEFS[worldSelect.value].enemies;
-            worldEnemies.sort((a,b) => (ENEMY_DEFS[a].mobLevel - ENEMY_DEFS[b].mobLevel));
-            for (const enemyName of worldEnemies){
-                if (enemyNames.includes(enemyName)){
-                    continue;
-                }
-                enemyNames.push(enemyName);
+            let enemyList = new Set([]);
+            enemyList.add("None");
+            let worldEnemies = WORLD_DEFS[worldSelect.value].enemyList;
+            for (const enemyCandidate of worldEnemies){
+                enemyList.add(enemyCandidate[0]);
             }
-            //console.log(enemyNames);
-            for (const enemyName of enemyNames) {
+
+            for (const enemyName of enemyList) {
                 let option = document.createElement("option");
                 option.value = enemyName;
                 option.text = enemyName;
@@ -650,6 +588,9 @@
 
         function updateDropTableDisplay() {
             const dropTable = activeEntity.lootTable;
+            if (!dropTable){
+                return;
+            }
 
             const sortedItems = dropTable.items.slice().sort((a, b) => {
                 const aI = dropTable.items.indexOf(a);
@@ -756,7 +697,7 @@
 
         function computeLoadoutStats() {
             let state = {
-                dmg: 1,
+                dmg: [new DamagePair("physical",1)],
                 dmgMult: 1.0,
                 moreMult: 1.0,
                 missChance: 0.05,
@@ -775,14 +716,18 @@
                     continue;
                 }
             }
-
-            state.dmg += state.starSetBonus * state.starSetBonus * 25;
+            // console.log("state.dmg before merge:", state.dmg);
+            // state.dmg = DamagePair.mergeDamage(
+            //     state.dmg,
+            //     [new DamagePair("astral",state.starSetBonus * state.starSetBonus * 25)]
+            // );
+            // console.log("state.dmg after merge:", state.dmg);
             state.dmgMult += state.arcaneCount * state.arcaneSetBonus * 0.03;
             state.missChance -= state.necroSetBonus * state.necroSetBonus * .02;
             dropCount = Math.floor(state.dropBonus);
             dropBonus = state.dropBonus % 1;
 
-            if (state.setBase !== -1) state.dmg = state.setBase;
+            //if (state.setBase !== -1) state.dmg = state.setBase;
 
             precomputedDamage = {
                 baseDmg: state.dmg,
@@ -803,72 +748,90 @@
         function updateStatsDisplay(){
             statsDisplay = document.getElementById("statsDisplay");
             statsDisplay.innerHTML = "";
-            statsDisplay.innerHTML += "+" + precomputedDamage.baseDmg + " dmg\n";
+            statsDisplay.innerHTML += formatDamage(precomputedDamage.baseDmg) + "\n";
             if ((precomputedDamage.dmgMult) > 1) statsDisplay.innerHTML += Math.floor(precomputedDamage.dmgMult * 100) + "% dmg\n";
             if ((precomputedDamage.moreMult) > 1) statsDisplay.innerHTML += truncateDecimal(precomputedDamage.moreMult,3) + "x dmg\n";
             statsDisplay.innerHTML += Math.floor(100 - precomputedDamage.missChance * 100) + "% chance to hit\n";
             if ((dropCount + dropBonus) > 1) statsDisplay.innerHTML += truncateDecimal(100 * (dropCount + dropBonus),4) + "% drops\n";
         }
 
-        function loadDevDisplay(){
-            let display = document.getElementById("dev-content");
+        function updateReputationGuide(){
+            display = document.getElementById("reputation-guide");
             display.replaceChildren();
-            let noActs = 1;
-            for (let world of Object.values(WORLD_DEFS)){
-                    if (world.act > noActs){
-                        noActs = world.act
-                    }
+            const repDiv = document.createElement("div");
+            reps.forEach(rep => {
+                if (rep.rep != 0){
+                    const repElement = document.createElement("div");
+                    repElement.textContent = rep.name + ": Level " + rep.level() + " (" + rep.rep + "/" + rep.nextLevel() + ")";
+                    repDiv.appendChild(repElement);
                 }
-            for (let i = 1; i <= noActs; i++){
-                const actDiv = document.createElement("divider");
-                actDiv.style.display = "block";
-                for (const worldName in WORLD_DEFS){
-                    const world = WORLD_DEFS[worldName];
-                    if (world.act != i){
-                        continue;
-                    }
+            })
+            display.appendChild(repDiv);
+        }
+
+        function formatDamage(dmg) {
+            return dmg.map(d => `${d.magnitude} ${d.type}`).join("\n");
+        }
+
+        function loadDevDisplay(){
+            // let display = document.getElementById("dev-content");
+            // display.replaceChildren();
+            // let noActs = 1;
+            // for (let world of Object.values(WORLD_DEFS)){
+            //         if (world.act > noActs){
+            //             noActs = world.act
+            //         }
+            //     }
+            // for (let i = 1; i <= noActs; i++){
+            //     const actDiv = document.createElement("divider");
+            //     actDiv.style.display = "block";
+            //     for (const worldName in WORLD_DEFS){
+            //         const world = WORLD_DEFS[worldName];
+            //         if (world.act != i){
+            //             continue;
+            //         }
                     
-                    const worldDiv = document.createElement("divider");
-                    worldDiv.style.display = "block";
-                    worldDiv.style.backgroundColor = world.worldColor;
-                    let usedEnemies = [];
-                    for (const enemyName of world.enemies){
-                        if (usedEnemies.includes(enemyName)){
-                            continue;
-                        }
-                        usedEnemies.push(enemyName);
-                        const enemy = spawnEnemy(enemyName);
-                        const img = document.createElement("img");
-                        img.src = 'icons/entities/' + enemy.icon + '.png';
-                        img.width = 48;
-                        img.height = 48;
-                        img.style.verticalAlign = 'middle';
-                        img.style.imageRendering = 'pixelated';
-                        if (enemy.hue){
-                            img.style.filter = 'invert(0) sepia(0.5) saturate(1000%) hue-rotate(' + enemy.hue + ')';
-                        } else {
-                            img.style.filter = '';
-                        }
-                        img.onmouseover = () => {
-                            document.getElementById("tooltip").style.display="flex";
-                            document.getElementById("tooltip").replaceChildren();
-                            const nameDiv = document.createElement("divider");
-                            nameDiv.innerHTML = enemy.name + " (" + worldName + ")";
-                            const descDiv = document.createElement("divider");
-                            descDiv.innerHTML = enemy.desc;
-                            descDiv.style.fontStyle = "italic";
-                            tooltip.appendChild(nameDiv);
-                            tooltip.appendChild(descDiv);
-                        }
-                        img.onmouseout = () => document.getElementById("tooltip").style.display = "none";
-                        worldDiv.appendChild(img);
-                        //console.log("loaded " + img.src)
-                    }
-                    actDiv.appendChild(worldDiv);
+            //         const worldDiv = document.createElement("divider");
+            //         worldDiv.style.display = "block";
+            //         worldDiv.style.backgroundColor = world.worldColor;
+            //         let usedEnemies = [];
+            //         for (const enemyName of world.enemies){
+            //             if (usedEnemies.includes(enemyName)){
+            //                 continue;
+            //             }
+            //             usedEnemies.push(enemyName);
+            //             const enemy = spawnEnemy(enemyName);
+            //             const img = document.createElement("img");
+            //             img.src = 'icons/entities/' + enemy.icon + '.png';
+            //             img.width = 48;
+            //             img.height = 48;
+            //             img.style.verticalAlign = 'middle';
+            //             img.style.imageRendering = 'pixelated';
+            //             if (enemy.hue){
+            //                 img.style.filter = 'invert(0) sepia(0.5) saturate(1000%) hue-rotate(' + enemy.hue + ')';
+            //             } else {
+            //                 img.style.filter = '';
+            //             }
+            //             img.onmouseover = () => {
+            //                 document.getElementById("tooltip").style.display="flex";
+            //                 document.getElementById("tooltip").replaceChildren();
+            //                 const nameDiv = document.createElement("divider");
+            //                 nameDiv.innerHTML = enemy.name + " (" + worldName + ")";
+            //                 const descDiv = document.createElement("divider");
+            //                 descDiv.innerHTML = enemy.desc;
+            //                 descDiv.style.fontStyle = "italic";
+            //                 tooltip.appendChild(nameDiv);
+            //                 tooltip.appendChild(descDiv);
+            //             }
+            //             img.onmouseout = () => document.getElementById("tooltip").style.display = "none";
+            //             worldDiv.appendChild(img);
+            //             //console.log("loaded " + img.src)
+            //         }
+            //         actDiv.appendChild(worldDiv);
                     
-                }
-                display.appendChild(actDiv);
-            }
+            //     }
+            //     display.appendChild(actDiv);
+            // }
         }
 
         function toggleDevDisplay(){
@@ -902,6 +865,11 @@
                 level: level,
                 xp: experience,
                 volume: volume,
+
+                reps: Array.from(reps.entries()).map(([name, rep]) => [
+                    name,
+                    rep.serialize()
+                ])
             };
             localStorage.setItem("clickerGameInfo", JSON.stringify(saveData));
         }
@@ -935,10 +903,23 @@
                 }
                 volume = savedData.volume || 50;
                 document.getElementById("volumeSlider").value = volume;
+
+                reps.clear();
+                savedData.reps.forEach(([name, data]) => {
+                    reps.set(
+                        name,
+                        new Reputation(
+                            data.name,
+                            data.difficulty,
+                            data.rep
+                        )
+                    );
+                });
             } else {
                 inventory = new Inventory();
             }
             updateInventory();
+            updateReputationGuide();
             updateEquipped();
             updateWorldSelect();
             computeLoadoutStats();
@@ -993,6 +974,7 @@
 
         loadGame();
         updateInventory();
+        updateReputationGuide();
         updateEquipped();
         updateWorldSelect();
         //playMusic();
@@ -1021,10 +1003,12 @@
                     }, 6000);
                 }
                 gainExperience(activeEntity);
+                gainReputation(activeEntity);
                 activeEntity = randomEnemy(worldSelect.value);
                 enemyAttacks = 0;
                 kills++;
                 updateInventory();
+                updateReputationGuide();
             } 
 
             updateEntityDisplay(hit);
@@ -1062,6 +1046,20 @@
                 newStart();
             }
         });
+        document.getElementById("resetReputation").addEventListener("click", () => {
+            if (confirm("Are you sure you want to reset your reputation? This cannot be undone.")) {
+                
+                autoMode = false;
+                document.getElementById("attackButton").innerHTML = "Attack!";
+                clearInterval(autoInterval);
+                resetReps();
+
+                updateWorldSelect();
+                updateRecipesDisplays();
+                saveGame();
+                loadGame();
+            }
+        });
         document.addEventListener("mousemove", e=> {
             const tooltip = document.getElementById("tooltip");
             tooltip.style.left = (e.pageX + 6) + "px";
@@ -1076,7 +1074,7 @@
                 document.getElementById("attackButton").innerHTML = "Stop Attacking";
                 autoInterval = setInterval(() => {
                     hit();
-                }, 500);
+                }, 333);
             } else {
                 document.getElementById("attackButton").innerHTML = "Attack!";
                 clearInterval(autoInterval);
@@ -1121,19 +1119,38 @@
                 activeEntity
             };
 
+            if (!Array.isArray(state.dmg)) {
+                throw new Error("BROKEN dmg STATE: " + state.dmg);
+            }
+
+            // console.log("state.dmg:",state.dmg)
+            
             for (const i of equipped) {
                 const effect = ItemEffects[i.name];
                 if (effect) effect(state);
             }
 
-            if (Math.random() < state.missChance) state.dmg *= state.missMult;
+            
             state.armorBreakMod *= 10;
-            return Math.floor(
-                Math.max(0, state.dmg) *
-                Math.max(0.0, state.dmgMult) *
-                Math.max(0.0, state.moreMult) +
-                Math.min(Math.max(0.0, state.armorBreak) * Math.max(0.0, state.armorBreakMod), state.activeEntity.armor)
-            );
+            let cumDamage = 0
+            // console.log("state.dmg:",state.dmg)
+            for (let damage_pair of state.dmg){
+                // console.log(damage_pair);
+                delta = Math.floor(
+                    Math.max(0, damage_pair.magnitude) *
+                    Math.max(0.0, state.dmgMult) *
+                    Math.max(0.0, state.moreMult) +
+                    Math.min(Math.max(0.0, state.armorBreak) * Math.max(0.0, state.armorBreakMod), state.activeEntity.armor)
+                );
+                // console.log("delta:",delta);
+                cumDamage += delta;
+            }
+            if (!Array.isArray(state.dmg)) {
+                throw new Error("BROKEN dmg STATE: " + state.dmg);
+            }
+            if (Math.random() < state.missChance) cumDamage *= state.missMult;
+            // console.log("attackDamage:",cumDamage)
+           return cumDamage
         }
         
     </script>
@@ -1144,16 +1161,25 @@
             const focusedEnemyName = document.getElementById("enemySelect").value;
             document.body.style.backgroundColor = world.worldColor;
             let enemyList = [];
-            for (let i = 0; i < world.enemies.length; i++){
-                enemyList.push(world.enemies[i]);
+            for (let i = 0; i < world.enemyList.length; i++){
+                enemyList.push(world.enemyList[i]);
             }
-            if (focusedEnemyName != "None"){
-                enemyList.push(focusedEnemyName);
+            if (focusedEnemyName !== "None"){
+                // find level range
+                let levelRange = [];
+                world.enemyList.forEach(enemyPair => {
+                    if (enemyPair[0] === focusedEnemyName){
+                        levelRange.push(enemyPair[1]);
+                    }
+                });
+                // console.log(focusedEnemyName + " is available at levels " + levelRange);
+                enemyList.push([focusedEnemyName, levelRange[Math.floor(Math.random() * levelRange.length)]]);
             }
-            if (itemEquipped("Greedy Goldgrubber Grips")){
-                enemyList.push("Treasure Goblin");
-            }
-            let enemy = spawnEnemy(enemyList[Math.floor(Math.random() * enemyList.length)]);
+            // if (itemEquipped("Greedy Goldgrubber Grips")){
+            //     enemyList.push("Treasure Goblin");
+            // }
+            let pair = enemyList[Math.floor(Math.random() * enemyList.length)];
+            let enemy = spawnEnemy(pair[0], pair[1]);
             //console.log("of " + enemyList + " chose" + enemy.name);
             document.getElementById("xpText").style.color = "";
             if (enemy.mobLevel < level){
@@ -1163,10 +1189,13 @@
         }
 
         function newStart(){
+            let firstWorld = WORLD_DEFS["Rivertown Shire"];
             updateFocus();
-            knownWorlds.add(worldSelect.value);
-            activeEntity = randomEnemy(worldSelect.value);
+            knownWorlds.add(firstWorld.name);
+            activeEntity = randomEnemy(firstWorld.name);
+            resetReps();
             updateEntityDisplay(-1);
+            updateReputationGuide();
             document.getElementById("recipe-content").style.display = "block";
             document.getElementById("craftDisplay").style.display = "block";
         }

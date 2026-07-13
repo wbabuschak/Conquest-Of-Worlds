@@ -1,5 +1,5 @@
 class Entity{
-    constructor(name, mobLevel, lootTable, armorClass = 0, icon = "defaultEnemy", hue = NO_HUE, desc = ""){
+    constructor(name, mobLevel, lootTable, armorClass = 0, icon = "defaultEnemy", hue = NO_HUE, desc = "", gainReps = [], loseReps = []){
         this.name = name;
         this.mobLevel = mobLevel;
         this.maxHealth = this.randomizeMaxHealth(mobLevel);
@@ -12,6 +12,8 @@ class Entity{
         this.icon = icon;
         this.hue = hue;
         this.desc = desc;
+        this.gainReps = gainReps;
+        this.loseReps = loseReps;
     }
 
     damage(damage){
@@ -28,7 +30,7 @@ class Entity{
     }
 
     calculateXP(mobLevel){
-        return Math.floor(mobLevel * mobLevel + 5);
+        return Math.floor(Math.pow(mobLevel,1.5) + 1);
     }
 
     getLoot(drops, remainder) {

@@ -1,275 +1,175 @@
 const recipes = [
     
-    // DEFAULT WORLD
     new Recipe([
-    Item.createItem("Dirty Shoes", 1),
-    Item.createItem("Gold Coin", 5),
-    ], Item.createItem("Shined Shoes", 1)),
-
-    new Recipe([
-    Item.createItem("Gold Coin", 180),
-    Item.createItem("Common Dagger"),
-    ], Item.createItem("Gilded Dagger", 1)),
+    Item.createItem("Ramshackle Shank", 1),
+    Item.createItem("Deadly Poison", 2),
+    ], Item.createItem("Dirty Dagger", 1)),
 
     new Recipe([
-    Item.createItem("Cloth Scrap", 14),
-    Item.createItem("Spectral Essence"),
-    ], Item.createItem("Spectral Cowl", 1)),
-
-    // SPIRIT WORLD
-    
-    new Recipe([
-    Item.createItem("Shined Shoes", 1),
-    Item.createItem("Bone Chip", 2),
-    Item.createItem("Greater Spectral Essence"),
-    ], Item.createItem("Skullstompers", 1)),
+    Item.createItem("Filthy Boots", 1),
+    Item.createItem("Gold Coin", 30),
+    ], Item.createItem("Walking Boots", 1)),
 
     new Recipe([
-    Item.createItem("Soul Binding I", 1),
-    Item.createItem("Shackled Spirit", 5),
-    Item.createItem("Bone Chip", 5),
-    Item.createItem("Ectoplasm", 75),
-    ], Item.createItem("Lesser Spirit Enchantment", 1)),
+    Item.createItem("Filthy Boots", 1),
+    Item.createItem("Gold Coin", 15),
+    Item.createItem("Cloth Scrap", 4),
+    ], Item.createItem("Wading Boots", 1)),
+
 
     new Recipe([
-    Item.createItem("Lesser Spirit Enchantment", 4),
-    Item.createItem("Soul Binding I", 4),
-    Item.createItem("Shackled Spirit", 20),
-    Item.createItem("Bone Chip", 20),
-    Item.createItem("Ectoplasm", 300),
-    ], Item.createItem("Greater Spirit Enchantment", 1)),
-
-    // DESERT WORLD
+    Item.createItem("Forest Leather Vest", 1),
+    Item.createItem("Cloth Scrap", 30),
+    Item.createItem("Fur Scrap", 2),
+    ], Item.createItem("Reinforced Leather Vest", 1)),
 
     new Recipe([
-    Item.createItem("Zealot Essence", 3),
-    Item.createItem("Shattered Havoc Hilt"),
-    Item.createItem("Broken Havoc Blade"),
-    ], Item.createItem("Havoc Blade", 1)),
+    Item.createItem("Forest Leather Boots", 1),
+    Item.createItem("Cloth Scrap", 30),
+    Item.createItem("Fur Scrap", 2),
+    ], Item.createItem("Reinforced Leather Boots", 1)),
 
     new Recipe([
-    Item.createItem("Token of Faith", 1),
-    Item.createItem("Water Jar", 1),
-    Item.createItem("Venomous Gland", 1),
-    Item.createItem("Drained Spirit", 1),
-    ], Item.createItem("Symbol of the Desert", 1)),
-
-    // ICE WORLD & YETI CAVE WORLD
+    Item.createItem("Forest Leather Gloves", 1),
+    Item.createItem("Cloth Scrap", 30),
+    Item.createItem("Fur Scrap", 2),
+    ], Item.createItem("Reinforced Leather Gloves", 1)),
 
     new Recipe([
-    Item.createItem("Cracked Gemstone Amulet"),
-    Item.createItem("Greater Spectral Essence"),
-    Item.createItem("Frozen Essence"),
-    ], Item.createItem("Activated Gemstone Amulet", 1)),
+    Item.createItem("Forest Leather Hood", 1),
+    Item.createItem("Cloth Scrap", 30),
+    Item.createItem("Fur Scrap", 2),
+    ], Item.createItem("Reinforced Leather Hood", 1)),
 
     new Recipe([
-    Item.createItem("Magical Essence", 30),
-    Item.createItem("Nature's Wrath"),
-    ], Item.createItem("Nature's Fury", 1)),
+    Item.createItem("Spider Fang", 2),
+    Item.createItem("Dog Tooth", 48),
+    ], Item.createItem("Tooth Necklace", 1)),
 
     new Recipe([
-    Item.createItem("Soul Binding II", 1),
-    Item.createItem("Never-Melting Ice", 5),
-    Item.createItem("Necromantic Residue", 3),
-    Item.createItem("Frozen Essence", 2),
-    Item.createItem("Yeti Fur", 75),
-    ], Item.createItem("Lesser Frost Enchantment", 1)),
+    Item.createItem("Reaper Cloak", 1),
+    Item.createItem("High Quality Cloth Scrap", 42),
+    Item.createItem("Spectral Essence", 10),
+    Item.createItem("Magical Essence", 20),
+    ], Item.createItem("Enchanted Reaper Cloak", 1)),
 
     new Recipe([
-    Item.createItem("Lesser Frost Enchantment", 4),
-    Item.createItem("Soul Binding II", 4),
-    Item.createItem("Never-Melting Ice", 20),
-    Item.createItem("Necromantic Residue", 12),
-    Item.createItem("Frozen Essence", 8),
-    Item.createItem("Yeti Fur", 300),
-    ], Item.createItem("Greater Frost Enchantment", 1)),
+    Item.createItem("Broken Mailparts", 80),
+    Item.createItem("Stolen Chestmold", 1),
+    Item.createItem("Pilfered Tool", 1),
+    ], Item.createItem("Repaired Mail Breastplate", 1)),
 
     new Recipe([
-    Item.createItem("Yeti Fur", 18),
-    ], Item.createItem("Yeti Fur Mitts", 1)),
+    Item.createItem("Broken Mailparts", 60),
+    Item.createItem("Stolen Handsmold", 1),
+    Item.createItem("Pilfered Tool", 1),
+    ], Item.createItem("Repaired Mail Gauntlets", 1)),
 
     new Recipe([
-    Item.createItem("Yeti Fur", 30),
-    Item.createItem("Yeti Snot", 1),
-    ], Item.createItem("Yeti Fur Hood", 1)),
+    Item.createItem("Frozen Legion Banner Tatter", 18),
+    Item.createItem("Frozen Essence", 12),
+    ], Item.createItem("Frozen Legion Banner", 1)),
 
     new Recipe([
-    Item.createItem("Magical Essence", 110),
-    Item.createItem("Yeti Snot", 3),
-    Item.createItem("Supreme Yeti Fur", 1),
-    ], Item.createItem("Yeti Fur Coat", 1)),
+    Item.createItem("Yetimagician Skull Fragment", 100),
+    Item.createItem("Frozen Essence", 10),
+    ], Item.createItem("Yetimagician Skull", 1)),
 
     new Recipe([
-    Item.createItem("Magical Essence", 60),
+    Item.createItem("Mussel Shell", 8),
+    Item.createItem("Dirt Essence", 6),
+    ], Item.createItem("Mussel Shell Helmet", 1)),
+
+    new Recipe([
+    Item.createItem("Mussel Shell", 8),
+    Item.createItem("Dirt Essence", 6),
+    ], Item.createItem("Mussel Shell Vest", 1)),
+
+    new Recipe([
+    Item.createItem("Mussel Shell", 8),
+    Item.createItem("Dirt Essence", 6),
+    ], Item.createItem("Mussel Shell Gauntlets", 1)),
+
+    new Recipe([
+    Item.createItem("Mussel Shell", 8),
+    Item.createItem("Dirt Essence", 6),
+    ], Item.createItem("Mussel Shell Treads", 1)),
+
+    new Recipe([
+    Item.createItem("Fire Emblem", 1),
+    Item.createItem("Fire Essence", 1000),
+    Item.createItem("Forgemaster's Vice", 1),
+    ], Item.createItem("Blazing Sigil", 1)),
+
+    new Recipe([
+    Item.createItem("Staff of Firebolt", 1),
+    Item.createItem("Fire Essence", 2000),
+    Item.createItem("Forgemaster's Vice", 2),
+    ], Item.createItem("Staff of Fireball", 1)),
+
+    new Recipe([
+    Item.createItem("Fragment of Ra'oulgh", 3),
+    Item.createItem("Fire Essence", 1),
+    ], Item.createItem("Glyph of Ra'oulgh", 1)),
+
+    new Recipe([
+    Item.createItem("Glyph of Ra'oulgh", 3),
+    Item.createItem("Fire Essence", 1),
+    ], Item.createItem("Bolt of Ra'oulgh", 1)),
+
+    new Recipe([
+    Item.createItem("Bolt of Ra'oulgh", 3),
+    Item.createItem("Fire Essence", 1),
+    ], Item.createItem("Node of Ra'oulgh", 1)),
+
+    new Recipe([
+    Item.createItem("Node of Ra'oulgh", 3),
+    Item.createItem("Fire Essence", 1),
+    ], Item.createItem("Icon of Ra'oulgh", 1)),
+
+    new Recipe([
+    Item.createItem("Yetimagic Enchantment Rod", 1),
+    Item.createItem("Yetimagic Essence", 9),
+    ], Item.createItem("Lesser Yetimagic Enchantment", 1)),
+
+    new Recipe([
+    Item.createItem("Yetimagic Enchantment Rod", 1),
+    Item.createItem("Lesser Yetimagic Enchantment", 9),
+    Item.createItem("Yetimagic Essence", 81),
+    ], Item.createItem("Lesser Yetimagic Enchantment", 1)),
+
+    new Recipe([
+    Item.createItem("Lenscrafter Tool", 1),
+    Item.createItem("Lenscrafter Tool Lockout Key", 1),
+    Item.createItem("Farside Viewing Lens", 2),
+    Item.createItem("Infused Metal Scrap", 10),
+    ], Item.createItem("Improved Farside Viewing Lens", 1)),
+
+    new Recipe([
+    Item.createItem("Lenscrafter Tool", 1),
+    Item.createItem("Lenscrafter Tool Lockout Key", 1),
+    Item.createItem("Improved Farside Viewing Lens", 2),
+    Item.createItem("Infused Metal Scrap", 100),
+    ], Item.createItem("Perfect Farside Viewer", 1)),
+
+    new Recipe([
+    Item.createItem("Doom Hood", 1),
+    Item.createItem("Greater Magical Essence", 3),
     Item.createItem("Frozen Essence", 3),
-    Item.createItem("Supreme Yeti Fur", 1),
-    Item.createItem("Never-Melting Ice", 3),
-     Item.createItem("Yeti Fur Mitts"),
-    ], Item.createItem("Enchanted Yeti Fur Mitts", 1)),
+    ], Item.createItem("Doomice Hood", 1)),
 
     new Recipe([
-    Item.createItem("Magical Essence", 60),
-    Item.createItem("Frozen Essence", 3),
-    Item.createItem("Supreme Yeti Fur", 2),
-    Item.createItem("Never-Melting Ice", 3),
-    Item.createItem("Yeti Fur Hood"),
-    ], Item.createItem("Enchanted Yeti Fur Hood", 1)),
+    Item.createItem("Frost Cloak", 1),
+    Item.createItem("Greater Magical Essence", 3),
+    Item.createItem("Shadow Essence", 3),
+    ], Item.createItem("Shadowfrost Cloak", 1)),
 
     new Recipe([
-    Item.createItem("Magical Essence", 60),
-    Item.createItem("Frozen Essence", 3),
-    Item.createItem("Supreme Yeti Fur", 3),
-    Item.createItem("Never-Melting Ice", 3),
-    Item.createItem("Yeti Fur Coat"),
-    ], Item.createItem("Enchanted Yeti Fur Coat", 1)),
-
-    new Recipe([
-    Item.createItem("Magical Essence", 100),
-    Item.createItem("Necromantic Residue", 5),
+    Item.createItem("Shadowfrost Wand", 1),
+    Item.createItem("Greater Magical Essence", 4),
+    Item.createItem("Shadow Essence", 4),
     Item.createItem("Frozen Essence", 4),
-    Item.createItem("Spectral Essence", 2),
-     Item.createItem("Enchanted Yeti Fur Mitts"),
-    ], Item.createItem("Necromancer Mitts", 1)),
-
-    new Recipe([
-    Item.createItem("Magical Essence", 100),
-    Item.createItem("Necromantic Residue", 8),
-    Item.createItem("Frozen Essence", 4),
-    Item.createItem("Spectral Essence", 2),
-    Item.createItem("Enchanted Yeti Fur Hood"),
-    ], Item.createItem("Necromancer Hood", 1)),
-
-    new Recipe([
-    Item.createItem("Magical Essence", 100),
-    Item.createItem("Necromantic Residue", 15),
-    Item.createItem("Frozen Essence", 4),
-    Item.createItem("Spectral Essence", 2),
-    Item.createItem("Enchanted Yeti Fur Coat"),
-    ], Item.createItem("Necromancer Coat", 1)),
-
-
-    // DRAGON SWAMP WORLD
-
-    new Recipe([
-    Item.createItem("Dragon Scale", 400),
-    Item.createItem("Green Cape"),
-    ], Item.createItem("Green Dragonscale Cape", 1)),
-    
-    new Recipe([
-    Item.createItem("Dragon Scale", 600),
-    Item.createItem("Black Cape"),
-    ], Item.createItem("Black Dragonscale Cape", 1)),
-
-    new Recipe([
-    Item.createItem("Dragon Scale", 800),
-    Item.createItem("Blue Cape"),
-    ], Item.createItem("Blue Dragonscale Cape", 1)),
-
-    new Recipe([
-    Item.createItem("Dragon Scale", 1000),
-    Item.createItem("Red Cape"),
-    ], Item.createItem("Red Dragonscale Cape", 1)),
-
-    // ARCANE WORLD
-
-    new Recipe([
-    Item.createItem("Magical Essence", 1200),
-    Item.createItem("Arcane Treads"),
-    ], Item.createItem("Treads of Arcane Stabilization", 1)),
-
-    new Recipe([
-    Item.createItem("Magical Essence", 1000),
-    Item.createItem("Arcane Gauntlets"),
-    ], Item.createItem("Gauntlets of Arcane Postmultiplication", 1)),
-
-    new Recipe([
-    Item.createItem("Magical Essence", 800),
-    Item.createItem("Arcane Helmet"),
-    ], Item.createItem("Helmet of Arcane Protection", 1)),
-
-    new Recipe([
-    Item.createItem("Magical Essence", 600),
-    Item.createItem("Arcane Vest"),
-    ], Item.createItem("Vest of Arcane Devotion", 1)),
-
-    new Recipe([
-    Item.createItem("Magical Essence", 400),
-    Item.createItem("Arcane Staff"),
-    ], Item.createItem("Staff of Arcane Domination", 1)),
-
-    // STELLAR REMNANT WORLD
-
-    new Recipe([
-    Item.createItem("Volcano Planet Essence", 8),
-    Item.createItem("Pleasure Essence", 4),
-    Item.createItem("A.M. Essence", 2),
-    Item.createItem("Stellar Remnant Essence", 1),
-    Item.createItem("Solar Debris", 999),
-    Item.createItem("Essence-Starved Tome", 1),
-    ], Item.createItem("Degenerate Star Tome", 1)),
-
-    new Recipe([
-    Item.createItem("Volcano Planet Essence", 8),
-    Item.createItem("Pleasure Essence", 4),
-    Item.createItem("A.M. Essence", 2),
-    Item.createItem("Stellar Remnant Essence", 1),
-    Item.createItem("Solar Debris", 999),
-    Item.createItem("Essence-Starved Boots", 1),
-    ], Item.createItem("Degenerate Star Boots", 1)),
-
-    new Recipe([
-    Item.createItem("Volcano Planet Essence", 8),
-    Item.createItem("Pleasure Essence", 4),
-    Item.createItem("A.M. Essence", 2),
-    Item.createItem("Stellar Remnant Essence", 1),
-    Item.createItem("Solar Debris", 999),
-    Item.createItem("Essence-Starved Belt", 1),
-    ], Item.createItem("Degenerate Star Belt", 1)),
-
-    new Recipe([
-    Item.createItem("Volcano Planet Essence", 8),
-    Item.createItem("Pleasure Essence", 4),
-    Item.createItem("A.M. Essence", 2),
-    Item.createItem("Stellar Remnant Essence", 1),
-    Item.createItem("Solar Debris", 999),
-    Item.createItem("Essence-Starved Hood", 1),
-    ], Item.createItem("Degenerate Star Hood", 1)),
-
-    new Recipe([
-    Item.createItem("Volcano Planet Essence", 8),
-    Item.createItem("Pleasure Essence", 4),
-    Item.createItem("A.M. Essence", 2),
-    Item.createItem("Stellar Remnant Essence", 1),
-    Item.createItem("Solar Debris", 999),
-    Item.createItem("Essence-Starved Coat", 1),
-    ], Item.createItem("Degenerate Star Coat", 1)),
-    
-    // MYTH WORLD
-
-    new Recipe([
-    Item.createItem("Soul Binding III", 1),
-    Item.createItem("Greater Myth Essence", 10),
-    Item.createItem("Myth Essence", 300),
-    ], Item.createItem("Lesser Myth Enchantment", 1)),
-
-    new Recipe([
-    Item.createItem("Lesser Myth Enchantment", 4),
-    Item.createItem("Soul Binding III", 4),
-    Item.createItem("Greater Myth Essence", 40),
-    Item.createItem("Myth Essence", 1200),
-    ], Item.createItem("Greater Myth Enchantment", 1)),
-
-    // TITAN BOSS WORLD
-
-    new Recipe([
-    Item.createItem("Titan Essence", 6),
-    Item.createItem("Wraps of Temptation")
-    ], Item.createItem("Wraps of the Great Deceiver", 1)),
-
-    new Recipe([
-    Item.createItem("Titan Essence", 6),
-    Item.createItem("Treads of Crushing Depths")
-    ], Item.createItem("Treads of Unfathomable Pressure", 1)),
+    ], Item.createItem("Doomfrost Wand", 1)),
 
 ]
 
