@@ -916,6 +916,7 @@
 
                 reps.clear();
                 savedData.reps.forEach(([name, data]) => {
+                    // console.log("loading reputation: " + name + " | " + data.name + " " + data.difficulty + " " + data.rep)
                     reps.set(
                         name,
                         new Reputation(
@@ -976,6 +977,11 @@
                 musicPlayer.volume = volume / 100.0;
             })
             musicPlayer.volume = volume / 100.0;
+
+            updateInventory();
+            updateReputationGuide();
+            updateEquipped();
+            updateWorldSelect();
         }
         
 
@@ -1019,11 +1025,8 @@
 
         window.onload = loadGame();
         window.onbeforeunload = saveGame;
-
-        updateInventory();
-        updateReputationGuide();
-        updateEquipped();
-        updateWorldSelect();
+        
+        
         //playMusic();
     </script>
 
@@ -1228,7 +1231,7 @@
             updateFocus();
             knownWorlds.add(firstWorld.name);
             activeEntity = randomEnemy(firstWorld.name);
-            resetReps();
+            
             updateEntityDisplay(-1);
             updateReputationGuide();
             document.getElementById("recipe-content").style.display = "block";
