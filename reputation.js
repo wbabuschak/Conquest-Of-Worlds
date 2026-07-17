@@ -23,7 +23,7 @@ class Reputation {
         if (this.rep == 0){
             return 0;
         }
-        return Math.sign(this.rep) * Math.floor(Math.log(Math.abs(this.rep) / 25 + 1));
+        return Math.sign(this.rep) * Math.floor(Math.log(Math.abs(this.rep) / 20 + 1));
     }
     //returns xp needed for next level
     nextLevel() {
@@ -31,7 +31,7 @@ class Reputation {
         if (this.level() + 1 == 0){
             return 0;
         }
-        return Math.sign(this.level()+1) * Math.ceil(25 * (Math.exp(Math.abs(this.level()+1)) - 1));
+        return Math.sign(this.level()+1) * Math.ceil(20 * (Math.exp(Math.abs(this.level()+1)) - 1));
     }
 
     serialize(){

@@ -26,7 +26,7 @@ class Entity{
     }
 
     randomizeMaxHealth(mobLevel){
-        return Math.floor((mobLevel * (2 * mobLevel + 6)) * (0.9 + Math.random() * .2));
+        return Math.floor((mobLevel * (1.7 * Math.pow(mobLevel,0.85) + 6)) * (0.9 + Math.random() * .2));
     }
 
     calculateXP(mobLevel){
